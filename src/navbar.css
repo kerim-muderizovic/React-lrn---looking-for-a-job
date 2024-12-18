@@ -1,0 +1,104 @@
+/* Ensure the navbar brand is on the left and links are on the right */
+.navbar {
+    padding: 0.3rem 0.5rem; /* Adds some spacing */
+  }
+  
+  .navbar-brand {
+    margin-right: auto; /* Push brand to the left */
+  }
+  
+  .navbar-nav {
+    margin-left: auto; /* Push links to the right */
+  }
+  
+  /* Add spacing between nav items */
+  .navbar-nav .nav-link {
+    margin-right: 1rem; /* Add space between links */
+  }
+  
+   
+   .navbar .btn {
+    margin-left: 0.5rem;
+  height: auto;   
+}
+
+.btn1{
+    height: 22%;
+}
+  *{
+    transition: none; /* Disable transitions on the navbar */
+  }
+  .navbar-collapse,
+.navbar-toggler,
+.navbar {
+  transition: none !important; /* Disable all transitions on these elements */
+}
+.navbar-toggler {
+  transition: none;
+}
+
+.navbar-collapse {
+  transition: none !important;
+}
+/* Target the MDB buttons */
+.mdb-btn, .btn-primary, .btn-dark {
+  transform: none !important;
+  animation: none !important;
+  transition: none !important;
+}
+
+/* Prevent toggler from resizing */
+.navbar-toggler {
+  transform: none !important;
+  animation: none !important;
+}
+/* Remove unwanted focus styles */
+
+/* Prevent size change on focus or active */
+
+
+.mdb-btn, .btn-primary, .btn-dark {
+  padding: 0.5rem 1rem !important; /* Adjust button padding */
+  height: auto !important; /* Prevent height changes */
+  width: auto !important; /* Prevent width changes */
+  transform: none !important; /* Prevent scaling effects */
+  animation: none !important; /* Disable button animations */
+  transition: none !important; /* Remove transition effects */
+}
+
+/* Container styling for the buttons */
+.d-flex {
+  display: flex;
+  gap: 1rem; /* Add spacing between buttons */
+  margin-left: 1rem; /* Add some left margin */
+}
+
+/* General button styles */
+button {
+  padding: 0.5rem 1rem; /* Consistent padding */
+  background-color: #007bff; /* Primary button color */
+  color: white; /* Text color */
+  border: none; /* Remove default border */
+  border-radius: 5px; /* Rounded corners */
+  font-size: 14px; /* Set font size */
+  font-weight: 500; /* Semi-bold text */
+  cursor: pointer; /* Pointer on hover */
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+/* Hover state */
+button:hover {
+  background-color: #0056b3; /* Darker blue on hover */
+}
+
+/* Active state */
+button:active {
+  background-color: #004494; /* Even darker blue */
+  transform: scale(0.98); /* Slight "press" effect */
+}
+
+/* Focus state */
+button:focus {
+  outline: none; /* Remove outline */
+  box-shadow: 0 0 5px rgba(0, 123, 255, 0.5); /* Add subtle focus glow */
+}

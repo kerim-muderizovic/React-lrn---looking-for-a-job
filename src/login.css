@@ -1,0 +1,44 @@
+.divider:after,
+.divider:before {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: #eee;
+}
+.h-custom {
+  height: calc(100% - 73px);
+}
+@media (max-width: 450px) {
+  .h-custom {
+  height: 100%;
+  }
+}
+
+html, body {
+    height: 100%;
+    margin: 0;
+  }
+  
+  #root, .h-custom, .login-page {
+    height: 100%; /* Ensures the component takes the full height of the page */
+  }
+  
+  .login-page {
+    min-height: 100vh !important;
+overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background: linear-gradient(to right, #6a11cb, #2575fc); /* Adds a cool gradient */
+    color: white;
+  }
+  .imgLogin{
+    width: 600px;
+    margin-left: 17%; /* Moves image away from the left */
+  margin-bottom: 100px;
+  }
+  .divImfg{
+    display: flex;
+    justify-content: center;
+  }

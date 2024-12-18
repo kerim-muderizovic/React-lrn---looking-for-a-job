@@ -1,0 +1,10 @@
+/* #root {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 2rem;
+  text-align: center;
+} */
+#root, .h-custom, .login-page {
+  height: 100%; /* Ensures the component takes the full height of the page */
+  background-color: 248,249,250;
+}

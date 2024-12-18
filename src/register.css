@@ -1,0 +1,76 @@
+/* Background and Layout */
+div.login-bg {
+  background: linear-gradient(to right, #6a11cb, #2575fc) !important;
+  min-height: 100vh !important;
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+  padding: 20px !important;
+}
+
+div.custom-card {
+  width: 100% !important;
+  max-width: 800px !important;
+  background-color: transparent !important;
+  box-shadow: none !important;
+}
+
+div.custom-card .card-body {
+  background: #fff !important;
+  border-radius: 25px !important;
+  padding: 30px !important;
+}
+
+/* Form Styling */
+.d-flex .form-label {
+  margin-top: 10px;
+}
+
+.form-outline {
+  text-align: center;
+}
+
+/* Ensure image is not too big */
+.imgC {
+  width: 100%;
+  max-width: 400px; /* Adjust max-width to control image size */
+  height: auto;
+}
+
+/* Ensure Flex behavior is applied correctly */
+.d-flex {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-left: 0;
+}
+
+.d-flex.flex-column {
+  flex-direction: column;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .imgC {
+    max-width: 300px; /* Adjust image width on smaller screens */
+  }
+
+  /* Ensure form columns take full width on smaller screens */
+  .custom-card {
+    max-width: 100%;
+  }
+
+  .d-flex {
+    flex-direction: column; /* Stack elements vertically on smaller screens */
+  }
+}
+.mdb-container-fluid {
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+}
+.d-flex {
+  margin: 0 !important; /* Remove margin */
+  padding: 0 !important; /* Remove padding */
+  justify-content: center !important;
+  align-items: center !important;
+}
