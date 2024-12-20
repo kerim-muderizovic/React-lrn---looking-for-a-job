@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 import {
   MDBNavbar,
   MDBContainer,
@@ -7,13 +8,48 @@ import {
   MDBNavbarNav,
   MDBNavbarItem,
   MDBNavbarLink,
-  MDBBtn,
   MDBCollapse
 } from 'mdb-react-ui-kit';
 import './navbar.css';
 
-export default function Navbar({ setView }) {
-  // const [showNav, setShowNav] = useState(false);
+export default function Navbar({ isLoggedIn,setIsLoggedIn,setView }) {
+  // const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  useEffect(() => {
+    const fetchAuthStatus = async () => {
+      try {
+        // Fetch CSRF token
+        await axios.get('http://localhost:8000/sanctum/csrf-cookie');
+
+        // Check login status
+        const response = await axios.get('http://localhost:8000/auth/check', {
+          withCredentials: true,
+        });
+        setIsLoggedIn(response.data.isLoggedIn);
+      } catch (error) {
+        console.error('Error checking auth status:', error);
+      }
+    };
+
+    fetchAuthStatus();
+  }, []);
+
+  const handleLogout = async () => {
+    try {
+      await axios.post(
+        'http://localhost:8000/logout',
+        {},
+        {
+          withXSRFToken: true,
+          withCredentials: true,
+        }
+      );
+      setIsLoggedIn(false);
+      window.location.href = '/'; // Redirect to home after logout
+    } catch (error) {
+      console.error('Logout failed:', error);
+    }
+  };
 
   return (
     <MDBNavbar expand='lg' light bgColor='light'>
@@ -50,10 +86,31 @@ export default function Navbar({ setView }) {
             <MDBNavbarItem>
               <MDBNavbarLink href='#'>Contact</MDBNavbarLink>
             </MDBNavbarItem>
-            {/* Buttons */}
+            {/* Conditional Buttons */}
             <div className='d-flex gap-2 ms-3'>
-            <button onClick={() => setView('register')}>Register</button>
-            <button onClick={() => setView('login')}>Sign In</button>
+              {isLoggedIn ? (
+                <button
+                  className='btn btn-link nav-link'
+                  onClick={handleLogout}
+                >
+                  Logout
+                </button>
+              ) : (
+                <>
+                  <button
+                    className='btn btn-link nav-link'
+                    onClick={() => setView('register')}
+                  >
+                    Register
+                  </button>
+                  <button
+                    className='btn btn-link nav-link'
+                    onClick={() => setView('login')}
+                  >
+                    Sign In
+                  </button>
+                </>
+              )}
             </div>
           </MDBNavbarNav>
         </MDBCollapse>

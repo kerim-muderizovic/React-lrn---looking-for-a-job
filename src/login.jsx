@@ -11,7 +11,7 @@ import {
 } from 'mdb-react-ui-kit';
 import './login.css';
 
-export default function Login() {
+export default function Login({setIsLoggedIn}) {
   const [formData, setFormData] = useState({
     email: '',
     password: '',
@@ -33,23 +33,21 @@ export default function Login() {
 
     try {
       const response = await axios.post('http://localhost:8000/login', formData, {
-        withXSRFToken: true,
-        headers: { 'Content-Type': 'application/json' },
-        withCredentials: true, // Ensures cookies are sent for session management
+          withXSRFToken: true,
+          headers: { 'Content-Type': 'application/json' },
+          withCredentials: true, 
       });
-
-      // Store user token or handle session here
-      console.log('Login successful:', response.data);
-      console.log('Login successful:');
-      // Redirect or update app state
-      window.location.href = '/home'; // Adjust based on your routing
-    } catch (err) {
+      setIsLoggedIn(true); 
+      console.log('Login success', response);
+  } catch (err) {
+      console.error('Login error', err);
       if (err.response) {
-        setError(err.response.data.message || 'Login failed');
+          setError(err.response.data.message || 'Login failed');
       } else {
-        setError('An error occurred. Please try again.');
+          setError('An error occurred. Please try again.');
       }
-    }
+  }
+  
   };
 
   return (

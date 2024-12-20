@@ -13,11 +13,11 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import  Navbar  from './navbar';
 function App() {
   const[view,setView]=useState('login');
-
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
   return (
     <div>
-    <Navbar setView={setView}/>
-    {view === 'login' && <Login />}
+    <Navbar isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} setView={setView}/>
+    {view === 'login' && <Login setIsLoggedIn={setIsLoggedIn}/>}
     {view === 'register' && <Register />}
 <Footer/>
     </div>
