@@ -1,28 +1,32 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import { Header } from './header'
-import './App.css'
-import Login from './login'
-import  Register  from './register'
-import Footer from './footer'
-// import {Brojac} from './counter';
-import { PerfumesList } from './counter';
+import React, { useState } from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'; // Import Router components
+import './App.css';
+import Navbar from './navbar';
+import Footer from './footer';
+import Login from './login';
+import Register from './register';
+import CRMApp from './crmMainPart';
 import '../node_modules/bootstrap/dist/css/bootstrap.min.css';
-import 'bootstrap/dist/css/bootstrap.min.css';
-import  Navbar  from './navbar';
-function App() {
-  const[view,setView]=useState('login');
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  return (
-    <div>
-    <Navbar isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} setView={setView}/>
-    {view === 'login' && <Login setIsLoggedIn={setIsLoggedIn}/>}
-    {view === 'register' && <Register />}
-<Footer/>
-    </div>
-  )
 
+function App() {
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  return (
+    <Router>
+      <div>
+        <Navbar isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} />
+
+        {/* Define Routes */}
+        <Routes>
+          <Route path="/login" element={<Login setIsLoggedIn={setIsLoggedIn} />} />
+          <Route path="/register" element={<Register />} />
+          <Route path="/crm" element={<CRMApp />} />
+        </Routes>
+
+        <Footer />
+      </div>
+    </Router>
+  );
 }
 
-export default App
+export default App;

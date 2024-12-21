@@ -11,11 +11,13 @@ import {
   MDBCollapse
 } from 'mdb-react-ui-kit';
 import './navbar.css';
+import { Link } from 'react-router-dom';
 
 export default function Navbar({ isLoggedIn,setIsLoggedIn,setView }) {
   // const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   useEffect(() => {
+    axios.withXSRFToken = true;
     const fetchAuthStatus = async () => {
       try {
         // Fetch CSRF token
@@ -51,6 +53,13 @@ export default function Navbar({ isLoggedIn,setIsLoggedIn,setView }) {
     }
   };
 
+  const handleScrollToContact = () => {
+    window.scrollTo({
+      top: document.body.scrollHeight,
+      behavior: 'smooth',
+    });
+  };
+
   return (
     <MDBNavbar expand='lg' light bgColor='light'>
       <MDBContainer fluid>
@@ -76,16 +85,14 @@ export default function Navbar({ isLoggedIn,setIsLoggedIn,setView }) {
           <MDBNavbarNav className='ms-auto d-flex align-items-center'>
             {/* Links */}
             <MDBNavbarItem>
-              <MDBNavbarLink active aria-current='page' href='#'>
+              <MDBNavbarLink active aria-current='page' as={Link} to='/'>
                 Home
               </MDBNavbarLink>
             </MDBNavbarItem>
             <MDBNavbarItem>
-              <MDBNavbarLink href='#'>About</MDBNavbarLink>
+              <MDBNavbarLink onClick={handleScrollToContact}>Contact</MDBNavbarLink>
             </MDBNavbarItem>
-            <MDBNavbarItem>
-              <MDBNavbarLink href='#'>Contact</MDBNavbarLink>
-            </MDBNavbarItem>
+
             {/* Conditional Buttons */}
             <div className='d-flex gap-2 ms-3'>
               {isLoggedIn ? (
@@ -97,18 +104,12 @@ export default function Navbar({ isLoggedIn,setIsLoggedIn,setView }) {
                 </button>
               ) : (
                 <>
-                  <button
-                    className='btn btn-link nav-link'
-                    onClick={() => setView('register')}
-                  >
+                  <Link to='/register' className='btn btn-link nav-link'>
                     Register
-                  </button>
-                  <button
-                    className='btn btn-link nav-link'
-                    onClick={() => setView('login')}
-                  >
+                  </Link>
+                  <Link to='/login' className='btn btn-link nav-link'>
                     Sign In
-                  </button>
+                  </Link>
                 </>
               )}
             </div>

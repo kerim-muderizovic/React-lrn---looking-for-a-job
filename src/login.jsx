@@ -11,7 +11,7 @@ import {
 } from 'mdb-react-ui-kit';
 import './login.css';
 
-export default function Login({setIsLoggedIn}) {
+export default function Login({setIsLoggedIn,setView}) {
   const [formData, setFormData] = useState({
     email: '',
     password: '',
@@ -32,7 +32,7 @@ export default function Login({setIsLoggedIn}) {
     setError(null);
 
     try {
-      const response = await axios.post('http://localhost:8000/login', formData, {
+      const response = await axios.post('http://localhost:8000/loginn', formData, {
           withXSRFToken: true,
           headers: { 'Content-Type': 'application/json' },
           withCredentials: true, 
@@ -111,7 +111,7 @@ export default function Login({setIsLoggedIn}) {
                   id='flexCheckDefault' 
                   label='Remember me' 
                 />
-                <a href="/forgot-password">Forgot password?</a>
+                <a href="/forgot-password" className='fPassword'>Forgot password?</a>
               </div>
 
               {error && <p className="text-danger">{error}</p>}
@@ -121,7 +121,7 @@ export default function Login({setIsLoggedIn}) {
                   {loading ? 'Logging in...' : 'Login'}
                 </MDBBtn>
                 <p className="small fw-bold mt-2 pt-1 mb-2">
-                  Don't have an account? <a href="/register" className="link-danger">Register</a>
+                  Don't have an account? <a href="/register" className="link-danger"  onClick={(e) =>{ e.preventDefault(); setView('register')}}>Register</a>
                 </p>
               </div>
             </form>
