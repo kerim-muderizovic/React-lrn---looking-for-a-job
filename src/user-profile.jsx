@@ -6,25 +6,43 @@ import './user-profile.css';
 export default function UserProfile() {
   const { authenticatedUser } = useUser();
   const [url, setUrl] = useState('');
-  const [isEditing, setIsEditing] = useState(false);
+  const [name, setName] = useState(authenticatedUser?.name || ''); // Initialize with current user name
+  const [isEditingPhoto, setIsEditingPhoto] = useState(false);
+  const [isEditingName, setIsEditingName] = useState(false);
 
   const handleSavePhoto = async () => {
     try {
       await axios.put(
         `http://localhost:8000/user/${authenticatedUser.id}/update-image`,
-        { url }, // Request payload
+        { url },
         {
-          withXSRFToken: true, // Ensure XSRF token is included
-          withCredentials: true, // Include credentials in the request
+          withXSRFToken: true,
+          withCredentials: true,
         }
       );
-      console.log('URL updated successfully');
-
-      // Optionally update the local authenticated user state
-      authenticatedUser.url = url; // Update the user's URL attribute locally
-      setIsEditing(false);
+      console.log('Profile photo updated successfully');
+      authenticatedUser.url = url;
+      setIsEditingPhoto(false);
     } catch (err) {
-      console.error('Failed to update URL:', err);
+      console.error('Failed to update profile photo:', err);
+    }
+  };
+
+  const handleSaveName = async () => {
+    try {
+      await axios.put(
+        `http://localhost:8000/user/${authenticatedUser.id}/update-name`,
+        { name },
+        {
+          withXSRFToken: true,
+          withCredentials: true,
+        }
+      );
+      console.log('Name updated successfully');
+      authenticatedUser.name = name;
+      setIsEditingName(false);
+    } catch (err) {
+      console.error('Failed to update name:', err);
     }
   };
 
@@ -41,43 +59,35 @@ export default function UserProfile() {
                   className="rounded-circle img-fluid"
                   style={{ width: '150px', height: '150px', objectFit: 'cover' }}
                 />
-                <h5 className="my-3">{authenticatedUser?.name || 'Guest'}</h5>
-                <p className="text-muted mb-1">Full Stack Developer</p>
-                <p className="text-muted mb-4">Donji Vakuf, Bosna i Hercegovina</p>
-                <div className="d-flex justify-content-center mb-2">
-                  {isEditing ? (
-                    <div>
-                      <input
-                        type="text"
-                        value={url}
-                        onChange={(e) => setUrl(e.target.value)}
-                        placeholder="Enter Image URL"
-                        className="form-control"
-                      />
-                      <button
-                        onClick={handleSavePhoto}
-                        className="btn btn-success btn-sm mt-2"
-                      >
-                      Add profile photo
-                      </button>
-                      <button
-                        onClick={() => setIsEditing(false)}
-                        className="btn btn-secondary btn-sm mt-2 ms-2"
-                      >
-                        Cancel
-                      </button>
-                    </div>
-                  ) : (
+                {isEditingPhoto ? (
+                  <div>
+                    <input
+                      type="text"
+                      value={url}
+                      onChange={(e) => setUrl(e.target.value)}
+                      placeholder="Enter Image URL"
+                      className="form-control"
+                    />
                     <button
-                      onClick={() => setIsEditing(true)}
-                      className="btn btn-primary btn-sm"
+                      onClick={handleSavePhoto}
+                      className="btn btn-success btn-sm mt-2"
                     >
-                      Add profile photo from the internet
+                      Save Photo
                     </button>
-                  )}
-                </div>
-                {authenticatedUser?.url && (
-                  <p className="text-muted mt-3"></p>
+                    <button
+                      onClick={() => setIsEditingPhoto(false)}
+                      className="btn btn-secondary btn-sm mt-2 ms-2"
+                    >
+                      Cancel
+                    </button>
+                  </div>
+                ) : (
+                  <button
+                    onClick={() => setIsEditingPhoto(true)}
+                    className="btn btn-primary btn-sm"
+                  >
+                    Edit Photo
+                  </button>
                 )}
               </div>
             </div>
@@ -90,9 +100,41 @@ export default function UserProfile() {
                     <p className="mb-0">Full Name</p>
                   </div>
                   <div className="col-sm-9">
-                    <p className="text-muted mb-0">
-                      {authenticatedUser?.name || 'John Doe'}
-                    </p>
+                    {isEditingName ? (
+                      <div>
+                        <input
+                          type="text"
+                          value={name}
+                          onChange={(e) => setName(e.target.value)}
+                          placeholder="Enter Name"
+                          className="form-control"
+                        />
+                        <button
+                          onClick={handleSaveName}
+                          className="btn btn-success btn-sm mt-2"
+                        >
+                          Save Name
+                        </button>
+                        <button
+                          onClick={() => setIsEditingName(false)}
+                          className="btn btn-secondary btn-sm mt-2 ms-2"
+                        >
+                          Cancel
+                        </button>
+                      </div>
+                    ) : (
+                      <div>
+                        <p className="text-muted mb-0">
+                          {authenticatedUser?.name || 'John Doe'}
+                        </p>
+                        <button
+                          onClick={() => setIsEditingName(true)}
+                          className="btn btn-primary btn-sm mt-2"
+                        >
+                          Edit Name
+                        </button>
+                      </div>
+                    )}
                   </div>
                 </div>
                 <hr />
