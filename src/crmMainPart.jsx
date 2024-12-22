@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { Route, Routes } from "react-router-dom"; // Import React Router
+import { Route, Routes, useNavigate } from "react-router-dom";
 import {
   MDBContainer,
   MDBRow,
@@ -13,34 +13,50 @@ import {
   MDBCardTitle,
   MDBCardText,
   MDBProgress,
-  MDBProgressBar
+  MDBProgressBar,
 } from "mdb-react-ui-kit";
 import Login from "./login";
+import './crmMainPart.css';
+
 export default function CRMApp() {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [tasks, setTasks] = useState([
     { name: "Task 1", progress: 50 },
     { name: "Task 2", progress: 75 },
   ]);
+  const [authChecked, setAuthChecked] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [user, setUser] = useState(null);
+  const navigate = useNavigate();
 
-  // Check if the user is logged in
   useEffect(() => {
-    axios.get("/auth/check")
-      .then((response) => {
-        if (response.data.isLoggedIn) {
-          setIsLoggedIn(true);
-        } else {
-          setIsLoggedIn(false);
+    const fetchAuthStatus = async () => {
+      try {
+        await axios.get("http://localhost:8000/sanctum/csrf-cookie", {
+          withCredentials: true,
+        });
+
+        const authResponse = await axios.get("http://localhost:8000/auth/check", {
+          withCredentials: true,
+        });
+
+        setIsAuthenticated(authResponse.data.isLoggedIn);
+
+        if (authResponse.data.isLoggedIn) {
+          setUser(authResponse.data.user);
         }
-      })
-      .catch((error) => {
-        console.error("Error checking authentication status", error);
-        setIsLoggedIn(false);
-      });
+      } catch (error) {
+        console.error("Error checking authentication status:", error);
+        setIsAuthenticated(false);
+      } finally {
+        setAuthChecked(true);
+      }
+    };
+
+    fetchAuthStatus();
   }, []);
 
   const addTask = () => {
-    if (!isLoggedIn) {
+    if (!isAuthenticated) {
       alert("You must be logged in to add a task.");
       return;
     }
@@ -52,14 +68,16 @@ export default function CRMApp() {
   };
 
   const handleLogin = () => {
-    // Redirect to the login page using React Router
-    window.location.href = "/login";  // React Router handles this for you
+    navigate("/login");
   };
+
+  if (!authChecked) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <MDBContainer fluid className="vh-100">
-      {/* Overlay when user is not logged in */}
-      {!isLoggedIn && (
+      {!isAuthenticated && (
         <div
           style={{
             position: "absolute",
@@ -85,9 +103,33 @@ export default function CRMApp() {
       )}
 
       <MDBRow className="h-100">
-        {/* Left Navbar Section */}
         <MDBCol size="3" className="bg-light p-3">
           <MDBNavbar light bgColor="light" className="flex-column h-100">
+            {user && (
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                  marginBottom: "20px",
+                }}
+              >
+                <img onClick={() => navigate("/user-profile")} className="imgProfile"
+                  src={user.profilePicture || "/default-avatar.png"}
+                  alt={`${user.name}'s profile`}
+                  style={{
+                    width: "100px",
+                    height: "100px",
+                    borderRadius: "50%",
+                    marginBottom: "10px",
+                  }}
+                />
+                <h5>{user.name}</h5>
+                <p style={{ fontSize: "0.9rem", color: "gray" }}>
+                  {user.role || "User"}
+                </p>
+              </div>
+            )}
             <MDBNavbarBrand>CRM</MDBNavbarBrand>
             <MDBBtn
               color="primary"
@@ -99,7 +141,6 @@ export default function CRMApp() {
           </MDBNavbar>
         </MDBCol>
 
-        {/* Right Task Section */}
         <MDBCol size="9" className="p-4">
           <h2 className="mb-4">Tasks</h2>
           <MDBRow>
@@ -108,9 +149,7 @@ export default function CRMApp() {
                 <MDBCard>
                   <MDBCardBody>
                     <MDBCardTitle>{task.name}</MDBCardTitle>
-                    <MDBCardText>
-                      Progress: {task.progress}%
-                    </MDBCardText>
+                    <MDBCardText>Progress: {task.progress}%</MDBCardText>
                     <MDBProgress>
                       <MDBProgressBar
                         width={task.progress}
@@ -126,8 +165,6 @@ export default function CRMApp() {
         </MDBCol>
       </MDBRow>
 
-      {/* Add the Routes for the login page outside this component */}
-      {/* Ensure this is in a parent Router component, typically in App.js */}
       <Routes>
         <Route path="/login" element={<Login />} />
       </Routes>

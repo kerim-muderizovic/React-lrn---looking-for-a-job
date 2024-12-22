@@ -10,8 +10,10 @@ import {
   MDBCheckbox 
 } from 'mdb-react-ui-kit';
 import './login.css';
+import  {useNavigate}  from 'react-router-dom';
 
 export default function Login({setIsLoggedIn,setView}) {
+  const navigate = useNavigate(); // Hook to navigate programmatically
   const [formData, setFormData] = useState({
     email: '',
     password: '',
@@ -37,7 +39,7 @@ export default function Login({setIsLoggedIn,setView}) {
           headers: { 'Content-Type': 'application/json' },
           withCredentials: true, 
       });
-      setIsLoggedIn(true); 
+      navigate('/crm'); // Replace '/dashboard' with your target route
       console.log('Login success', response);
   } catch (err) {
       console.error('Login error', err);
