@@ -8,3 +8,37 @@
   height: 100%; /* Ensures the component takes the full height of the page */
   background-color: 248,249,250;
 }
+
+.MDBModal {
+  display: block !important; /* Force modal to display */
+  z-index: 1050 !important; /* Ensure it is above other elements */
+  position: fixed !important; /* Modal should be fixed */
+  top: 50% !important; /* Center it vertically */
+  left: 50% !important; /* Center it horizontally */
+  transform: translate(-50%, -50%) !important; /* Fine-tune positioning */
+}
+
+/* Modal overlay (background) */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+/* Modal content (box) */
+.modal-content {
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  max-width: 400px;
+  width: 100%;
+  text-align: center;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}

@@ -17,4 +17,101 @@
     transform: scale(0.95); /* Shrinks slightly on click */
     box-shadow: 0 3px 5px rgba(0, 0, 0, 0.15); /* Reduces the shadow */
   }
-  
+
+  .ojjjj
+  {
+    z-index: 1050 !important;
+  }
+/* Modal Overlay: Background and Positioning */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.7); /* Dark overlay */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1050; /* Above other content */
+}
+
+/* Modal Content: Box styling, shadows, and rounded corners */
+.modal-content {
+  background-color: #fff  !important;
+  padding: 20px;
+  border-radius: 10px;
+  width: 100%;
+  max-width: 500px;
+  /* box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); */
+  animation: fadeIn 0.3s ease-out;
+}
+
+/* Title Styling: Larger font and bold */
+.modal-content h3 {
+  font-size: 24px;
+  font-weight: 600;
+  color: WHITE;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+/* Input fields: Focus effect and padding */
+.form-control,
+.form-select {
+  border-radius: 5px;
+  padding: 10px;
+  border: 1px solid #ddd;
+  transition: all 0.3s ease;
+}
+
+.form-control:focus,
+.form-select:focus {
+  border-color: #007bff;
+  box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+}
+
+/* Button Styling: Primary and Secondary buttons with hover effects */
+.btn {
+  padding: 10px 20px;
+  border-radius: 5px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.btn-secondary {
+  background-color: #6c757d;
+  border: none;
+  color: white;
+}
+
+.btn-secondary:hover {
+  background-color: #5a6268;
+}
+
+.btn-primary {
+  background-color: #007bff;
+  border: none;
+  color: white;
+}
+
+.btn-primary:hover {
+  background-color: #0056b3;
+}
+
+/* Adjusting margins and paddings */
+.mb-3 {
+  margin-bottom: 15px;
+}
+
+/* Animation for modal fade-in effect */
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
