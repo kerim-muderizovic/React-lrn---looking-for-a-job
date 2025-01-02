@@ -15,16 +15,11 @@ import {
   MDBProgress,
   MDBProgressBar,
 } from "mdb-react-ui-kit";
+import { useUser } from "./userContext";
 import Login from "./login";
 import "./crmMainPart.css";
-
 export default function CRMApp() {
-  const [tasks, setTasks] = useState([]);
-  const [authChecked, setAuthChecked] = useState(false);
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [user, setUser] = useState(null);
-  const [users, setUsers] = useState([]);
-  const [modalOpen, setModalOpen] = useState(false);
+  const { authenticatedUser } = useUser(); // Access the authenticated user from context
   const [newTask, setNewTask] = useState({
     title: "",
     description: "",
@@ -32,6 +27,46 @@ export default function CRMApp() {
     progress: 0,
     users: [],
   });
+  const [tasks, setTasks] = useState([]);
+  const [authChecked, setAuthChecked] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [user, setUser] = useState(null);
+  const [users, setUsers] = useState([]);
+  const [modalOpen, setModalOpen] = useState(false);
+  const [updatedTasks, setUpdatedTasks] = useState(tasks);
+
+  
+  const updateTaskProgress = async (taskId, newProgress) => {
+    try {
+      // Ensure CSRF cookie is set first
+      await axios.get('http://localhost:8000/sanctum/csrf-cookie', { withCredentials: true });
+  
+      // Now send the PUT request with the CSRF token
+      const response = await axios.put(
+        `http://localhost:8000/tasks/${taskId}`,
+        { progress: newProgress },
+        { 
+          withCredentials: true, // Include credentials (cookies) in the request
+        withXSRFToken:true
+        }
+      );
+  
+      // If the update was successful, update the local state
+      setTasks((prevTasks) =>
+        prevTasks.map((task) =>
+          task.id === taskId ? { ...task, progress: newProgress } : task
+        )
+      );
+  
+      console.log('Task updated:', response.data); // Log the response
+    } catch (error) {
+      console.error("Error updating task progress:", error);
+    }
+  };
+  
+  
+    // Define drag-and-drop phases
+    const phases = [0, 25, 50, 75, 100];
   const handleDeleteTask = async (taskId) => {
     try {
       // Send delete request to the backend
@@ -63,7 +98,6 @@ export default function CRMApp() {
         const authResponse = await axios.get("http://localhost:8000/auth/check", {
           withCredentials: true,
         });
-
         setIsAuthenticated(authResponse.data.isLoggedIn);
         if (authResponse.data.isLoggedIn) {
           setUser(authResponse.data.user);
@@ -74,19 +108,41 @@ export default function CRMApp() {
       } finally {
         setAuthChecked(true);
       }
+      
     };
 
     const fetchTasks = async () => {
       try {
-        const { data } = await axios.get("http://localhost:8000/getAllTasks", {
+        // Check authentication status
+        // const authCheckResponse = await axios.get('http://localhost:8000/auth/check', {
+        //   withCredentials: true,
+        // });
+        // console.log('Authentication check response:', authCheckResponse.data);
+    
+        // Fetch tasks
+        const tasksResponse = await axios.get("http://localhost:8000/getUserTasks", {
           withCredentials: true,
         });
-        setTasks(data.tasks || []);
+        console.log('Tasks response prilikom uzimanja za konkretnog', tasksResponse.data);
+    
+        // Set tasks in state
+        setTasks(tasksResponse.data.tasks || []);
       } catch (error) {
         console.error("Error fetching tasks:", error);
       }
     };
-
+    // const updateTaskProgress = async (taskId, newProgress) => {
+    //   try {
+    //     await axios.put(`/tasks/${taskId}`, { progress: newProgress });
+    //     setUpdatedTasks((prevTasks) =>
+    //       prevTasks.map((task) =>
+    //         task.id === taskId ? { ...task, progress: newProgress } : task
+    //       )
+    //     );
+    //   } catch (error) {
+    //     console.error("Error updating task progress:", error);
+    //   }
+    // };
     const fetchUsers = async () => {
       try {
         const { data } = await axios.get("http://localhost:8000/assignable-users", {
@@ -121,8 +177,9 @@ export default function CRMApp() {
         description: "",
         priority: "Low",
         progress: 0,
-        users: [],
+        users: authenticatedUser ? [authenticatedUser.id] : [],
       });
+      console.log('when adding task authUser is ', authenticatedUser);
     } catch (error) {
       console.error("Error adding task:", error);
     }
@@ -171,7 +228,8 @@ export default function CRMApp() {
           <MDBNavbar light bgColor="light" className="flex-column h-100">
             {user && (
               <div style={{ textAlign: "center", marginBottom: "20px" }}>
-                <img
+                          <a href="/user-profile" style={{ textDecoration: "none" }}>
+                <img className="profileImage"
                   src={user.profilePicture || "/default-avatar.png"}
                   alt={`${user.name}'s profile`}
                   style={{
@@ -181,13 +239,16 @@ export default function CRMApp() {
                     marginBottom: "10px",
                   }}
                 />
+                </a>
                 <h5>{user.name}</h5>
               </div>
-            )}
-            <MDBNavbarBrand>CRM</MDBNavbarBrand>
+            )}  
+            <div className="addTaskBTN">
             <MDBBtn color="primary" className="mt-3 w-100" onClick={toggleModal}>
               + Add Task
             </MDBBtn>
+            </div>
+
           </MDBNavbar>
         </MDBCol>
         <MDBCol size="9" className="p-4">
@@ -198,19 +259,53 @@ export default function CRMApp() {
       style={{
         backgroundColor: priorityColors[task.priority],
         marginBottom: "15px",
+        position: "relative",
       }}
     >
-      <MDBCardBody>
+      <MDBCardBody className="Task">
         <MDBCardTitle>{task.title}</MDBCardTitle>
         <MDBCardText>{task.description}</MDBCardText>
         <MDBCardText>Progress: {task.progress}%</MDBCardText>
-        <MDBProgress>
-          <MDBProgressBar
-            width={task.progress}
-            valuemin={0}
-            valuemax={100}
+
+        <div
+          style={{
+            position: "relative",
+            height: "20px",
+            backgroundColor: "#d3d3d3",
+            borderRadius: "5px",
+            cursor: "pointer",
+          }}
+          onMouseDown={(e) => {
+            const boundingRect = e.target.getBoundingClientRect();
+            const offsetX = e.clientX - boundingRect.left;
+            const newProgress = Math.min(
+              100,
+              Math.max(0, Math.round((offsetX / boundingRect.width) * 100))
+            );
+            updateTaskProgress(task.id, newProgress);
+          }}
+          onMouseMove={(e) => {
+            if (e.buttons !== 1) return; // Check if mouse is held down
+            const boundingRect = e.target.getBoundingClientRect();
+            const offsetX = e.clientX - boundingRect.left;
+            const newProgress = Math.min(
+              100,
+              Math.max(0, Math.round((offsetX / boundingRect.width) * 100))
+            );
+            updateTaskProgress(task.id, newProgress);
+          }}
+        >
+          <div
+            style={{
+              width: `${task.progress}%`,
+              height: "100%",
+              backgroundColor: "#4caf50",
+              borderRadius: "5px",
+              transition: "width 0.2s ease-in-out",
+            }}
           />
-        </MDBProgress>
+        </div>
+
         <MDBBtn
           color="danger"
           onClick={() => handleDeleteTask(task.id)}
@@ -222,6 +317,8 @@ export default function CRMApp() {
     </MDBCard>
   ))}
 </MDBCol>
+
+  
 
       </MDBRow>
 

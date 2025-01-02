@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import { useRef } from 'react';
 import {
   MDBNavbar,
   MDBContainer,
@@ -12,29 +13,29 @@ import {
 } from 'mdb-react-ui-kit';
 import './navbar.css';
 import { Link } from 'react-router-dom';
+import { useUser } from './userContext';
 
-export default function Navbar({ isLoggedIn,setIsLoggedIn,setView }) {
-  // const [isLoggedIn, setIsLoggedIn] = useState(false);
-
+export default function Navbar({ setView }) {
+  const { authenticatedUser, fetchAuthenticatedUser,isLoading,setIsLoading } = useUser();
+  const isMounted = useRef(false);
+  // Fetch the user once when the component mounts
   useEffect(() => {
-    axios.withXSRFToken = true;
-    const fetchAuthStatus = async () => {
+    const loadUser = async () => {
       try {
-        // Fetch CSRF token
-        await axios.get('http://localhost:8000/sanctum/csrf-cookie');
-
-        // Check login status
-        const response = await axios.get('http://localhost:8000/auth/check', {
-          withCredentials: true,
-        });
-        setIsLoggedIn(response.data.isLoggedIn);
+        setIsLoading(true); // Set loading to true before the fetch
+        await fetchAuthenticatedUser(); // Fetch user data
       } catch (error) {
-        console.error('Error checking auth status:', error);
+        console.error('Error fetching authenticated user:', error);
+      } finally {
+        if (isMounted.current) {
+        setIsLoading(false); // Ensure loading is false once fetch is done
+        console.log('gotovo'); // Log when the finally block is executed
+        }
       }
     };
-
-    fetchAuthStatus();
-  }, []);
+    isMounted.current = true;
+    loadUser();
+  }, [ setIsLoading]); // Dependency only on the fetch function (should not change)
 
   const handleLogout = async () => {
     try {
@@ -46,7 +47,6 @@ export default function Navbar({ isLoggedIn,setIsLoggedIn,setView }) {
           withCredentials: true,
         }
       );
-      setIsLoggedIn(false);
       window.location.href = '/'; // Redirect to home after logout
     } catch (error) {
       console.error('Logout failed:', error);
@@ -63,14 +63,11 @@ export default function Navbar({ isLoggedIn,setIsLoggedIn,setView }) {
   return (
     <MDBNavbar expand='lg' light bgColor='light'>
       <MDBContainer fluid>
-        {/* Navbar Wrapper for Alignment */}
         <div className="d-flex w-100 justify-content-between align-items-center">
-          {/* Brand Name */}
-          <MDBNavbarBrand href='#' className='ms-3'>
-            MyApp
+          <MDBNavbarBrand href='/' className='ms-3'>
+            <img src="https://www.con2cus.de/img/c2c.svg" style={{ width: '100px', height: 'auto' }} alt="Brand Logo" />
           </MDBNavbarBrand>
 
-          {/* Navbar Toggler */}
           <MDBNavbarToggler
             aria-controls='navbarSupportedContent'
             aria-expanded='false'
@@ -80,10 +77,8 @@ export default function Navbar({ isLoggedIn,setIsLoggedIn,setView }) {
           </MDBNavbarToggler>
         </div>
 
-        {/* Collapsible Navbar Links */}
         <MDBCollapse navbar>
           <MDBNavbarNav className='ms-auto d-flex align-items-center'>
-            {/* Links */}
             <MDBNavbarItem>
               <MDBNavbarLink active aria-current='page' as={Link} to='/'>
                 Home
@@ -93,9 +88,10 @@ export default function Navbar({ isLoggedIn,setIsLoggedIn,setView }) {
               <MDBNavbarLink onClick={handleScrollToContact}>Contact</MDBNavbarLink>
             </MDBNavbarItem>
 
-            {/* Conditional Buttons */}
             <div className='d-flex gap-2 ms-3'>
-              {isLoggedIn ? (
+              {isLoading ? (
+                <div>Loading...</div>
+              ) : authenticatedUser ? (
                 <button
                   className='btn btn-link nav-link'
                   onClick={handleLogout}
