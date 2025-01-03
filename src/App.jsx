@@ -39,7 +39,7 @@ function AppContent() {
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route path="/crm/*" element={<CRMApp />} />
-          <Route path="/AdminPage*" element={<AdminPage />} />
+          <Route path="/AdminPage/*" element={<AdminPage />} />
         </Routes>
       </DndProvider>
 

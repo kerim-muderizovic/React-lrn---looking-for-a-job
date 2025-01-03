@@ -46,7 +46,7 @@
   width: 100%;
   max-width: 500px;
   /* box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); */
-  animation: fadeIn 0.3s ease-out;
+  /* animation: fadeIn 0.3s ease-out; */
 }
 
 /* Title Styling: Larger font and bold */
@@ -107,7 +107,7 @@
 }
 
 /* Animation for modal fade-in effect */
-@keyframes fadeIn {
+/* @keyframes fadeIn {
   0% {
     opacity: 0;
     transform: scale(0.8);
@@ -116,7 +116,7 @@
     opacity: 1;
     transform: scale(1);
   }
-}
+} */
 
 
 .modal-overlay {
@@ -140,7 +140,7 @@
   padding: 20px;
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
   text-align: center;
-  animation: fadeIn 0.3s ease-in-out;
+  /* animation: fadeIn 0.3s ease-in-out; */
 }
 
 .modal-content h3 {
@@ -199,7 +199,7 @@
 }
 
 /* Fade-in animation */
-@keyframes fadeIn {
+/* @keyframes fadeIn {
   from {
     opacity: 0;
     transform: scale(0.95);
@@ -208,7 +208,7 @@
     opacity: 1;
     transform: scale(1);
   }
-}
+} */
 
 /* Task Card Styling */
 .MDBCard {

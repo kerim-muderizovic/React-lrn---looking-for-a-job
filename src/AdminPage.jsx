@@ -13,15 +13,32 @@ import {
   MDBTableHead,
   MDBTableBody,
   MDBBtn,
+  MDBModal,
+  MDBModalHeader,
+  MDBModalFooter,
+  MDBModalBody
 } from 'mdb-react-ui-kit';
 import './AdminPage.css'; // Optional CSS file for custom styles
-
+import { useUser } from './userContext';
 export default function AdminPage() {
-  // State to store users and tasks data
+  // State to store users, tasks, and admin name
   const [users, setUsers] = useState([]);
   const [tasks, setTasks] = useState([]);
+    const { authenticatedUser, fetchAuthenticatedUser,isLoading,setIsLoading } = useUser();
+    const [modalOpen, setModalOpen] = useState(false);
+  const [selectedTask, setSelectedTask] = useState(null);
 
-  // Fetch users and tasks data on component mount
+  const toggleModal = () => setModalOpen(!modalOpen);
+
+  const showDescription = (task) => {
+    setSelectedTask(task);
+    console.log(task)
+    console.log(modalOpen);
+    toggleModal();
+  };
+  const [adminName, setAdminName] = useState('');
+
+  // Fetch users, tasks, and admin name on component mount
   useEffect(() => {
     // Replace 'users_url' and 'tasks_url' with actual API endpoints
     axios.get('http://localhost:8000/user/getAll') // URL for users data
@@ -30,16 +47,17 @@ export default function AdminPage() {
       })
       .catch(error => console.error('Error fetching users:', error));
 
-      axios.get('http://localhost:8000/getAllTasks') // URL for tasks data
+    axios.get('http://localhost:8000/getAllTasks') // URL for tasks data
       .then(response => {
-        // Check if response contains tasks array
         if (response.data && Array.isArray(response.data.tasks)) {
-          setTasks(response.data.tasks); // Set tasks data from the 'tasks' key
+          setTasks(response.data.tasks);
         } else {
           console.error('Expected an array of tasks, but got:', response.data);
         }
       })
       .catch(error => console.error('Error fetching tasks:', error));
+
+    setAdminName(authenticatedUser.name);
   }, []); // Empty dependency array to run once on mount
 
   return (
@@ -61,6 +79,9 @@ export default function AdminPage() {
             </MDBNavbarLink>
           </MDBNavbarItem>
         </MDBNavbarNav>
+        <div className="mt-4">
+          <strong>Admin:</strong> {adminName || 'Loading...'}
+        </div>
       </div>
 
       {/* Main Content */}
@@ -79,7 +100,7 @@ export default function AdminPage() {
                 </tr>
               </MDBTableHead>
               <MDBTableBody>
-                {users.map((user, index) => (
+                {users.filter((u) => u.role !== 'admin').map((user, index) => (
                   <tr key={user.id}>
                     <td>{index + 1}</td>
                     <td>{user.name}</td>
@@ -92,9 +113,11 @@ export default function AdminPage() {
                       <MDBBtn size="sm" color="danger">
                         Delete
                       </MDBBtn>
-                      <MDBBtn size="sm" color="warning">
-                        Approve
-                      </MDBBtn>
+                      {!user.approvedByAdmin && (
+                        <MDBBtn size="sm" color="warning">
+                          Approve
+                        </MDBBtn>
+                      )}
                     </td>
                   </tr>
                 ))}
@@ -104,39 +127,81 @@ export default function AdminPage() {
         </MDBRow>
 
         <h2 className="my-4">Task Management</h2>
-        <MDBRow>
-          <MDBCol>
-            <MDBTable responsive striped hover>
-              <MDBTableHead>
-                <tr>
-                  <th>#</th>
-                  <th>Task Name</th>
-                  <th>Assigned User</th>
-                  <th>Status</th>
-                  <th>Actions</th>
+      <div className="row">
+        <div className="col">
+          <table className="table table-striped table-hover">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Task Name</th>
+                <th>Description</th>
+                <th>Assigned User</th>
+                <th>Status</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {tasks.map((task, index) => (
+                <tr key={task.id}>
+                  <td>{index + 1}</td>
+                  <td>{task.title}</td>
+                  <td>
+                    <button
+                      className="btn btn-sm btn-info"
+                      onClick={() => showDescription(task)}
+                    >
+                      Show Description
+                    </button>
+                  </td>
+                  <td>
+                    {task.assigned_users && task.assigned_users.length > 0
+                      ? task.assigned_users.map((user) => user.name).join(', ')
+                      : 'No users assigned'}
+                  </td>
+                  <td>{task.progress} %</td>
+                  <td>
+                    <button className="btn btn-sm btn-primary me-2">Edit</button>
+                    <button className="btn btn-sm btn-danger">Delete</button>
+                  </td>
                 </tr>
-              </MDBTableHead>
-              <MDBTableBody>
-                {tasks.map((task, index) => (
-                  <tr key={task.id}>
-                    <td>{index + 1}</td>
-                    <td>{task.name}</td>
-                    <td>{task.assignedUser}</td>
-                    <td>{task.status}</td>
-                    <td>
-                      <MDBBtn size="sm" color="primary" className="me-2">
-                        Edit
-                      </MDBBtn>
-                      <MDBBtn size="sm" color="danger">
-                        Delete
-                      </MDBBtn>
-                    </td>
-                  </tr>
-                ))}
-              </MDBTableBody>
-            </MDBTable>
-          </MDBCol>
-        </MDBRow>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      {/* Modal for Description */}
+      {selectedTask && (
+        <div
+          className={`modal fade ${modalOpen ? 'show d-block' : ''}`}
+          tabIndex="-1"
+          style={{ backgroundColor: modalOpen ? 'rgba(0, 0, 0, 0.5)' : 'none' }}
+        >
+          <div className="modal-dialog">
+            <div className="modal-content">
+              <div className="modal-header">
+                <h5 className="modal-title">
+                  Task Description - {selectedTask.title}
+                </h5>
+              </div>
+              <div className="modal-body">
+                {selectedTask.description
+                  ? selectedTask.description
+                  : 'No description available.'}
+              </div>
+              <div className="modal-footer">
+                <button
+                  type="button"
+                  className="btn btn-secondary"
+                  onClick={toggleModal}
+                >
+                  Close
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
       </MDBContainer>
     </div>
   );

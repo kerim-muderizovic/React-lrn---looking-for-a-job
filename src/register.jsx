@@ -56,7 +56,7 @@ export default function Register() {
           'Content-Type': 'application/json',
         },
       });
-      setSuccess('Registration successful! Please log in.');
+      setSuccess('Registration successful! Check your email box.');
     } catch (err) {
       if (err.response) {
         setError(err.response.data.message || 'Registration failed');

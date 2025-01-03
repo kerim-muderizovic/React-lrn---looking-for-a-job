@@ -32,25 +32,37 @@ export default function Login({setIsLoggedIn,setView}) {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError(null);
-
+  
     try {
       const response = await axios.post('http://localhost:8000/loginn', formData, {
           withXSRFToken: true,
           headers: { 'Content-Type': 'application/json' },
           withCredentials: true, 
       });
-      navigate('/crm'); // Replace '/dashboard' with your target route
+  
+      // Store the user and role from the response
+      const { user } = response.data;
+  
+      // Example: save user role in a context or state
+      if (user.role === 'admin') {
+        navigate('/adminPage/*');
+   window.location.reload();  // Navigate to CRM if user is not admin
+   // Navigate to the admin page if user is an admin
+      } else {
+   navigate('/crm');
+   window.location.reload();  // Navigate to CRM if user is not admin
+      }
       console.log('Login success', response);
-  } catch (err) {
+    } catch (err) {
       console.error('Login error', err);
       if (err.response) {
           setError(err.response.data.message || 'Login failed');
       } else {
           setError('An error occurred. Please try again.');
       }
-  }
-  
+    }
   };
+  
 
   return (
     <div className="login-page">

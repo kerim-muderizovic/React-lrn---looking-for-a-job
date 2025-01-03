@@ -14,26 +14,19 @@ import {
 import './navbar.css';
 import { Link } from 'react-router-dom';
 import { useUser } from './userContext';
-
+import { useNavigate } from 'react-router-dom';
 export default function Navbar({ setView }) {
   const { authenticatedUser, fetchAuthenticatedUser,isLoading,setIsLoading } = useUser();
-  const isMounted = useRef(false);
   // Fetch the user once when the component mounts
+  const navigate = useNavigate(); // Initialize useNavigate
   useEffect(() => {
     const loadUser = async () => {
       try {
-        setIsLoading(true); // Set loading to true before the fetch
         await fetchAuthenticatedUser(); // Fetch user data
       } catch (error) {
         console.error('Error fetching authenticated user:', error);
-      } finally {
-        if (isMounted.current) {
-        setIsLoading(false); // Ensure loading is false once fetch is done
-        console.log('gotovo'); // Log when the finally block is executed
-        }
-      }
+      } 
     };
-    isMounted.current = true;
     loadUser();
   }, [ setIsLoading]); // Dependency only on the fetch function (should not change)
 
@@ -47,7 +40,7 @@ export default function Navbar({ setView }) {
           withCredentials: true,
         }
       );
-      window.location.href = '/'; // Redirect to home after logout
+      navigate('/', { replace: true }); // Use navigate instead of window.location.href
     } catch (error) {
       console.error('Logout failed:', error);
     }

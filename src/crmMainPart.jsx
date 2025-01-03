@@ -228,7 +228,6 @@ export default function CRMApp() {
           <MDBNavbar light bgColor="light" className="flex-column h-100">
             {user && (
               <div style={{ textAlign: "center", marginBottom: "20px" }}>
-                          <a href="/user-profile" style={{ textDecoration: "none" }}>
                 <img className="profileImage"
                   src={user.profilePicture || "/default-avatar.png"}
                   alt={`${user.name}'s profile`}
@@ -237,9 +236,9 @@ export default function CRMApp() {
                     height: "100px",
                     borderRadius: "50%",
                     marginBottom: "10px",
-                  }}
+                  }}   onClick={() => navigate("/user-profile")}
                 />
-                </a>
+                
                 <h5>{user.name}</h5>
               </div>
             )}  
