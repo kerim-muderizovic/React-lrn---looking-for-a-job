@@ -18,35 +18,44 @@ import {
   MDBModalFooter,
   MDBModalBody
 } from 'mdb-react-ui-kit';
+import ChatWindow from './chatWindows';
+import EditModal from './editModal';
 import './AdminPage.css'; // Optional CSS file for custom styles
 import { useUser } from './userContext';
+import AddNewTaskAdmin from './addNewTask';
+const handleDeleteUser =()=>{
+    console.log('clicked')
+}
+
+
 export default function AdminPage() {
-  // State to store users, tasks, and admin name
-  const [users, setUsers] = useState([]);
-  const [tasks, setTasks] = useState([]);
-    const { authenticatedUser, fetchAuthenticatedUser,isLoading,setIsLoading } = useUser();
-    const [modalOpen, setModalOpen] = useState(false);
-  const [selectedTask, setSelectedTask] = useState(null);
-
-  const toggleModal = () => setModalOpen(!modalOpen);
-
-  const showDescription = (task) => {
-    setSelectedTask(task);
-    console.log(task)
-    console.log(modalOpen);
-    toggleModal();
+    // State to store users, tasks, and admin name
+    const [users, setUsers] = useState([]);
+    const [tasks, setTasks] = useState([]);
+    const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+    const [currentEditData, setCurrentEditData] = useState(null);
+    const [editType, setEditType] = useState(null);
+    const openEditModal = (type, data) => {
+        setEditType(type);
+        setCurrentEditData(data);
+        setIsEditModalOpen(true);
+    };
+    const [selectedChatUser, setSelectedChatUser] = useState(null);
+    const startChat = (userId) => {
+        setSelectedChatUser(userId); // Set the selected user for chat
+      };
+      
+      const closeChat = () => {
+        setSelectedChatUser(null); // Reset the selected chat user
+      };
+  const [modalAddNewTask, setModalAddNewTaskOpen] = useState(false); // Modal visibility state
+  const closeEditModal = () => {
+    setIsEditModalOpen(false);
+    setCurrentEditData(null);
+    setEditType(null);
   };
-  const [adminName, setAdminName] = useState('');
-
-  // Fetch users, tasks, and admin name on component mount
-  useEffect(() => {
-    // Replace 'users_url' and 'tasks_url' with actual API endpoints
-    axios.get('http://localhost:8000/user/getAll') // URL for users data
-      .then(response => {
-        setUsers(response.data); // Set users data to state
-      })
-      .catch(error => console.error('Error fetching users:', error));
-
+const fetchTasks=()=>
+{
     axios.get('http://localhost:8000/getAllTasks') // URL for tasks data
       .then(response => {
         if (response.data && Array.isArray(response.data.tasks)) {
@@ -56,9 +65,99 @@ export default function AdminPage() {
         }
       })
       .catch(error => console.error('Error fetching tasks:', error));
+}
+  const saveChanges = () => {
+    const url =
+      editType === "user"
+        ? `http://localhost:8000/Admin/users/${currentEditData.id}`
+        : `http://localhost:8000/Admin/tasks/${currentEditData.id}`;
+  
+    axios
+      .put(
+        url,
+        currentEditData, // Request payload
+        {
+          withCredentials: true,
+          withXSRFToken:true,
+        }
+      )
+      .then((response) => {
+        alert(`${editType === "user" ? "User" : "Task"} updated successfully!`);
+        closeEditModal();
+        // Optionally refetch data
+        fetchTasks();
+        
+      })
+      .catch((error) => console.error(`Error updating ${editType}:`, error));
+  };
+  
 
-    setAdminName(authenticatedUser.name);
+    // const { authenticatedUser, fetchAuthenticatedUser,isLoading,setIsLoading } = useUser();
+      const { authenticatedUser } = useUser(); // Access the authenticated user from context
+    
+    const [modalOpen, setModalOpen] = useState(false);
+  const [selectedTask, setSelectedTask] = useState(null);
+
+  const toggleModal = () => setModalOpen(!modalOpen);
+
+  const showDescription = (task) => {
+    setSelectedTask(task);
+    console.log(task);
+    console.log(modalOpen);
+    toggleModal();
+  };
+  const [adminName, setAdminName] = useState('');
+  const handleDeleteTask =(taskId) =>{
+    axios.delete(`http://localhost:8000/Admin/tasks/${taskId}`, {
+        withCredentials: true,
+        withXSRFToken: true,
+      }).then((res)=>{
+          fetchTasks();
+          console.log('uspjesno izbrisan task!!!!').catch(err=>console.error('velika kita'));
+     })
+}
+  // Fetch users, tasks, and admin name on component mount
+  useEffect(() => {
+    
+    const fetchAuthStatus = async () => {
+        try {
+          await axios.get("http://localhost:8000/sanctum/csrf-cookie", {
+            withCredentials: true,
+          });
+  
+          const authResponse = await axios.get("http://localhost:8000/auth/check", {
+            withCredentials: true,
+          });
+          console.log(authResponse);
+          setIsAuthenticated(authResponse.data.isLoggedIn);
+          if (authResponse.data.isLoggedIn) {
+            setUser(authResponse.data.user);
+          }
+        } catch (error) {
+          console.error("Error checking authentication status:", error);
+          setIsAuthenticated(false);
+        } finally {
+          setAuthChecked(true);
+        }
+        
+      };
+      fetchAuthStatus();
+fetchTasks();
+        console.log('ucitANI U OVOM SRANJU:',authenticatedUser);
+        setAdminName(authenticatedUser.name)
+    // Replace 'users_url' and 'tasks_url' with actual API endpoints
+    axios.get('http://localhost:8000/user/getAll') // URL for users data
+      .then(response => {
+        setUsers(response.data); // Set users data to state
+      })
+      .catch(error => console.error('Error fetching users:', error));
+
+    
+     
+
   }, []); // Empty dependency array to run once on mount
+const toggleModalAddNewTask =()=>setModalAddNewTaskOpen(!modalAddNewTask);
+
 
   return (
     <div className="d-flex">
@@ -82,6 +181,9 @@ export default function AdminPage() {
         <div className="mt-4">
           <strong>Admin:</strong> {adminName || 'Loading...'}
         </div>
+        
+<AddNewTaskAdmin users={users} /> {/* This component handles the task creation modal */}
+
       </div>
 
       {/* Main Content */}
@@ -107,10 +209,19 @@ export default function AdminPage() {
                     <td>{user.email}</td>
                     <td>{user.role}</td>
                     <td>
-                      <MDBBtn size="sm" color="primary" className="me-2">
+                    <td>
+  <MDBBtn
+    size="sm"
+    color="info"
+    onClick={() => startChat(user.id)}
+  >
+    Chat
+  </MDBBtn>
+</td>
+                      <MDBBtn size="sm" color="primary" className="me-2" onClick={() => openEditModal("user", user)}>
                         Edit
                       </MDBBtn>
-                      <MDBBtn size="sm" color="danger">
+                      <MDBBtn size="sm" color="danger" onClick={handleDeleteUser()}>
                         Delete
                       </MDBBtn>
                       {!user.approvedByAdmin && (
@@ -160,8 +271,8 @@ export default function AdminPage() {
                   </td>
                   <td>{task.progress} %</td>
                   <td>
-                    <button className="btn btn-sm btn-primary me-2">Edit</button>
-                    <button className="btn btn-sm btn-danger">Delete</button>
+                    <button className="btn btn-sm btn-primary me-2"  onClick={() => openEditModal("task", task)}>Edit</button>
+                    <button className="btn btn-sm btn-danger" onClick={()=>handleDeleteTask(task.id)}>Delete</button>
                   </td>
                 </tr>
               ))}
@@ -169,6 +280,15 @@ export default function AdminPage() {
           </table>
         </div>
       </div>
+      <EditModal
+        isOpen={isEditModalOpen}
+        type={editType}
+        data={currentEditData}
+        onChange={setCurrentEditData}
+        onSave={saveChanges}
+        onClose={closeEditModal}
+      />
+    
 
       {/* Modal for Description */}
       {selectedTask && (
@@ -202,6 +322,15 @@ export default function AdminPage() {
           </div>
         </div>
       )}
+{selectedChatUser && (
+  <ChatWindow
+  userId={authenticatedUser.id}
+  receiverId={selectedChatUser}
+  onClose={closeChat}
+/>
+)}
+      <MDBRow>
+      </MDBRow>
       </MDBContainer>
     </div>
   );

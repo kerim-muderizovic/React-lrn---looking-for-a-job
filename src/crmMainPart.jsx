@@ -15,6 +15,7 @@ import {
   MDBProgress,
   MDBProgressBar,
 } from "mdb-react-ui-kit";
+import ChatWindow from "./chatWindows";
 import { useUser } from "./userContext";
 import Login from "./login";
 import "./crmMainPart.css";
@@ -98,6 +99,7 @@ export default function CRMApp() {
         const authResponse = await axios.get("http://localhost:8000/auth/check", {
           withCredentials: true,
         });
+        console.log('response autha',authResponse.data);
         setIsAuthenticated(authResponse.data.isLoggedIn);
         if (authResponse.data.isLoggedIn) {
           setUser(authResponse.data.user);
@@ -222,12 +224,15 @@ export default function CRMApp() {
           </MDBBtn>
         </div>
       )}
-
+<ChatWindow userId={authenticatedUser.id} receiverId={2} onClose={false}>
+  
+</ChatWindow>
       <MDBRow className="h-100">
         <MDBCol size="3" className="bg-light p-3">
           <MDBNavbar light bgColor="light" className="flex-column h-100">
             {user && (
               <div style={{ textAlign: "center", marginBottom: "20px" }}>
+                        
                 <img className="profileImage"
                   src={user.profilePicture || "/default-avatar.png"}
                   alt={`${user.name}'s profile`}
