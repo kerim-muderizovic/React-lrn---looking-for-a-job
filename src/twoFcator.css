@@ -1,0 +1,21 @@
+html, body {
+    height: 100% !important;
+    margin: 0 !important;
+  }
+  .imgLogin{
+    width: 600px !important;
+    margin-left: 17% !important; /* Moves image away from the left */
+  margin-bottom: 100px !important;
+
+  }
+
+  .two-factor-auth {
+    min-height: 100vh !important;
+    overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        background: linear-gradient(to right, #6a11cb, #2575fc); /* Adds a cool gradient */
+        color: white;
+  }

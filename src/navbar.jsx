@@ -28,7 +28,7 @@ export default function Navbar({ setView }) {
       } 
     };
     loadUser();
-  }, [ setIsLoading]); // Dependency only on the fetch function (should not change)
+  }, [ fetchAuthenticatedUser]); // Dependency only on the fetch function (should not change)
 
   const handleLogout = async () => {
     try {

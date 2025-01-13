@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom'; // Import Navigate
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import './App.css';
 import Navbar from './navbar';
 import Footer from './footer';
@@ -10,10 +10,12 @@ import '../node_modules/bootstrap/dist/css/bootstrap.min.css';
 import UserProfile from './user-profile';
 import AdminPage from './AdminPage';
 import AddTaskModal from './taskModal';
-import { UserProvider, useUser } from './userContext'; // Import the UserProvider and useUser
+import { UserProvider, useUser } from './userContext';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import { ClipLoader } from 'react-spinners';
+import TwoFactorAuth from './TwoFactor';
+
 function AppContent() {
   const { authenticatedUser } = useUser(); // Access the user context
 
@@ -40,6 +42,7 @@ function AppContent() {
           <Route path="/register" element={<Register />} />
           <Route path="/crm/*" element={<CRMApp />} />
           <Route path="/AdminPage/*" element={<AdminPage />} />
+          <Route path="/2fa" element={<TwoFactorAuth />} /> {/* Add 2FA route */}
         </Routes>
       </DndProvider>
 

@@ -224,9 +224,7 @@ export default function CRMApp() {
           </MDBBtn>
         </div>
       )}
-<ChatWindow userId={authenticatedUser.id} receiverId={2} onClose={false}>
-  
-</ChatWindow>
+
       <MDBRow className="h-100">
         <MDBCol size="3" className="bg-light p-3">
           <MDBNavbar light bgColor="light" className="flex-column h-100">

@@ -41,19 +41,29 @@ export default function Login({setIsLoggedIn,setView}) {
       });
   
       // Store the user and role from the response
+      console.log('Response received:', response.data);
       const { user } = response.data;
-  
-      // Example: save user role in a context or state
+      const { requires_2fa } = user; // Extract requires_2fa from user
+      console.log('evo odg::::::', requires_2fa);
+console.log(requires_2fa);
+    if (requires_2fa)
+       {
+      navigate('/2fa'); // Navigate to the 2FA route
+    } 
+    else
+     {
       if (user.role === 'admin') {
-        navigate('/adminPage/*');
-   window.location.reload();  // Navigate to CRM if user is not admin
-   // Navigate to the admin page if user is an admin
-      } else {
-   navigate('/crm');
-   window.location.reload();  // Navigate to CRM if user is not admin
+        navigate('/AdminPage/*');
+        window.location.reload();
+      } 
+      else {
+        navigate('/crm');
+        window.location.reload();
       }
+    }
       console.log('Login success', response);
-    } catch (err) {
+    } 
+    catch (err) {
       console.error('Login error', err);
       if (err.response) {
           setError(err.response.data.message || 'Login failed');
