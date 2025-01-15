@@ -19,45 +19,67 @@ export const UserProvider = ({ children }) => {
   };
 
   const fetchAuthenticatedUser = async () => {
+    setIsLoading(true); // Start loading
     try {
-      // Ensure CSRF token is set first
-      await fetchCsrfToken();
-  
-      // Now make the request to get the authenticated user
+      await fetchCsrfToken(); // Ensure CSRF token is set
       const response = await axios.get('http://localhost:8000/api/user', {
         withCredentials: true,
       });
-  
       setAuthenticatedUser(response.data); // Update state with user data
       console.log('Authenticated user response:', response.data);
-      
     } catch (err) {
       console.error('Failed to fetch authenticated user:', err);
-      
-      setAuthenticatedUser(false); // Explicitly set to false if unauthenticated
-    } finally {
-      setIsLoading(false); // Always end loading state
+      setAuthenticatedUser(null); // Explicitly set user to null if unauthenticated
+    } 
+    setIsLoading(false); // End loading
+  };
+
+  const login = async (credentials) => {
+    try {
+      const response = await axios.post('http://localhost:8000/loginn', credentials, {
+        withXSRFToken: true,
+        headers: { 'Content-Type': 'application/json' },
+        withCredentials: true,
+      });
+  
+      const { user } = response.data;
+      setAuthenticatedUser(user); // Update the authenticated user state immediately
+      return user; // Return user for navigation or further actions
+    } catch (error) {
+      throw error; // Let the calling component handle the error
     }
   };
   
 
+  const logout = async () => {
+    setIsLoading(true); // Start loading
+    setAuthenticatedUser(null);
+    try {
+      await axios.post('http://localhost:8000/logout', {}, {
+        withXSRFToken: true,
+        withCredentials: true,
+      });
+    } catch (error) {
+      console.error('Logout failed:', error);
+    }
+    setIsLoading(false); // End loading
+  };
+
+  // Fetch user data once when the app initializes
   useEffect(() => {
-    const fetchUserData = async () => {
-      await fetchCsrfToken();
+    const initialize = async () => {
       await fetchAuthenticatedUser();
     };
-
-    fetchUserData();
+    initialize();
   }, []);
 
   if (isLoading) {
     return <div>Loading...</div>; // Optionally replace with a spinner
   }
 
-
   return (
-    <UserContext.Provider value={{ authenticatedUser, fetchAuthenticatedUser }}>
-                  {children}
+    <UserContext.Provider value={{ authenticatedUser, fetchAuthenticatedUser, login, logout, isLoading }}>
+      {children}
     </UserContext.Provider>
   );
 };

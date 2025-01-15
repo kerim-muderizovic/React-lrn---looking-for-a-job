@@ -19,8 +19,9 @@ import ChatWindow from "./chatWindows";
 import { useUser } from "./userContext";
 import Login from "./login";
 import "./crmMainPart.css";
+import { useAuth } from "./AuthContext";
 export default function CRMApp() {
-  const { authenticatedUser } = useUser(); // Access the authenticated user from context
+  const { authUser } = useAuth(); // Access the authenticated user from context
   const [newTask, setNewTask] = useState({
     title: "",
     description: "",
@@ -179,9 +180,9 @@ export default function CRMApp() {
         description: "",
         priority: "Low",
         progress: 0,
-        users: authenticatedUser ? [authenticatedUser.id] : [],
+        users: authUser ? [authUser.id] : [],
       });
-      console.log('when adding task authUser is ', authenticatedUser);
+      console.log('when adding task authUser is ', authUser);
     } catch (error) {
       console.error("Error adding task:", error);
     }

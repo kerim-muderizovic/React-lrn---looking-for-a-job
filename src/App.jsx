@@ -15,18 +15,20 @@ import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import { ClipLoader } from 'react-spinners';
 import TwoFactorAuth from './TwoFactor';
+import { AuthProvider } from './AuthContext';
 
 function AppContent() {
-  const { authenticatedUser } = useUser(); // Access the user context
+  const { authenticatedUser } = useUser(); 
+  // Access the user context
 
   // Show a loading spinner if the user context is still fetching the data
-  if (authenticatedUser === null) {
-    return <ClipLoader color="#36d7b7" size={150} />;
-  }
+  // if (authenticatedUser === null) {
+  //   return <ClipLoader color="#36d7b7" size={150} />;
+  // }
 
   return (
     <div>
-      <Navbar isLoggedIn={!!authenticatedUser} />
+      <Navbar/>
 
       <DndProvider backend={HTML5Backend}>
         <Routes>
@@ -53,11 +55,14 @@ function AppContent() {
 
 function App() {
   return (
+    <AuthProvider>
     <UserProvider>
       <Router>
         <AppContent />
       </Router>
     </UserProvider>
+    </AuthProvider>
+
   );
 }
 

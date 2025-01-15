@@ -1,107 +1,73 @@
-import React, { useEffect, useState } from 'react';
-import axios from 'axios';
-import { useRef } from 'react';
+import React from 'react';
 import {
   MDBNavbar,
   MDBContainer,
   MDBNavbarBrand,
-  MDBNavbarToggler,
   MDBNavbarNav,
   MDBNavbarItem,
   MDBNavbarLink,
-  MDBCollapse
+  MDBCollapse,
 } from 'mdb-react-ui-kit';
-import './navbar.css';
-import { Link } from 'react-router-dom';
-import { useUser } from './userContext';
 import { useNavigate } from 'react-router-dom';
-export default function Navbar({ setView }) {
-  const { authenticatedUser, fetchAuthenticatedUser,isLoading,setIsLoading } = useUser();
-  // Fetch the user once when the component mounts
-  const navigate = useNavigate(); // Initialize useNavigate
-  useEffect(() => {
-    const loadUser = async () => {
-      try {
-        await fetchAuthenticatedUser(); // Fetch user data
-      } catch (error) {
-        console.error('Error fetching authenticated user:', error);
-      } 
-    };
-    loadUser();
-  }, [ fetchAuthenticatedUser]); // Dependency only on the fetch function (should not change)
+import { useAuth } from './AuthContext'; // Import the AuthContext
+
+export default function Navbar() {
+  const navigate = useNavigate();
+  const { authUser, logout } = useAuth(); // Extract authUser and logout from AuthContext
 
   const handleLogout = async () => {
-    try {
-      await axios.post(
-        'http://localhost:8000/logout',
-        {},
-        {
-          withXSRFToken: true,
-          withCredentials: true,
-        }
-      );
-      navigate('/', { replace: true }); // Use navigate instead of window.location.href
-    } catch (error) {
-      console.error('Logout failed:', error);
-    }
+    await logout(); // Ensure logout action
+    navigate('/'); // Redirect to the home page
   };
 
-  const handleScrollToContact = () => {
-    window.scrollTo({
-      top: document.body.scrollHeight,
-      behavior: 'smooth',
-    });
+  const handleLogin = () => {
+    navigate('/login');
+  };
+
+  const handleRegister = () => {
+    navigate('/register');
   };
 
   return (
-    <MDBNavbar expand='lg' light bgColor='light'>
+    <MDBNavbar expand="lg" light bgColor="light">
       <MDBContainer fluid>
-        <div className="d-flex w-100 justify-content-between align-items-center">
-          <MDBNavbarBrand href='/' className='ms-3'>
-            <img src="https://www.con2cus.de/img/c2c.svg" style={{ width: '100px', height: 'auto' }} alt="Brand Logo" />
-          </MDBNavbarBrand>
-
-          <MDBNavbarToggler
-            aria-controls='navbarSupportedContent'
-            aria-expanded='false'
-            aria-label='Toggle navigation'
-          >
-            <span className='navbar-toggler-icon'></span>
-          </MDBNavbarToggler>
-        </div>
+        <MDBNavbarBrand href="/" className="ms-3">
+          <img
+            src="https://www.con2cus.de/img/c2c.svg"
+            style={{ width: '100px', height: 'auto' }}
+            alt="Brand Logo"
+          />
+        </MDBNavbarBrand>
 
         <MDBCollapse navbar>
-          <MDBNavbarNav className='ms-auto d-flex align-items-center'>
-            <MDBNavbarItem>
-              <MDBNavbarLink active aria-current='page' as={Link} to='/'>
-                Home
-              </MDBNavbarLink>
-            </MDBNavbarItem>
-            <MDBNavbarItem>
-              <MDBNavbarLink onClick={handleScrollToContact}>Contact</MDBNavbarLink>
-            </MDBNavbarItem>
-
-            <div className='d-flex gap-2 ms-3'>
-              {isLoading ? (
-                <div>Loading...</div>
-              ) : authenticatedUser ? (
-                <button
-                  className='btn btn-link nav-link'
-                  onClick={handleLogout}
-                >
-                  Logout
-                </button>
-              ) : (
-                <>
-                  <Link to='/register' className='btn btn-link nav-link'>
-                    Register
-                  </Link>
-                  <Link to='/login' className='btn btn-link nav-link'>
+          <MDBNavbarNav className="ms-auto d-flex align-items-center">
+            {authUser ? ( // Conditionally render based on authUser
+              <>
+                <MDBNavbarItem>
+                  <span className="navbar-text me-3">
+                    Welcome, {authUser.name || 'User'}!
+                  </span>
+                </MDBNavbarItem>
+                <MDBNavbarItem>
+                  <MDBNavbarLink onClick={handleLogout} className="btn btn-link nav-link">
+                    Logout
+                  </MDBNavbarLink>
+                </MDBNavbarItem>
+              </>
+            ) : (
+              <>
+                <MDBNavbarItem>
+                  <MDBNavbarLink onClick={handleLogin} className="btn btn-link nav-link">
                     Sign In
-                  </Link>
-                </>
-              )}
-            </div>
+                  </MDBNavbarLink>
+                </MDBNavbarItem>
+                <MDBNavbarItem>
+                  <MDBNavbarLink onClick={handleRegister} className="btn btn-link nav-link">
+                    Register
+                  </MDBNavbarLink>
+                </MDBNavbarItem>
+              </>
+            )}
           </MDBNavbarNav>
         </MDBCollapse>
       </MDBContainer>

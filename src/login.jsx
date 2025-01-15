@@ -1,19 +1,21 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import axios from 'axios';
-import { 
-  MDBContainer, 
-  MDBCol, 
-  MDBRow, 
-  MDBBtn, 
-  MDBIcon, 
-  MDBInput, 
-  MDBCheckbox 
+import { useNavigate } from 'react-router-dom';
+import { useAuth } from './AuthContext'; // Import AuthContext
+import {
+  MDBContainer,
+  MDBCol,
+  MDBRow,
+  MDBBtn,
+  MDBInput,
+  MDBCheckbox,
+  MDBIcon,
 } from 'mdb-react-ui-kit';
 import './login.css';
-import  {useNavigate}  from 'react-router-dom';
 
-export default function Login({setIsLoggedIn,setView}) {
-  const navigate = useNavigate(); // Hook to navigate programmatically
+export default function Login() {
+  const { login } = useAuth(); // Use the login function from AuthContext
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     email: '',
     password: '',
@@ -32,44 +34,25 @@ export default function Login({setIsLoggedIn,setView}) {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError(null);
+    setLoading(true);
   
     try {
-      const response = await axios.post('http://localhost:8000/loginn', formData, {
-          withXSRFToken: true,
-          headers: { 'Content-Type': 'application/json' },
-          withCredentials: true, 
-      });
+      // Use the login function from AuthContext to handle the authentication
+      const user = await login(formData); // Pass formData to login
   
-      // Store the user and role from the response
-      console.log('Response received:', response.data);
-      const { user } = response.data;
-      const { requires_2fa } = user; // Extract requires_2fa from user
-      console.log('evo odg::::::', requires_2fa);
-console.log(requires_2fa);
-    if (requires_2fa)
-       {
-      navigate('/2fa'); // Navigate to the 2FA route
-    } 
-    else
-     {
-      if (user.role === 'admin') {
-        navigate('/AdminPage/*');
-        window.location.reload();
-      } 
-      else {
-        navigate('/crm');
-        window.location.reload();
-      }
-    }
-      console.log('Login success', response);
-    } 
-    catch (err) {
-      console.error('Login error', err);
-      if (err.response) {
-          setError(err.response.data.message || 'Login failed');
+      // Redirect based on user role or 2FA status
+      if (user.requires_2fa) {
+        navigate('/2fa'); // Navigate to the 2FA route
+      } else if (user.role === 'admin') {
+        navigate('/AdminPage/*'); // Navigate to admin page
       } else {
-          setError('An error occurred. Please try again.');
+        navigate('/crm'); // Navigate to CRM dashboard
       }
+    } catch (err) {
+      console.error('Login error:', err);
+      setError(err.response?.data?.message || 'Login failed');
+    } finally {
+      setLoading(false);
     }
   };
   
@@ -78,25 +61,25 @@ console.log(requires_2fa);
     <div className="login-page">
       <MDBContainer fluid className="h-custom">
         <MDBRow className="align-items-center justify-content-center">
-          <MDBCol col='10' md='6'>
-            <img 
-              src="https://www.con2cus.de/img/c2c.svg" 
-              className="imgLogin" 
-              alt="Sample" 
+          <MDBCol col="10" md="6">
+            <img
+              src="https://www.con2cus.de/img/c2c.svg"
+              className="imgLogin"
+              alt="Sample"
             />
           </MDBCol>
 
-          <MDBCol col='4' md='6'>
+          <MDBCol col="4" md="6">
             <div className="d-flex flex-row align-items-center justify-content-center">
               <p className="lead fw-normal mb-0 me-3">Sign in with</p>
-              <MDBBtn floating size='md' tag='a' className='me-2'>
-                <MDBIcon fab icon='facebook-f' />
+              <MDBBtn floating size="md" tag="a" className="me-2">
+                <MDBIcon fab icon="facebook-f" />
               </MDBBtn>
-              <MDBBtn floating size='md' tag='a' className='me-2'>
-                <MDBIcon fab icon='twitter' />
+              <MDBBtn floating size="md" tag="a" className="me-2">
+                <MDBIcon fab icon="twitter" />
               </MDBBtn>
-              <MDBBtn floating size='md' tag='a' className='me-2'>
-                <MDBIcon fab icon='linkedin-in' />
+              <MDBBtn floating size="md" tag="a" className="me-2">
+                <MDBIcon fab icon="linkedin-in" />
               </MDBBtn>
             </div>
 
@@ -105,47 +88,52 @@ console.log(requires_2fa);
             </div>
 
             <form onSubmit={handleSubmit}>
-              <MDBInput 
-                wrapperClass='mb-4' 
-                label='Email address' 
-                id='formControlLg' 
-                type='email' 
-                size="lg" 
-                name="email" 
-                value={formData.email} 
-                onChange={handleChange} 
+              <MDBInput
+                wrapperClass="mb-4"
+                label="Email address"
+                id="formControlLg"
+                type="email"
+                size="lg"
+                name="email"
+                value={formData.email}
+                onChange={handleChange}
                 required
               />
-              <MDBInput 
-                wrapperClass='mb-4' 
-                label='Password' 
-                id='formControlLg' 
-                type='password' 
-                size="lg" 
-                name="password" 
-                value={formData.password} 
-                onChange={handleChange} 
+              <MDBInput
+                wrapperClass="mb-4"
+                label="Password"
+                id="formControlLg"
+                type="password"
+                size="lg"
+                name="password"
+                value={formData.password}
+                onChange={handleChange}
                 required
               />
 
               <div className="d-flex justify-content-between mb-4">
-                <MDBCheckbox 
-                  name='flexCheck' 
-                  value='' 
-                  id='flexCheckDefault' 
-                  label='Remember me' 
+                <MDBCheckbox
+                  name="flexCheck"
+                  value=""
+                  id="flexCheckDefault"
+                  label="Remember me"
                 />
-                <a href="/forgot-password" className='fPassword'>Forgot password?</a>
+                <a href="/forgot-password" className="fPassword">
+                  Forgot password?
+                </a>
               </div>
 
               {error && <p className="text-danger">{error}</p>}
 
-              <div className='text-center text-md-start mt-4 pt-2'>
-                <MDBBtn className="mb-0 px-5" size='lg' type="submit" disabled={loading}>
+              <div className="text-center text-md-start mt-4 pt-2">
+                <MDBBtn className="mb-0 px-5" size="lg" type="submit" disabled={loading}>
                   {loading ? 'Logging in...' : 'Login'}
                 </MDBBtn>
                 <p className="small fw-bold mt-2 pt-1 mb-2">
-                  Don't have an account? <a href="/register" className="link-danger"  onClick={(e) =>{ e.preventDefault(); setView('register')}}>Register</a>
+                  Don't have an account?{' '}
+                  <a href="/register" className="link-danger">
+                    Register
+                  </a>
                 </p>
               </div>
             </form>

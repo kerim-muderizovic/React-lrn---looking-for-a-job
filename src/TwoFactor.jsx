@@ -3,11 +3,13 @@ import axios from 'axios';
 import { MDBContainer, MDBRow, MDBCol, MDBInput, MDBBtn } from 'mdb-react-ui-kit';
 import './twoFcator.css';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from './AuthContext';
 export default function TwoFactorAuth({ setView }) {
   const [code, setCode] = useState('');
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
   const navigate=useNavigate();
+  const {setauthUser,logout}=useAuth();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -30,7 +32,9 @@ export default function TwoFactorAuth({ setView }) {
       }
     } catch (err) {
       console.error('2FA verification error', err);
+      logout();
       setError(err.response?.data?.message || 'You entered invalid code. Log in and try again!!!');
+
       setTimeout(() => {
         navigate('/login');
       }, 5000); // 5000ms = 5 seconds
