@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   MDBNavbar,
   MDBContainer,
@@ -9,15 +9,23 @@ import {
   MDBCollapse,
 } from 'mdb-react-ui-kit';
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from './AuthContext'; // Import the AuthContext
+import { useAuth } from './AuthContext';
 
 export default function Navbar() {
+  const { logout, authUser } = useAuth();
   const navigate = useNavigate();
-  const { authUser, logout } = useAuth(); // Extract authUser and logout from AuthContext
+
+  // Local state to track login status
+  const [isLoggedIn, setIsLoggedIn] = useState(authUser?.isLoggedIn || false);
+
+  useEffect(() => {
+    // Update local state whenever authUser changes
+    setIsLoggedIn(authUser?.isLoggedIn || false);
+  }, [authUser]);
 
   const handleLogout = async () => {
-    await logout(); // Ensure logout action
-    navigate('/'); // Redirect to the home page
+    await logout();
+    navigate('/'); // Navigate to the home page
   };
 
   const handleLogin = () => {
@@ -41,19 +49,12 @@ export default function Navbar() {
 
         <MDBCollapse navbar>
           <MDBNavbarNav className="ms-auto d-flex align-items-center">
-            {authUser ? ( // Conditionally render based on authUser
-              <>
-                <MDBNavbarItem>
-                  <span className="navbar-text me-3">
-                    Welcome, {authUser.name || 'User'}!
-                  </span>
-                </MDBNavbarItem>
-                <MDBNavbarItem>
-                  <MDBNavbarLink onClick={handleLogout} className="btn btn-link nav-link">
-                    Logout
-                  </MDBNavbarLink>
-                </MDBNavbarItem>
-              </>
+            {isLoggedIn ? (
+              <MDBNavbarItem>
+                <MDBNavbarLink onClick={handleLogout} className="btn btn-link nav-link">
+                  Logout
+                </MDBNavbarLink>
+              </MDBNavbarItem>
             ) : (
               <>
                 <MDBNavbarItem>

@@ -16,12 +16,11 @@ import {
   MDBProgressBar,
 } from "mdb-react-ui-kit";
 import ChatWindow from "./chatWindows";
-import { useUser } from "./userContext";
 import Login from "./login";
 import "./crmMainPart.css";
 import { useAuth } from "./AuthContext";
 export default function CRMApp() {
-  const { authUser } = useAuth(); // Access the authenticated user from context
+  const { authUser,fetchAuthenticatedUser } = useAuth(); // Access the authenticated user from context
   const [newTask, setNewTask] = useState({
     title: "",
     description: "",
@@ -91,38 +90,10 @@ export default function CRMApp() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const fetchAuthStatus = async () => {
-      try {
-        await axios.get("http://localhost:8000/sanctum/csrf-cookie", {
-          withCredentials: true,
-        });
-
-        const authResponse = await axios.get("http://localhost:8000/auth/check", {
-          withCredentials: true,
-        });
-        console.log('response autha',authResponse.data);
-        setIsAuthenticated(authResponse.data.isLoggedIn);
-        if (authResponse.data.isLoggedIn) {
-          setUser(authResponse.data.user);
-        }
-      } catch (error) {
-        console.error("Error checking authentication status:", error);
-        setIsAuthenticated(false);
-      } finally {
-        setAuthChecked(true);
-      }
-      
-    };
 
     const fetchTasks = async () => {
       try {
-        // Check authentication status
-        // const authCheckResponse = await axios.get('http://localhost:8000/auth/check', {
-        //   withCredentials: true,
-        // });
-        // console.log('Authentication check response:', authCheckResponse.data);
-    
-        // Fetch tasks
+     
         const tasksResponse = await axios.get("http://localhost:8000/getUserTasks", {
           withCredentials: true,
         });
@@ -134,18 +105,7 @@ export default function CRMApp() {
         console.error("Error fetching tasks:", error);
       }
     };
-    // const updateTaskProgress = async (taskId, newProgress) => {
-    //   try {
-    //     await axios.put(`/tasks/${taskId}`, { progress: newProgress });
-    //     setUpdatedTasks((prevTasks) =>
-    //       prevTasks.map((task) =>
-    //         task.id === taskId ? { ...task, progress: newProgress } : task
-    //       )
-    //     );
-    //   } catch (error) {
-    //     console.error("Error updating task progress:", error);
-    //   }
-    // };
+
     const fetchUsers = async () => {
       try {
         const { data } = await axios.get("http://localhost:8000/assignable-users", {
@@ -156,8 +116,8 @@ export default function CRMApp() {
         console.error("Error fetching users:", error);
       }
     };
+     axios.get('http://localhost:8000/sanctum/csrf-cookie', { withCredentials: true });
 
-    fetchAuthStatus();
     fetchTasks();
     fetchUsers();
   }, []);
@@ -190,7 +150,7 @@ export default function CRMApp() {
 
   const toggleModal = () => setModalOpen((prev) => !prev);
 
-  if (!authChecked) {
+  if (!authUser.isLoggedIn) {
     return <div>Loading...</div>;
   }
 
@@ -202,7 +162,7 @@ export default function CRMApp() {
 
   return (
     <MDBContainer fluid className="vh-100">
-      {!isAuthenticated && (
+      {!authUser.isLoggedIn && (
         <div
           style={{
             position: "absolute",
@@ -229,12 +189,12 @@ export default function CRMApp() {
       <MDBRow className="h-100">
         <MDBCol size="3" className="bg-light p-3">
           <MDBNavbar light bgColor="light" className="flex-column h-100">
-            {user && (
+            {authUser.isLoggedIn && (
               <div style={{ textAlign: "center", marginBottom: "20px" }}>
                         
                 <img className="profileImage"
-                  src={user.profilePicture || "/default-avatar.png"}
-                  alt={`${user.name}'s profile`}
+                  src={authUser.user.profilePicture || "/default-avatar.png"}
+                  alt={`${authUser.name}'s profile`}
                   style={{
                     width: "100px",
                     height: "100px",
@@ -243,7 +203,7 @@ export default function CRMApp() {
                   }}   onClick={() => navigate("/user-profile")}
                 />
                 
-                <h5>{user.name}</h5>
+                <h5>{authUser.user.name}</h5>
               </div>
             )}  
             <div className="addTaskBTN">

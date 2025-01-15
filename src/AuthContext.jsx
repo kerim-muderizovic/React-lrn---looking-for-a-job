@@ -27,7 +27,7 @@ export const AuthProvider = ({ children }) => {
     setIsLoading(true);
     try {
       await fetchCsrfToken();
-      const response = await axios.get('http://localhost:8000/api/user', {
+      const response = await axios.get('http://localhost:8000/auth/check', {
         withCredentials: true,
       });
       setAuthUser(response.data); // Update user state

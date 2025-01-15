@@ -21,8 +21,8 @@ import {
 import ChatWindow from './chatWindows';
 import EditModal from './editModal';
 import './AdminPage.css'; // Optional CSS file for custom styles
-import { useUser } from './userContext';
 import AddNewTaskAdmin from './addNewTask';
+import { useAuth } from './AuthContext';
 const handleDeleteUser =()=>{
     console.log('clicked')
 }
@@ -92,8 +92,7 @@ const fetchTasks=()=>
   };
   
 
-    // const { authenticatedUser, fetchAuthenticatedUser,isLoading,setIsLoading } = useUser();
-      const { authenticatedUser } = useUser(); // Access the authenticated user from context
+      const { authUser } = useAuth(); // Access the authenticated user from context
     
     const [modalOpen, setModalOpen] = useState(false);
   const [selectedTask, setSelectedTask] = useState(null);
@@ -119,32 +118,9 @@ const fetchTasks=()=>
   // Fetch users, tasks, and admin name on component mount
   useEffect(() => {
     
-    const fetchAuthStatus = async () => {
-        try {
-          await axios.get("http://localhost:8000/sanctum/csrf-cookie", {
-            withCredentials: true,
-          });
-  
-          const authResponse = await axios.get("http://localhost:8000/auth/check", {
-            withCredentials: true,
-          });
-          console.log(authResponse);
-          setIsAuthenticated(authResponse.data.isLoggedIn);
-          if (authResponse.data.isLoggedIn) {
-            setUser(authResponse.data.user);
-          }
-        } catch (error) {
-          console.error("Error checking authentication status:", error);
-          setIsAuthenticated(false);
-        } finally {
-          setAuthChecked(true);
-        }
-        
-      };
-      fetchAuthStatus();
 fetchTasks();
-        console.log('ucitANI U OVOM SRANJU:',authenticatedUser);
-        setAdminName(authenticatedUser.name)
+        console.log('ucitANI U OVOM SRANJU:',authUser);
+        setAdminName(authUser.user.name)
     // Replace 'users_url' and 'tasks_url' with actual API endpoints
     axios.get('http://localhost:8000/user/getAll') // URL for users data
       .then(response => {
@@ -324,7 +300,7 @@ const toggleModalAddNewTask =()=>setModalAddNewTaskOpen(!modalAddNewTask);
       )}
 {selectedChatUser && (
   <ChatWindow
-  userId={authenticatedUser.id}
+  userId={authUser.id}
   receiverId={selectedChatUser}
   onClose={closeChat}
 />

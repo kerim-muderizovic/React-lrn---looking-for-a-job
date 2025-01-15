@@ -10,44 +10,52 @@ import '../node_modules/bootstrap/dist/css/bootstrap.min.css';
 import UserProfile from './user-profile';
 import AdminPage from './AdminPage';
 import AddTaskModal from './taskModal';
-import { UserProvider, useUser } from './userContext';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import { ClipLoader } from 'react-spinners';
 import TwoFactorAuth from './TwoFactor';
-import { AuthProvider } from './AuthContext';
+import { AuthProvider, useAuth } from './AuthContext';
+import RequireAuth from './RequireAuth';
 
 function AppContent() {
-  const { authenticatedUser } = useUser(); 
-  // Access the user context
+  const { authUser, isLoading } = useAuth();
 
-  // Show a loading spinner if the user context is still fetching the data
-  // if (authenticatedUser === null) {
-  //   return <ClipLoader color="#36d7b7" size={150} />;
-  // }
+  // Show a loading spinner if user information is still being fetched
+  if (isLoading) {
+    return (
+      <div className="loading-container">
+        <ClipLoader color="#36d7b7" size={150} />
+      </div>
+    );
+  }
 
   return (
     <div>
-      <Navbar/>
-
+      <Navbar />
       <DndProvider backend={HTML5Backend}>
         <Routes>
           {/* Redirect to the appropriate route based on login status */}
           <Route
             path="/"
             element={
-              authenticatedUser ? <Navigate to="/crm" replace /> : <Navigate to="/register" replace />
+              authUser?.isLoggedIn ? (
+                <Navigate to="/crm" replace />
+              ) : (
+                <Navigate to="/register" replace />
+              )
             }
           />
-          <Route path="/user-profile" element={<UserProfile />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
-          <Route path="/crm/*" element={<CRMApp />} />
-          <Route path="/AdminPage/*" element={<AdminPage />} />
           <Route path="/2fa" element={<TwoFactorAuth />} /> {/* Add 2FA route */}
+
+          <Route element={<RequireAuth />}>
+            <Route path="/user-profile" element={<UserProfile />} />
+            <Route path="/crm/*" element={<CRMApp />} />
+            <Route path="/AdminPage/*" element={<AdminPage />} />
+          </Route>
         </Routes>
       </DndProvider>
-
       <Footer />
     </div>
   );
@@ -56,13 +64,10 @@ function AppContent() {
 function App() {
   return (
     <AuthProvider>
-    <UserProvider>
       <Router>
         <AppContent />
       </Router>
-    </UserProvider>
     </AuthProvider>
-
   );
 }
 

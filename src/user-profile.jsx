@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
-import { useUser } from './userContext';
 import axios from 'axios';
 import './user-profile.css';
-
+import { useAuth } from './AuthContext';
 export default function UserProfile() {
   const { authenticatedUser } = useUser();
+  const {useAuth} = useAuth();
   const [url, setUrl] = useState('');
-  const [name, setName] = useState(authenticatedUser?.name || ''); // Initialize with current user name
+  const [name, setName] = useState(useAuth?.name || ''); // Initialize with current user name
   const [isEditingPhoto, setIsEditingPhoto] = useState(false);
   const [isEditingName, setIsEditingName] = useState(false);
   const [isEditingPassword, setIsEditingPassword] = useState(false);
@@ -16,7 +16,7 @@ export default function UserProfile() {
   const handleSavePhoto = async () => {
     try {
       await axios.put(
-        `http://localhost:8000/user/${authenticatedUser.id}/update-image`,
+        `http://localhost:8000/user/${useAuth.id}/update-image`,
         { url },
         {
           withXSRFToken: true,
@@ -24,7 +24,7 @@ export default function UserProfile() {
         }
       );
       console.log('Profile photo updated successfully');
-      authenticatedUser.url = url;
+      useAuth.url = url;
       setIsEditingPhoto(false);
     } catch (err) {
       console.error('Failed to update profile photo:', err);
@@ -53,7 +53,7 @@ export default function UserProfile() {
   const handleSaveName = async () => {
     try {
       await axios.put(
-        `http://localhost:8000/user/${authenticatedUser.id}/update-name`,
+        `http://localhost:8000/user/${useAuth.id}/update-name`,
         { name },
         {
           withXSRFToken: true,
@@ -61,7 +61,7 @@ export default function UserProfile() {
         }
       );
       console.log('Name updated successfully');
-      authenticatedUser.name = name;
+      useAuth.name = name;
       setIsEditingName(false);
     } catch (err) {
       console.error('Failed to update name:', err);
@@ -76,7 +76,7 @@ export default function UserProfile() {
             <div className="card mb-4">
               <div className="card-body text-center">
                 <img
-                  src={authenticatedUser?.url || 'https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava3.webp'}
+                  src={useAuth?.url || 'https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava3.webp'}
                   alt="avatar"
                   className="rounded-circle img-fluid"
                   style={{ width: '120px', height: '120px', objectFit: 'cover' }}
@@ -147,7 +147,7 @@ export default function UserProfile() {
           ) : (
             <div>
               <p className="text-muted mb-0">
-                {authenticatedUser?.name || 'John Doe'}
+                {useAuth?.name || 'John Doe'}
               </p>
               <button
                 onClick={() => setIsEditingName(true)}
@@ -166,7 +166,7 @@ export default function UserProfile() {
         </div>
         <div className="col-sm-9">
           <p className="text-muted mb-0">
-            {authenticatedUser?.email || 'example@example.com'}
+            {useAuth?.email || 'example@example.com'}
           </p>
         </div>
       </div>
