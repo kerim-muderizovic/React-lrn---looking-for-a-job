@@ -38,7 +38,7 @@ export default function CRMApp() {
   const [updatedTasks, setUpdatedTasks] = useState(tasks);
   const phases = [0, 25, 50, 75, 100];
   useEffect(() => {
-    console.log('when adding task authUser is ', authUser);
+    console.log('user pri ucitavanju ', authUser);
 
     const fetchTasks = async () => {
       try {
@@ -142,8 +142,8 @@ export default function CRMApp() {
         description: "",
         priority: "Low",
         progress: 0,
-        users: authUser ? [authUser.id] : [],
-      });
+        users: [authUser.user.id], // Ensure the user ID is set 
+         });
       console.log('when adding task authUser is ', authUser);
     } catch (error) {
       console.error("Error adding task:", error);
