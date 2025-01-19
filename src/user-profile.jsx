@@ -2,21 +2,21 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import './user-profile.css';
 import { useAuth } from './AuthContext';
+import { useTranslation } from 'react-i18next';
 export default function UserProfile() {
-  const { authenticatedUser } = useUser();
-  const {useAuth} = useAuth();
+  const {authUser,setAuthUser} = useAuth();
   const [url, setUrl] = useState('');
-  const [name, setName] = useState(useAuth?.name || ''); // Initialize with current user name
+  const [name, setName] = useState(authUser?.user?.name || ''); // Initialize with current user name
   const [isEditingPhoto, setIsEditingPhoto] = useState(false);
   const [isEditingName, setIsEditingName] = useState(false);
   const [isEditingPassword, setIsEditingPassword] = useState(false);
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
-  
+  const { t } = useTranslation();
   const handleSavePhoto = async () => {
     try {
       await axios.put(
-        `http://localhost:8000/user/${useAuth.id}/update-image`,
+        `http://localhost:8000/user/${authUser.user.id}/update-image`,
         { url },
         {
           withXSRFToken: true,
@@ -24,7 +24,16 @@ export default function UserProfile() {
         }
       );
       console.log('Profile photo updated successfully');
-      useAuth.url = url;
+      setAuthUser((prev) => ({
+        ...prev,
+        user: {
+          ...prev.user,
+          profilePicture: url,
+          
+        },
+      }
+    
+    ));
       setIsEditingPhoto(false);
     } catch (err) {
       console.error('Failed to update profile photo:', err);
@@ -53,7 +62,7 @@ export default function UserProfile() {
   const handleSaveName = async () => {
     try {
       await axios.put(
-        `http://localhost:8000/user/${useAuth.id}/update-name`,
+        `http://localhost:8000/user/${authUser.user.id}/update-name`,
         { name },
         {
           withXSRFToken: true,
@@ -61,7 +70,7 @@ export default function UserProfile() {
         }
       );
       console.log('Name updated successfully');
-      useAuth.name = name;
+      authUser.user.name = name;
       setIsEditingName(false);
     } catch (err) {
       console.error('Failed to update name:', err);
@@ -70,160 +79,159 @@ export default function UserProfile() {
 
   return (
     <section style={{ backgroundColor: '#eee' }} className="sectionUserProfile">
-      <div className="container py-5">
-        <div className="row">
-          <div className="col-lg-4">
-            <div className="card mb-4">
-              <div className="card-body text-center">
-                <img
-                  src={useAuth?.url || 'https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava3.webp'}
-                  alt="avatar"
-                  className="rounded-circle img-fluid"
-                  style={{ width: '120px', height: '120px', objectFit: 'cover' }}
-                />
-                {isEditingPhoto ? (
-                  <div>
-                    <input
-                      type="text"
-                      value={url}
-                      onChange={(e) => setUrl(e.target.value)}
-                      placeholder="Enter Image URL"
-                      className="form-control"
-                    />
-                    <button
-                      onClick={handleSavePhoto}
-                      className="btn btn-success btn-sm mt-2"
-                    >
-                      Save Photo
-                    </button>
-                    <button
-                      onClick={() => setIsEditingPhoto(false)}
-                      className="btn btn-secondary btn-sm mt-2 ms-2"
-                    >
-                      Cancel
-                    </button>
-                  </div>
-                ) : (
+    <div className="container py-5">
+      <div className="row">
+        <div className="col-lg-4">
+          <div className="card mb-4">
+            <div className="card-body text-center">
+              <img
+                src={authUser?.user?.profilePicture || 'https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava3.webp'}
+                alt={t('profile.avatarAlt', 'avatar')}
+                className="rounded-circle img-fluid"
+                style={{ width: '120px', height: '120px', objectFit: 'cover' }}
+              />
+              {isEditingPhoto ? (
+                <div>
+                  <input
+                    type="text"
+                    value={url}
+                    onChange={(e) => setUrl(e.target.value)}
+                    placeholder={t('profile.enterImageUrl', 'Enter Image URL')}
+                    className="form-control"
+                  />
                   <button
-                    onClick={() => setIsEditingPhoto(true)}
-                    className="btn btn-primary btn-sm"
+                    onClick={handleSavePhoto}
+                    className="btn btn-success btn-sm mt-2"
                   >
-                    Edit Photo
+                    {t('profile.savePhoto', 'Save Photo')}
                   </button>
-                )}
+                  <button
+                    onClick={() => setIsEditingPhoto(false)}
+                    className="btn btn-secondary btn-sm mt-2 ms-2"
+                  >
+                    {t('profile.cancel', 'Cancel')}
+                  </button>
+                </div>
+              ) : (
+                <button
+                  onClick={() => setIsEditingPhoto(true)}
+                  className="btn btn-primary btn-sm"
+                >
+                  {t('profile.editPhoto', 'Edit Photo')}
+                </button>
+              )}
+            </div>
+          </div>
+        </div>
+        <div className="col-lg-8">
+          <div className="card mb-4">
+            <div className="card-body">
+              <div className="row">
+                <div className="col-sm-3">
+                  <p className="mb-0">{t('profile.fullName', 'Full Name')}</p>
+                </div>
+                <div className="col-sm-9">
+                  {isEditingName ? (
+                    <div>
+                      <input
+                        type="text"
+                        value={name}
+                        onChange={(e) => setName(e.target.value)}
+                        placeholder={t('profile.enterName', 'Enter Name')}
+                        className="form-control"
+                      />
+                      <button
+                        onClick={handleSaveName}
+                        className="btn btn-success btn-sm mt-2"
+                      >
+                        {t('profile.saveName', 'Save Name')}
+                      </button>
+                      <button
+                        onClick={() => setIsEditingName(false)}
+                        className="btn btn-secondary btn-sm mt-2 ms-2"
+                      >
+                        {t('profile.cancel', 'Cancel')}
+                      </button>
+                    </div>
+                  ) : (
+                    <div>
+                      <p className="text-muted mb-0">
+                        {authUser?.user.name || t('profile.defaultName', 'John Doe')}
+                      </p>
+                      <button
+                        onClick={() => setIsEditingName(true)}
+                        className="btn btn-primary btn-sm mt-2"
+                      >
+                        {t('profile.editName', 'Edit Name')}
+                      </button>
+                    </div>
+                  )}
+                </div>
+              </div>
+              <hr />
+              <div className="row">
+                <div className="col-sm-3">
+                  <p className="mb-0">{t('profile.email', 'Email')}</p>
+                </div>
+                <div className="col-sm-9">
+                  <p className="text-muted mb-0">
+                    {authUser?.user?.email || t('profile.defaultEmail', 'example@example.com')}
+                  </p>
+                </div>
+              </div>
+              <hr />
+              <div className="row">
+                <div className="col-sm-3">
+                  <p className="mb-0">{t('profile.password', 'Password')}</p>
+                </div>
+                <div className="col-sm-9">
+                  {isEditingPassword ? (
+                    <div>
+                      <input
+                        type="password"
+                        value={newPassword}
+                        onChange={(e) => setNewPassword(e.target.value)}
+                        placeholder={t('profile.enterNewPassword', 'Enter New Password')}
+                        className="form-control"
+                      />
+                      <input
+                        type="password"
+                        value={confirmPassword}
+                        onChange={(e) => setConfirmPassword(e.target.value)}
+                        placeholder={t('profile.confirmNewPassword', 'Confirm New Password')}
+                        className="form-control mt-2"
+                      />
+                      <button
+                        onClick={handleSavePassword}
+                        className="btn btn-success btn-sm mt-2"
+                      >
+                        {t('profile.savePassword', 'Save Password')}
+                      </button>
+                      <button
+                        onClick={() => setIsEditingPassword(false)}
+                        className="btn btn-secondary btn-sm mt-2 ms-2"
+                      >
+                        {t('profile.cancel', 'Cancel')}
+                      </button>
+                    </div>
+                  ) : (
+                    <div>
+                      <p className="text-muted mb-0">{t('profile.hiddenPassword', '********')}</p>
+                      <button
+                        onClick={() => setIsEditingPassword(true)}
+                        className="btn btn-primary btn-sm mt-2"
+                      >
+                        {t('profile.changePassword', 'Change Password')}
+                      </button>
+                    </div>
+                  )}
+                </div>
               </div>
             </div>
           </div>
-          <div className="col-lg-8">
-  <div className="card mb-4">
-    <div className="card-body">
-      <div className="row">
-        <div className="col-sm-3">
-          <p className="mb-0">Full Name</p>
-        </div>
-        <div className="col-sm-9">
-          {isEditingName ? (
-            <div>
-              <input
-                type="text"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                placeholder="Enter Name"
-                className="form-control"
-              />
-              <button
-                onClick={handleSaveName}
-                className="btn btn-success btn-sm mt-2"
-              >
-                Save Name
-              </button>
-              <button
-                onClick={() => setIsEditingName(false)}
-                className="btn btn-secondary btn-sm mt-2 ms-2"
-              >
-                Cancel
-              </button>
-            </div>
-          ) : (
-            <div>
-              <p className="text-muted mb-0">
-                {useAuth?.name || 'John Doe'}
-              </p>
-              <button
-                onClick={() => setIsEditingName(true)}
-                className="btn btn-primary btn-sm mt-2"
-              >
-                Edit Name
-              </button>
-            </div>
-          )}
-        </div>
-      </div>
-      <hr />
-      <div className="row">
-        <div className="col-sm-3">
-          <p className="mb-0">Email</p>
-        </div>
-        <div className="col-sm-9">
-          <p className="text-muted mb-0">
-            {useAuth?.email || 'example@example.com'}
-          </p>
-        </div>
-      </div>
-      <hr />
-      <div className="row">
-        <div className="col-sm-3">
-          <p className="mb-0">Password</p>
-        </div>
-        <div className="col-sm-9">
-          {isEditingPassword ? (
-            <div>
-              <input
-                type="password"
-                value={newPassword}
-                onChange={(e) => setNewPassword(e.target.value)}
-                placeholder="Enter New Password"
-                className="form-control"
-              />
-              <input
-                type="password"
-                value={confirmPassword}
-                onChange={(e) => setConfirmPassword(e.target.value)}
-                placeholder="Confirm New Password"
-                className="form-control mt-2"
-              />
-              <button
-                onClick={handleSavePassword}
-                className="btn btn-success btn-sm mt-2"
-              >
-                Save Password
-              </button>
-              <button
-                onClick={() => setIsEditingPassword(false)}
-                className="btn btn-secondary btn-sm mt-2 ms-2"
-              >
-                Cancel
-              </button>
-            </div>
-          ) : (
-            <div>
-              <p className="text-muted mb-0">********</p>
-              <button
-                onClick={() => setIsEditingPassword(true)}
-                className="btn btn-primary btn-sm mt-2"
-              >
-                Change Password
-              </button>
-            </div>
-          )}
         </div>
       </div>
     </div>
-  </div>
-</div>
-
-        </div>
-      </div>
-    </section>
-  );
+  </section>
+);
 }

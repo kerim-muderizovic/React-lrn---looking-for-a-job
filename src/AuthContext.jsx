@@ -11,7 +11,7 @@ export const useAuth = () => useContext(AuthContext);
 export const AuthProvider = ({ children }) => {
   const [authUser, setAuthUser] = useState(null); // Store the authenticated user
   const [isLoading, setIsLoading] = useState(true); // Track loading state
-
+  const [loading, setLoading] = useState(false); // Central loading state
   // Fetch CSRF token
   const fetchCsrfToken = async () => {
     try {
@@ -38,21 +38,26 @@ export const AuthProvider = ({ children }) => {
     }
     setIsLoading(false);
   };
+  useEffect(() => {
+    fetchAuthenticatedUser();
+  }, []);
 
   // Login function
   const login = async (credentials) => {
+    setLoading(true); // Start global loading
     try {
       const response = await axios.post('http://localhost:8000/loginn', credentials, {
         withXSRFToken: true,
         headers: { 'Content-Type': 'application/json' },
         withCredentials: true,
       });
-      const { user } = response.data;
-      setAuthUser(user); // Update user state
-      return user;
+      // const { user } = response.data;
+      setAuthUser(response.data); // Update user state
+      return authUser;
     } catch (error) {
-      console.error('Login failed:', error);
-      throw error; // Let the calling component handle the error
+      throw error; // Let the component handle errors
+    } finally {
+      setLoading(false); // Stop global loading
     }
   };
 
@@ -72,9 +77,6 @@ export const AuthProvider = ({ children }) => {
   };
 
   // Initialize user data on mount
-  useEffect(() => {
-    fetchAuthenticatedUser();
-  }, []);
 
   // Provide loading state while initializing
   if (isLoading) {
@@ -82,7 +84,7 @@ export const AuthProvider = ({ children }) => {
   }
 
   return (
-    <AuthContext.Provider value={{ authUser, login, logout, fetchAuthenticatedUser, isLoading }}>
+    <AuthContext.Provider value={{ authUser, login, logout, fetchAuthenticatedUser, isLoading ,setAuthUser,loading,setLoading}}>
       {children}
     </AuthContext.Provider>
   );

@@ -1,0 +1,125 @@
+{
+  "navbar": {
+    "signIn": "Sign In",
+    "register": "Register",
+    "logout": "Logout"
+  },
+  "login": {
+    "signInWith": "Sign in with",
+    "or": "Or",
+    "email": "Email address",
+    "password": "Password",
+    "rememberMe": "Remember me",
+    "forgotPassword": "Forgot password?",
+    "loggingIn": "Logging in...",
+    "login": "Login",
+    "noAccount": "Don't have an account?",
+    "register": "Register"
+  },
+  "profile": {
+    "avatarAlt": "avatar",
+    "enterImageUrl": "Enter Image URL",
+    "savePhoto": "Save Photo",
+    "cancel": "Cancel",
+    "editPhoto": "Edit Photo",
+    "fullName": "Full Name",
+    "enterName": "Enter Name",
+    "saveName": "Save Name",
+    "defaultName": "John Doe",
+    "editName": "Edit Name",
+    "email": "Email",
+    "defaultEmail": "example@example.com",
+    "password": "Password",
+    "enterNewPassword": "Enter New Password",
+    "confirmNewPassword": "Confirm New Password",
+    "savePassword": "Save Password",
+    "hiddenPassword": "********",
+    "changePassword": "Change Password"
+  },
+  "footer": {
+    "socialMedia": {
+      "description": "Connect with us on social networks:",
+      "links": {
+        "facebook": "#!",
+        "twitter": "#!",
+        "instagram": "#!",
+        "linkedin": "#!",
+        "github": "#!"
+      }
+    },
+    "sections": {
+      "about": {
+        "title": "Con2Cus",
+        "description": "'Con2Cus' is your trusted CRM solution, providing tools to streamline your business operations."
+      },
+      "products": {
+        "title": "Products",
+        "items": {
+          "CRMTools": "CRM Tools",
+          "analytics": "Analytics",
+          "support": "Support",
+          "pricing": "Pricing"
+        }
+      },
+      "usefulLinks": {
+        "title": "Useful links",
+        "items": {
+          "account": "Your Account",
+          "helpCenter": "Help Center",
+          "privacyPolicy": "Privacy Policy",
+          "termsOfService": "Terms of Service"
+        }
+      },
+      "contact": {
+        "title": "Contact",
+        "items": {
+          "address": "Sarajevo, BIH 71000",
+          "email": "info@con2cus.com",
+          "phone": "+387 62 123 456",
+          "fax": "+387 36 789 101"
+        }
+      }
+    },
+    "copyright": {
+      "text": "© 2024 Copyright:",
+      "linkText": "Con2Cus.de",
+      "linkUrl": "https://con2cus.de/"
+    }
+  }
+  ,
+  "crm": {
+    "tasks": {
+      "title": "Tasks",
+      "addTask": "Add Task",
+      "taskName": "Task Name",
+      "taskDescription": "Task Description",
+      "priority": "Priority",
+      "low": "Low",
+      "medium": "Medium",
+      "high": "High",
+      "progress": "Progress",
+      "delete": "Delete"
+    },
+    "profile": {
+      "profilePicture": "Profile Picture",
+      "profileInfo": "Profile Information",
+      "editProfile": "Edit Profile"
+    }
+  },
+  "modal": {
+    "title": "Add Task",
+    "placeholder": {
+      "taskName": "Task Name"
+    },
+    "buttons": {
+      "addTask": "Add Task",
+      "close": "Close"
+    },
+    "error": {
+      "addTask": "Error adding task",
+      "emptyTaskName": "Task name cannot be empty",
+      "fetchUsers": "Error fetching users"
+    }
+  }  
+  
+}

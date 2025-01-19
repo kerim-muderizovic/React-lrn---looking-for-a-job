@@ -9,14 +9,14 @@ import CRMApp from './crmMainPart';
 import '../node_modules/bootstrap/dist/css/bootstrap.min.css';
 import UserProfile from './user-profile';
 import AdminPage from './AdminPage';
-import AddTaskModal from './taskModal';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import { ClipLoader } from 'react-spinners';
 import TwoFactorAuth from './TwoFactor';
 import { AuthProvider, useAuth } from './AuthContext';
 import RequireAuth from './RequireAuth';
-
+import { I18nextProvider } from 'react-i18next';import './i18';
+import i18n from './i18';
 function AppContent() {
   const { authUser, isLoading } = useAuth();
 
@@ -63,11 +63,13 @@ function AppContent() {
 
 function App() {
   return (
+    <I18nextProvider i18n={i18n}>
     <AuthProvider>
       <Router>
         <AppContent />
       </Router>
     </AuthProvider>
+  </I18nextProvider>
   );
 }
 

@@ -10,10 +10,12 @@ import {
 } from 'mdb-react-ui-kit';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from './AuthContext';
+import { useTranslation } from 'react-i18next';
 
 export default function Navbar() {
   const { logout, authUser } = useAuth();
   const navigate = useNavigate();
+  const { t, i18n } = useTranslation();
 
   // Local state to track login status
   const [isLoggedIn, setIsLoggedIn] = useState(authUser?.isLoggedIn || false);
@@ -36,6 +38,10 @@ export default function Navbar() {
     navigate('/register');
   };
 
+  const changeLanguage = (lang) => {
+    i18n.changeLanguage(lang);
+  };
+
   return (
     <MDBNavbar expand="lg" light bgColor="light">
       <MDBContainer fluid>
@@ -49,22 +55,33 @@ export default function Navbar() {
 
         <MDBCollapse navbar>
           <MDBNavbarNav className="ms-auto d-flex align-items-center">
+            <MDBNavbarItem>
+              <button onClick={() => changeLanguage('en')} className="btn btn-link">
+                EN
+              </button>
+            </MDBNavbarItem>
+            <MDBNavbarItem>
+              <button onClick={() => changeLanguage('de')} className="btn btn-link">
+                DE
+              </button>
+            </MDBNavbarItem>
+
             {isLoggedIn ? (
               <MDBNavbarItem>
                 <MDBNavbarLink onClick={handleLogout} className="btn btn-link nav-link">
-                  Logout
+                  {t('navbar.logout')}
                 </MDBNavbarLink>
               </MDBNavbarItem>
             ) : (
               <>
                 <MDBNavbarItem>
                   <MDBNavbarLink onClick={handleLogin} className="btn btn-link nav-link">
-                    Sign In
+                    {t('navbar.signIn')}
                   </MDBNavbarLink>
                 </MDBNavbarItem>
                 <MDBNavbarItem>
                   <MDBNavbarLink onClick={handleRegister} className="btn btn-link nav-link">
-                    Register
+                    {t('navbar.register')}
                   </MDBNavbarLink>
                 </MDBNavbarItem>
               </>

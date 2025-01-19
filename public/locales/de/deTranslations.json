@@ -1,0 +1,123 @@
+{
+  "navbar": {
+    "signIn": "Einloggen",
+    "register": "Registrieren",
+    "logout": "Ausloggen"
+  },
+  "login": {
+    "signInWith": "Einloggen mit",
+    "or": "Oder",
+    "email": "E-Mail-Adresse",
+    "password": "Passwort",
+    "rememberMe": "Erinnere dich an mich",
+    "forgotPassword": "Passwort vergessen?",
+    "loggingIn": "Einloggen...",
+    "login": "Einloggen",
+    "noAccount": "Noch kein Konto?",
+    "register": "Registrieren"
+  },
+  "profile": {
+    "avatarAlt": "Avatar",
+    "enterImageUrl": "Bild-URL eingeben",
+    "savePhoto": "Foto speichern",
+    "cancel": "Abbrechen",
+    "editPhoto": "Foto bearbeiten",
+    "fullName": "Vollständiger Name",
+    "enterName": "Name eingeben",
+    "saveName": "Name speichern",
+    "defaultName": "John Doe",
+    "editName": "Name bearbeiten",
+    "email": "E-Mail",
+    "defaultEmail": "beispiel@beispiel.com",
+    "password": "Passwort",
+    "enterNewPassword": "Neues Passwort eingeben",
+    "confirmNewPassword": "Neues Passwort bestätigen",
+    "savePassword": "Passwort speichern",
+    "hiddenPassword": "********",
+    "changePassword": "Passwort ändern"
+  },
+  "footer": {
+    "socialMedia": {
+      "description": "Verbinden Sie sich mit uns in sozialen Netzwerken:",
+      "links": {
+        "facebook": "#!",
+        "twitter": "#!",
+        "instagram": "#!",
+        "linkedin": "#!",
+        "github": "#!"
+      }
+    },
+    "sections": {
+      "about": {
+        "title": "Con2Cus",
+        "description": "'Con2Cus' ist Ihre vertrauenswürdige CRM-Lösung und bietet Tools zur Optimierung Ihrer Geschäftsprozesse."
+      },
+      "products": {
+        "title": "Produkte",
+        "items": {
+          "CRMTools": "CRM-Tools",
+          "analytics": "Analytik",
+          "support": "Support",
+          "pricing": "Preise"
+        }
+      },
+      "usefulLinks": {
+        "title": "Nützliche Links",
+        "items": {
+          "account": "Ihr Konto",
+          "helpCenter": "Hilfe-Center",
+          "privacyPolicy": "Datenschutzrichtlinie",
+          "termsOfService": "Nutzungsbedingungen"
+        }
+      },
+      "contact": {
+        "title": "Kontakt",
+        "items": {
+          "address": "Sarajevo, BIH 71000",
+          "email": "info@con2cus.com",
+          "phone": "+387 62 123 456",
+          "fax": "+387 36 789 101"
+        }
+      }
+    },
+    "copyright": {
+      "text": "© 2024 Urheberrecht:",
+      "linkText": "Con2Cus.de",
+      "linkUrl": "https://con2cus.de/"
+    }
+  },
+"modal": {
+    "title": "Aufgabe hinzufügen",
+    "placeholder": {
+      "taskName": "Aufgabenname"
+    },
+    "buttons": {
+      "addTask": "Aufgabe hinzufügen",
+      "close": "Schließen"
+    },
+    "error": {
+      "addTask": "Fehler beim Hinzufügen der Aufgabe",
+      "emptyTaskName": "Aufgabenname darf nicht leer sein",
+      "fetchUsers": "Fehler beim Abrufen von Benutzern"
+    }
+  },
+  "crm": {
+    "tasks": {
+      "title": "Aufgaben",
+      "addTask": "Aufgabe hinzufügen",
+      "taskName": "Aufgabenname",
+      "taskDescription": "Beschreibung der Aufgabe",
+      "priority": "Priorität",
+      "low": "Niedrig",
+      "medium": "Mittel",
+      "high": "Hoch",
+      "progress": "Fortschritt",
+      "delete": "Löschen"
+    },
+    "profile": {
+      "profilePicture": "Profilbild",
+      "profileInfo": "Profilinformationen",
+      "editProfile": "Profil bearbeiten"
+    }
+  }
+}
