@@ -148,14 +148,7 @@ export default function Login() {
               </div>
             </form>
 
-            <div className="language-switcher mt-3">
-              <button onClick={() => changeLanguage('en')} className="btn btn-link">
-                English
-              </button>
-              <button onClick={() => changeLanguage('de')} className="btn btn-link">
-                Deutsch
-              </button>
-            </div>
+            
           </MDBCol>
         </MDBRow>
       </MDBContainer>

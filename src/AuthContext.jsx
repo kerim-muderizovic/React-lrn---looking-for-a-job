@@ -52,8 +52,9 @@ export const AuthProvider = ({ children }) => {
         withCredentials: true,
       });
       // const { user } = response.data;
+      console.log(response.data);
       setAuthUser(response.data); // Update user state
-      return authUser;
+      return response.data;
     } catch (error) {
       throw error; // Let the component handle errors
     } finally {
