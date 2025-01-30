@@ -1,124 +1,28 @@
-
-  .profileImage:active {
-    transform: scale(0.95) !important; /* Shrinks slightly on click */
-    box-shadow: 0 3px 5px rgba(0, 0, 0, 0.15) !important; /* Reduces the shadow */
-  }
-
-  .profileImage {
-    width: 100px;
-    height: 100px;
-    border-radius: 50%;
-    margin-bottom: 10px;
-    transition: transform 0.3s, box-shadow 0.3s;
-    cursor: pointer;
-  }
-  
-  .profileImage:hover {
-    transform: scale(1.1);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-  }
-  
-  .addTaskBTN
-  {
-    margin-bottom: 80%;
-    width: 60%;
-
-  }
-/* Modal Overlay: Background and Positioning */
-.modal-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: rgba(0, 0, 0, 0.7); /* Dark overlay */
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 1050; /* Above other content */
+.profileImage {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  margin-bottom: 10px;
+  cursor: pointer;
+  transition: transform 0.3s, box-shadow 0.3s;
 }
 
-/* Modal Content: Box styling, shadows, and rounded corners */
-.modal-content {
-  background-color: #fff  !important;
-  padding: 20px;
-  border-radius: 10px;
-  width: 100%;
-  max-width: 500px;
-  /* box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); */
-  /* animation: fadeIn 0.3s ease-out; */
+.profileImage:hover {
+  transform: scale(1.1);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
-/* Title Styling: Larger font and bold */
-.modal-content h3 {
-  font-size: 24px;
-  font-weight: 600;
-  color: WHITE;
-  margin-bottom: 20px;
-  text-align: center;
+.profileImage:active {
+  transform: scale(0.95) !important;
+  box-shadow: 0 3px 5px rgba(0, 0, 0, 0.15) !important;
 }
 
-/* Input fields: Focus effect and padding */
-.form-control,
-.form-select {
-  border-radius: 5px;
-  padding: 10px;
-  border: 1px solid #ddd;
-  transition: all 0.3s ease;
+.addTaskBTN {
+  margin-bottom: 68%;
+  width: 60%;
 }
 
-.form-control:focus,
-.form-select:focus {
-  border-color: #007bff;
-  box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
-}
-
-/* Button Styling: Primary and Secondary buttons with hover effects */
-.btn {
-  padding: 10px 20px;
-  border-radius: 5px;
-  font-weight: 600;
-  transition: all 0.3s ease;
-}
-
-.btn-secondary {
-  background-color: #6c757d;
-  border: none;
-  color: white;
-}
-
-.btn-secondary:hover {
-  background-color: #5a6268;
-}
-
-.btn-primary {
-  background-color: #007bff;
-  border: none;
-  color: white;
-}
-
-.btn-primary:hover {
-  background-color: #0056b3;
-}
-
-/* Adjusting margins and paddings */
-.mb-3 {
-  margin-bottom: 15px;
-}
-
-/* Animation for modal fade-in effect */
-/* @keyframes fadeIn {
-  0% {
-    opacity: 0;
-    transform: scale(0.8);
-  }
-  100% {
-    opacity: 1;
-    transform: scale(1);
-  }
-} */
-
-
+/* Modal Overlay */
 .modal-overlay {
   position: fixed;
   top: 0;
@@ -129,24 +33,26 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 1000;
+  z-index: 1050;
 }
 
+/* Modal Content */
 .modal-content {
-  background: #ffffff;
-  width: 90%;
+  background: #fff !important;
+  width: 100%;
   max-width: 500px;
-  border-radius: 12px;
+  border-radius: 10px;
   padding: 20px;
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
   text-align: center;
-  /* animation: fadeIn 0.3s ease-in-out; */
 }
 
 .modal-content h3 {
   font-size: 1.5rem;
-  color: #333;
-  margin-bottom: 1rem;
+  font-weight: 600;
+  color: white;
+  margin-bottom: 20px;
+  text-align: center;
 }
 
 .modal-content input,
@@ -158,7 +64,6 @@
   border: 1px solid #ddd;
   border-radius: 8px;
   font-size: 1rem;
-  outline: none;
   transition: border-color 0.3s;
 }
 
@@ -169,8 +74,8 @@
   box-shadow: 0 0 4px rgba(0, 123, 255, 0.5);
 }
 
-.modal-content button {
-  width: calc(50% - 10px);
+.modal-content button:not(.uiverse-btn) {
+    width: calc(50% - 10px);
   padding: 10px;
   margin: 0 5px;
   font-size: 1rem;
@@ -185,11 +90,11 @@
   color: #fff;
 }
 
-.modal-content button:first-child:hover {
+.modal-content button:first-child:hover:not(.uiverse-btn) {
   background: #0056b3;
 }
 
-.modal-content button:last-child {
+.modal-content button:last-child:not(.uiverse-btn) {
   background: #f0f0f0;
   color: #333;
 }
@@ -198,39 +103,27 @@
   background: #e0e0e0;
 }
 
-/* Fade-in animation */
-/* @keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: scale(0.95);
-  }
-  to {
-    opacity: 1;
-    transform: scale(1);
-  }
-} */
-
 /* Task Card Styling */
 .MDBCard {
-  background-color: #f8f9fa; /* Light background for better readability */
-  border: 1px solid #ddd; /* Subtle border for separation */
-  border-radius: 8px; /* Slight rounding for modern appearance */
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Light shadow for depth */
+  background-color: #f8f9fa;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   margin-bottom: 15px;
   position: relative;
   transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
 .MDBCard:hover {
-  transform: scale(1.02); /* Slight zoom on hover */
-  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15); /* More pronounced shadow */
+  transform: scale(1.02);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
 }
 
-/* Progress Bar Container */
+/* Progress Bar */
 .progress-bar-container {
   position: relative;
   height: 20px;
-  background-color: #e9ecef; /* Light grey for container */
+  background-color: #e9ecef;
   border-radius: 10px;
   overflow: hidden;
   cursor: pointer;
@@ -239,27 +132,158 @@
 }
 
 .progress-bar-container:hover {
-  background-color: #d6d8db; /* Darker grey on hover */
+  background-color: #d6d8db;
 }
 
-/* Progress Bar */
 .progress-bar {
   height: 100%;
-  background: linear-gradient(90deg, #4caf50, #81c784); /* Smooth gradient */
+  background: linear-gradient(90deg, #4caf50, #81c784);
   border-radius: 10px;
   transition: width 0.3s ease-in-out;
 }
 
 /* Delete Button */
 .MDBBtn {
-  background-color: #f44336; /* Red for delete */
-  color: white ;
+  background-color: #f44336;
+  color: white;
   border: none;
   transition: background-color 0.3s ease, transform 0.2s ease;
 }
 
 .MDBBtn:hover {
-  background-color: #e53935; /* Slightly darker red on hover */
-  transform: scale(1.1); /* Slight zoom effect */
+  background-color: #e53935;
+  transform: scale(1.1);
+}
+/* Fix cursor behavior */
+.react-datepicker__input-container {
+  cursor: pointer; /* Ensure the cursor is a pointer when hovering over the input */
 }
 
+.react-datepicker__input-container input {
+  cursor: pointer; /* Ensure the cursor is a pointer when hovering over the input */
+}
+
+/* Disable animations */
+.react-datepicker {
+  animation: none !important;
+  transition: none !important;
+}
+
+/* Remove weird hover effects */
+.react-datepicker__day--selected,
+.react-datepicker__day--keyboard-selected,
+.react-datepicker__day:hover {
+  background-color: #007bff; /* Use your preferred color */
+  color: white;
+  border-radius: 0.3rem;
+}
+
+/* Fix the calendar dropdown position */
+.react-datepicker-popper {
+  z-index: 9999 !important; /* Ensure the calendar appears above other elements */
+}
+
+.modal-content button:last-child {
+  z-index: auto; /* Ensure it doesn't overlap the calendar */
+  position: static; /* Use default positioning */
+  cursor: pointer; /* Ensure the cursor is normal */
+  background-color: transparent; /* Example: Remove any conflicting background */
+  border: none; /* Example: Remove any conflicting borders */
+}
+.btnSort {
+  animation: none !important;
+  transition: none !important;
+  transform: none !important;
+  box-shadow: none !important;
+  outline: none !important;
+}
+
+.btnSort:active, 
+.btnSort:focus {
+  animation: none !important;
+  transition: none !important;
+  transform: none !important; /* Prevents size change */
+  box-shadow: none !important;
+  outline: none !important;
+}
+
+/* Style applies only to buttons with "uiverse-btn" class */
+/* From Uiverse.io by shah1345 */ 
+.button2 {
+  display: inline-block;
+  transition: all 0.2s ease-in;
+  position: relative;
+  overflow: hidden;
+  z-index: 1;
+  color: #090909;
+  padding: 0.7em 1.7em;
+  cursor: pointer;
+  font-size: 18px;
+  border-radius: 0.5em;
+  background: #e8e8e8;
+  border: 1px solid #e8e8e8;
+  box-shadow: 6px 6px 12px #c5c5c5, -6px -6px 12px #ffffff;
+}
+
+.button2:active {
+  color: #666;
+  box-shadow: inset 4px 4px 12px #c5c5c5, inset -4px -4px 12px #ffffff;
+}
+
+.button2:before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%) scaleY(1) scaleX(1.25);
+  top: 100%;
+  width: 140%;
+  height: 180%;
+  background-color: rgba(0, 0, 0, 0.05);
+  border-radius: 50%;
+  display: block;
+  transition: all 0.5s 0.1s cubic-bezier(0.55, 0, 0.1, 1);
+  z-index: -1;
+}
+
+.button2:after {
+  content: "";
+  position: absolute;
+  left: 55%;
+  transform: translateX(-50%) scaleY(1) scaleX(1.45);
+  top: 180%;
+  width: 160%;
+  height: 190%;
+  background-color: #009087;
+  border-radius: 50%;
+  display: block;
+  transition: all 0.5s 0.1s cubic-bezier(0.55, 0, 0.1, 1);
+  z-index: -1;
+}
+
+.button2:hover {
+  color: #ffffff;
+  border: 1px solid #009087;
+}
+
+.button2:hover:before {
+  top: -35%;
+  background-color: #009087;
+  transform: translateX(-50%) scaleY(1.3) scaleX(0.8);
+}
+
+.button2:hover:after {
+  top: -45%;
+  background-color: #009087;
+  transform: translateX(-50%) scaleY(1.3) scaleX(0.8);
+}
+
+.modal-content button:last-child {
+  z-index: 1000 !important; /* Adjust if needed */
+  position: relative !important;
+}
+
+.task-list-container {
+  max-height: 85vh; /* Adjust based on your layout */
+  overflow-y: auto;
+  padding-bottom: 20px; /* Ensures spacing before the footer */
+}

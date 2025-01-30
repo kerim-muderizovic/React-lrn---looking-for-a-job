@@ -98,7 +98,9 @@
       "medium": "Medium",
       "high": "High",
       "progress": "Progress",
-      "delete": "Delete"
+      "delete": "Delete",
+      "selectDueDate": "Select final date",
+      "due": "Due"
     },
     "profile": {
       "profilePicture": "Profile Picture",

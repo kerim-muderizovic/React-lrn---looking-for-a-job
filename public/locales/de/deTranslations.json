@@ -112,7 +112,10 @@
       "medium": "Mittel",
       "high": "Hoch",
       "progress": "Fortschritt",
-      "delete": "Löschen"
+      "delete": "Löschen",
+      "selectDueDate": "Ablaufdatum auswählen",
+      "due": "Zuletzt abgelaufen"
+
     },
     "profile": {
       "profilePicture": "Profilbild",
