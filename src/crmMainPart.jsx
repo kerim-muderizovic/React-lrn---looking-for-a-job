@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect,useMemo } from "react";
 import axios from "axios";
-import { Route, Routes, useNavigate } from "react-router-dom";
+import { Await, Route, Routes, useNavigate } from "react-router-dom";
 import { Pie } from 'react-chartjs-2';
 import Calendar from "./calendar";
 import {
@@ -47,7 +47,7 @@ export default function CRMApp() {
   const [modalOpen, setModalOpen] = useState(false);
   const [updatedTasks, setUpdatedTasks] = useState(tasks);
   const phases = [0, 25, 50, 75, 100];
-  const dataa = {
+  const dataa = useMemo(() => ({
     labels: ['In Progress', 'Completed', 'Not Started'],
     datasets: [
       {
@@ -55,23 +55,25 @@ export default function CRMApp() {
         backgroundColor: ['#ffc107', '#28a745', '#dc3545'], // Colors for each segment
         hoverBackgroundColor: ['#e0a800', '#218838', '#c82333'],
       },
-    ],};
+    ],
+  }), [taskProgressData]);
+  const fetchTasksPie = async()=> {
+    try {
+      const tasksProgressesResponse =await axios.get("http://localhost:8000/task-progresses", {
+        withCredentials: true,
+      });
+      console.log('Progresi taskova', tasksProgressesResponse.data);
+      setTaskProgressData([
+        tasksProgressesResponse.data.in_progress_tasks,  // In Progress
+        tasksProgressesResponse.data.completed_tasks,   // Completed
+        tasksProgressesResponse.data.not_started_tasks,  // Not Started
+      ]);  } catch (error) {
+      console.error("Error fetching tasks:", error);
+    }
+  }
   useEffect(() => {
     console.log('user pri ucitavanju ', authUser);
-const fetchTasksPie = async()=> {
-  try {
-    const tasksProgressesResponse =await axios.get("http://localhost:8000/task-progresses", {
-      withCredentials: true,
-    });
-    console.log('Progresi taskova', tasksProgressesResponse.data);
-    setTaskProgressData([
-      tasksProgressesResponse.data.in_progress_tasks,  // In Progress
-      tasksProgressesResponse.data.completed_tasks,   // Completed
-      tasksProgressesResponse.data.not_started_tasks,  // Not Started
-    ]);  } catch (error) {
-    console.error("Error fetching tasks:", error);
-  }
-}
+
 
     const fetchTasks = async () => {
       try {
@@ -82,7 +84,8 @@ const fetchTasksPie = async()=> {
         console.log('Tasks response prilikom uzimanja za konkretnog', tasksResponse.data);
     
         // Set tasks in state
-        setTasks(tasksResponse.data.tasks || []);
+      const filterTasks=(tasksResponse.data.tasks || []).filter(task=>task.progress<100);
+        setTasks(filterTasks);
       } catch (error) {
         console.error("Error fetching tasks:", error);
       }
@@ -111,31 +114,41 @@ fetchTasksPie();
   
   const updateTaskProgress = async (taskId, newProgress) => {
     try {
-      // Ensure CSRF cookie is set first
-      await axios.get('http://localhost:8000/sanctum/csrf-cookie', { withCredentials: true });
-  
-      // Now send the PUT request with the CSRF token
-      const response = await axios.put(
-        `http://localhost:8000/tasks/${taskId}`,
-        { progress: newProgress },
-        { 
-          withCredentials: true, // Include credentials (cookies) in the request
-        withXSRFToken:true
+        if (newProgress === 100) {
+            const confirmCompletion = window.confirm("Are you sure you want to mark this task as completed?");
+            if (!confirmCompletion) {
+                return; // Stop if user cancels
+            }
         }
-      );
-  
-      // If the update was successful, update the local state
-      setTasks((prevTasks) =>
-        prevTasks.map((task) =>
-          task.id === taskId ? { ...task, progress: newProgress } : task
-        )
-      );
-  
-      console.log('Task updated:', response.data); // Log the response
+
+        // Ensure CSRF cookie is set first
+        await axios.get('http://localhost:8000/sanctum/csrf-cookie', { withCredentials: true });
+
+        // Now send the PUT request with the CSRF token
+        const response = await axios.put(
+            `http://localhost:8000/tasks/${taskId}`,
+            { progress: newProgress },
+            { 
+                withCredentials: true, // Include credentials (cookies) in the request
+                withXSRFToken: true
+            }
+        );
+
+        // If the update was successful, update the local state
+        setTasks((prevTasks) =>
+            newProgress === 100
+                ? prevTasks.filter((task) => task.id !== taskId) // Remove completed task
+                : prevTasks.map((task) =>
+                    task.id === taskId ? { ...task, progress: newProgress } : task
+                )
+        );
+
+        console.log('Task updated:', response.data); // Log the response
     } catch (error) {
-      console.error("Error updating task progress:", error);
+        console.error("Error updating task progress:", error);
     }
-  };
+};
+
   
   
     // Define drag-and-drop phases
@@ -150,6 +163,7 @@ fetchTasksPie();
         withCredentials: true, 
         
       });
+      fetchTasksPie();
       // If successful, remove the task from the UI state
       setTasks((prevTasks) => prevTasks.filter((task) => task.id !== taskId));
       console.log(response.data.message); // Success message from backend
@@ -159,48 +173,49 @@ fetchTasksPie();
     }
   };
   const navigate = useNavigate();
-  const data = {
-    labels: ['Completed', 'In Progress', 'Not Started'],
-    datasets: [
-      {
-        data: taskProgressData,
-        backgroundColor: ['#28a745', '#ffc107', '#dc3545'],
-        hoverBackgroundColor: ['#218838', '#e0a800', '#c82333'],
-      },
-    ],
-  };
-  
 
   const handleAddTask = async () => {
     try {
+        const newData = {
+            ...newTask,
+            users: [authUser.user.id],
+        };
 
-      const newData = {
-        ...newTask,
-        users:[authUser.user.id],
-      }
-      
-      console.log("taskova vr:",newTask)
-      const { data } = await axios.post(
-        "http://localhost:8000/postTask",
-        newData,
-        { 
-          withXSRFToken:true,
-          withCredentials: true }
-      );
-      setTasks((prevTasks) => [...prevTasks, data.task]);
-      setModalOpen(false);
-      setNewTask({
-        title: "",
-        description: "",
-        priority: "Low",
-        progress: 0,
-        users: [authUser.user.id], // Ensure the user ID is set 
-         });
-      console.log('when adding task authUser is ', authUser);
-    } catch (error) {
-      console.error("Error adding task:", error);
+        console.log("taskova vr:", newTask);
+        const { data } = await axios.post(
+            "http://localhost:8000/postTask",
+            newData,
+            { 
+                withXSRFToken: true,
+                withCredentials: true 
+            }
+        );
+
+        setTasks((prevTasks) => [...prevTasks, data.task]);
+
+        console.log("Refetching task progress data...");
+        
+        // Ensure fetchTasksPie updates state before continuing
+         fetchTasksPie();  
+
+        console.log("Task progress data refetched successfully.");
+
+        setModalOpen(false);
+        setNewTask({
+            title: "",
+            description: "",
+            priority: "Low",
+            progress: 0,
+            users: [authUser.user.id], 
+        });
+
+        console.log('when adding task authUser is ', authUser);
+    } 
+    catch (error) {
+        console.error("Error adding task:", error);
     }
-  };
+};
+
 
   const toggleModal = () => setModalOpen((prev) => !prev);
   const [sortOrder, setSortOrder] = useState("newest");
