@@ -30,34 +30,31 @@ function AppContent() {
   }
 
   return (
-    <div>
-      <Navbar />
+    <div style={{ display: "flex", flexDirection: "column", minHeight: "100vh" }}>
+    <Navbar />
+    <div style={{ flex: 1, overflow: "auto" }}>
       <DndProvider backend={HTML5Backend}>
         <Routes>
-          {/* Redirect to the appropriate route based on login status */}
-          <Route
-            path="/"
-            element={
-              authUser?.isLoggedIn ? (
-                <Navigate to="/crm" replace />
-              ) : (
-                <Navigate to="/register" replace />
-              )
-            }
-          />
+          <Route path="/" element={authUser?.isLoggedIn ? <Navigate to="/crm" replace /> : <Navigate to="/register" replace />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
-          <Route path="/2fa" element={<TwoFactorAuth />} /> {/* Add 2FA route */}
-
+          <Route path="/2fa" element={<TwoFactorAuth />} />
+  
           <Route element={<RequireAuth />}>
             <Route path="/user-profile" element={<UserProfile />} />
-            <Route path="/crm/*" element={<CRMApp />} />
+            <Route path="/crm/*" element={<CRMApp style={{ flex: 1, minHeight: "100%" }} />} />
             <Route path="/AdminPage/*" element={<AdminPage />} />
           </Route>
         </Routes>
       </DndProvider>
-      <Footer />
     </div>
+    <Footer />
+  </div>
+  
+
+
+  
+  
   );
 }
 

@@ -9,14 +9,7 @@
   background-color: 248,249,250;
 }
 
-.MDBModal {
-  display: block !important; /* Force modal to display */
-  z-index: 1050 !important; /* Ensure it is above other elements */
-  position: fixed !important; /* Modal should be fixed */
-  top: 50% !important; /* Center it vertically */
-  left: 50% !important; /* Center it horizontally */
-  transform: translate(-50%, -50%) !important; /* Fine-tune positioning */
-}
+
 
 /* Modal overlay (background) */
 .modal-overlay {
@@ -41,4 +34,14 @@
   width: 100%;
   text-align: center;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+html, body {
+  height: 100%;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+main {
+  flex: 1;
 }

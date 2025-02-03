@@ -258,7 +258,7 @@ fetchTasksPie();
   
 
   return (
-    <MDBContainer fluid className="vh-100">
+    <MDBContainer fluid className="">
     {!authUser.isLoggedIn && (
       <div
         style={{

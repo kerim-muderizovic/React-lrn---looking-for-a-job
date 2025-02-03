@@ -282,8 +282,3 @@
   position: relative !important;
 }
 
-.task-list-container {
-  max-height: 85vh; /* Adjust based on your layout */
-  overflow-y: auto;
-  padding-bottom: 20px; /* Ensures spacing before the footer */
-}

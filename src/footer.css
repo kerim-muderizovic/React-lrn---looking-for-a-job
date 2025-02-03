@@ -1,7 +1,12 @@
 footer {
-    padding: 20px 0;
-  }
-  
+  width: 100%;
+  background: #f8f9fa;
+  padding: 20px;
+  text-align: center;
+  margin-top: auto; /* Push footer to the bottom */
+}
+
+
   footer h6 {
     font-size: 1rem;
     font-weight: bold;

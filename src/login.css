@@ -32,6 +32,7 @@ overflow: hidden;
     align-items: center;
     background: linear-gradient(to right, #6a11cb, #2575fc); /* Adds a cool gradient */
     color: white;
+    /* text-align: center; */
   }
   .imgLogin{
     width: 600px;
