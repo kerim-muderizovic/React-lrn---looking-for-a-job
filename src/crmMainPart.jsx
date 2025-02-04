@@ -258,12 +258,12 @@ fetchTasksPie();
   
 
   return (
-    <MDBContainer fluid className="">
+    <MDBContainer fluid className="gDiv">
     {!authUser.isLoggedIn && (
       <div
         style={{
           position: 'absolute',
-          top: 0,
+          top: '54.3px',
           left: 0,
           right: 0,
           bottom: 0,

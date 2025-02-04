@@ -20,6 +20,10 @@
     overflow: hidden;
     transition: all 0.6s cubic-bezier(0.23, 1, 0.32, 1);
   }
+  /* .task-list-container{
+    top: 54.3px;
+    position: absolute;
+  } */
   
   .animated-button svg {
     position: absolute;
@@ -90,5 +94,5 @@
     opacity: 1;
   }
   
-  .task-list-container{
+  
  

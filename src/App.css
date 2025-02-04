@@ -24,7 +24,9 @@
   align-items: center;
   z-index: 1000;
 }
-
+body{
+  padding-top: 60.7px;
+}
 /* Modal content (box) */
 .modal-content {
   background-color: #fff;

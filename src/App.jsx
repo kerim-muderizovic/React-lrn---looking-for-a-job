@@ -19,7 +19,8 @@ import { I18nextProvider } from 'react-i18next';import './i18';
 import i18n from './i18';
 function AppContent() {
   const { authUser, isLoading } = useAuth();
-
+  console.log(authUser,"testttt");
+const isAdmin=authUser?.user?.role==="admin";
   // Show a loading spinner if user information is still being fetched
   if (isLoading) {
     return (
@@ -48,7 +49,7 @@ function AppContent() {
         </Routes>
       </DndProvider>
     </div>
-    <Footer />
+    {!isAdmin  && <Footer />}
   </div>
   
 

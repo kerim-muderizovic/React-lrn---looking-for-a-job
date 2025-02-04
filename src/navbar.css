@@ -1,38 +1,49 @@
-/* Ensure the navbar brand is on the left and links are on the right */
-.navbar {
-    padding: 0.3rem 0.5rem; /* Adds some spacing */
-  }
-  
-  .navbar-brand {
-    margin-right: auto; /* Push brand to the left */
-  }
-  
-  .navbar-nav {
-    margin-left: auto; /* Push links to the right */
-  }
-  
-  /* Add spacing between nav items */
-  .navbar-nav .nav-link {
-    margin-right: 1rem; /* Add space between links */
-  }
-  
-   
-   .navbar .btn {
-    margin-left: 0.5rem;
-  height: auto;   
+/* Ensure the navbar is fixed at the top */
+.mdb-navbar {
+  position: fixed !important;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1050; /* Ensure it's above other elements */
+  background-color: #ffffff; /* Keep background solid */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Add a shadow */
+}
+/* Push brand to the left */
+.navbar-brand {
+  margin-right: auto;
 }
 
-.btn1{
-    height: 22%;
+/* Push links to the right */
+.navbar-nav {
+  margin-left: auto;
 }
-  *{
-    transition: none; /* Disable transitions on the navbar */
-  }
-  .navbar-collapse,
+
+/* Add spacing between nav items */
+.navbar-nav .nav-link {
+  margin-right: 1rem; /* Add space between links */
+}
+
+/* Button styling */
+.navbar .btn {
+  margin-left: 0.5rem;
+  height: auto;
+}
+
+.btn1 {
+  height: 22%;
+}
+
+/* Disable transitions on the navbar */
+* {
+  transition: none;
+}
+
+.navbar-collapse,
 .navbar-toggler,
 .navbar {
-  transition: none !important; /* Disable all transitions on these elements */
+  transition: none !important;
 }
+
 .navbar-toggler {
   transition: none;
 }
@@ -40,6 +51,7 @@
 .navbar-collapse {
   transition: none !important;
 }
+
 /* Target the MDB buttons */
 .mdb-btn, .btn-primary, .btn-dark {
   transform: none !important;
@@ -52,11 +64,8 @@
   transform: none !important;
   animation: none !important;
 }
-/* Remove unwanted focus styles */
 
 /* Prevent size change on focus or active */
-
-
 .mdb-btn, .btn-primary, .btn-dark {
   padding: 0.5rem 1rem !important; /* Adjust button padding */
   height: auto !important; /* Prevent height changes */
@@ -67,11 +76,7 @@
 }
 
 /* Container styling for the buttons */
-.d-flex {
-  display: flex;
-  gap: 1rem; /* Add spacing between buttons */
-  margin-left: 1rem; /* Add some left margin */
-}
+
 
 /* General button styles */
 button {

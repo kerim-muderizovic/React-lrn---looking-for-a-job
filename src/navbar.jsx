@@ -11,7 +11,7 @@ import {
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from './AuthContext';
 import { useTranslation } from 'react-i18next';
-
+import './navbar.css';
 export default function Navbar() {
   const { logout, authUser } = useAuth();
   const navigate = useNavigate();
@@ -43,7 +43,7 @@ export default function Navbar() {
   };
 
   return (
-    <MDBNavbar expand="lg" light bgColor="light">
+    <MDBNavbar expand="lg" light bgColor="light" className='mdb-navbar'>
       <MDBContainer fluid>
         <MDBNavbarBrand href="/" className="ms-3">
           <img

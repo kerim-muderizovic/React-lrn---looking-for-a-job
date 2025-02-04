@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios'; // Import axios for HTTP requests
+import SideBar from './sideBar';
 import {
   MDBContainer,
   MDBRow,
@@ -136,76 +137,60 @@ const toggleModalAddNewTask =()=>setModalAddNewTaskOpen(!modalAddNewTask);
 
 
   return (
-    <div className="d-flex">
-      {/* Sidebar */}
-      <div className="sidebar bg-light p-3">
-        <MDBNavbarBrand href="/admin" className="mb-4">
-          <MDBIcon fas icon="tools" className="me-2" /> Admin Panel
-        </MDBNavbarBrand>
-        <MDBNavbarNav>
-          <MDBNavbarItem>
-            <MDBNavbarLink href="/admin/users">
-              <MDBIcon fas icon="user" className="me-2" /> Users
-            </MDBNavbarLink>
-          </MDBNavbarItem>
-          <MDBNavbarItem>
-            <MDBNavbarLink href="/admin/tasks">
-              <MDBIcon fas icon="tasks" className="me-2" /> Tasks
-            </MDBNavbarLink>
-          </MDBNavbarItem>
-        </MDBNavbarNav>
-        <div className="mt-4">
-          <strong>Admin:</strong> {adminName || 'Loading...'}
-        </div>
+    
+    <div className="glavniAdmin">
+       {/* Sidebar */}
+       <SideBar users={users}></SideBar>
+    
         
-<AddNewTaskAdmin users={users} /> {/* This component handles the task creation modal */}
+   
+        
+{/* <AddNewTaskAdmin users={users} /> This component handles the task creation modal */}
 
-      </div>
+      
 
       {/* Main Content */}
       <MDBContainer className="main-content">
-        <h1 className="my-4">User Management</h1>
-        <MDBRow>
-          <MDBCol>
-            <MDBTable responsive striped hover>
-              <MDBTableHead>
-                <tr>
-                  <th>#</th>
-                  <th>Name</th>
-                  <th>Email</th>
-                  <th>Role</th>
-                  <th>Actions</th>
-                </tr>
-              </MDBTableHead>
-              <MDBTableBody>
-                {users.filter((u) => u.role !== 'admin').map((user, index) => (
-                  <tr key={user.id}>
-                    <td>{index + 1}</td>
-                    <td>{user.name}</td>
-                    <td>{user.email}</td>
-                    <td>{user.role}</td>
-                    <td>
-                    <td>
-  <MDBBtn
-    size="sm"
-    color="info"
-    onClick={() => startChat(user.id)}
-  >
-    Chat
-  </MDBBtn>
-</td>
-                      <MDBBtn size="sm" color="primary" className="me-2" onClick={() => openEditModal("user", user)}>
-                        Edit
-                      </MDBBtn>
-                      <MDBBtn size="sm" color="danger" onClick={handleDeleteUser()}>
-                        Delete
-                      </MDBBtn>
-                      {!user.approvedByAdmin && (
-                        <MDBBtn size="sm" color="warning">
-                          Approve
-                        </MDBBtn>
-                      )}
-                    </td>
+      <h1 className="my-4">User Management</h1>
+  <MDBRow>
+    <MDBCol>
+      <MDBTable responsive striped hover>
+        <MDBTableHead>
+          <tr>
+            <th>#</th>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Role</th>
+            <th>Actions</th>
+          </tr>
+        </MDBTableHead>
+        <MDBTableBody>
+          {users.filter((u) => u.role !== 'admin').map((user, index) => (
+            <tr key={user.id}>
+              <td>{index + 1}</td>
+              <td>{user.name}</td>
+              <td>{user.email}</td>
+              <td>{user.role}</td>
+              <td>
+                <MDBBtn
+                  size="sm"
+                  color="info"
+                  onClick={() => startChat(user.id)}
+                >
+                  Chat
+                </MDBBtn>
+                <MDBBtn size="sm" color="primary" className="me-2" onClick={() => openEditModal("user", user)}>
+                  Edit
+                </MDBBtn>
+                <MDBBtn size="sm" color="danger" onClick={handleDeleteUser()}>
+                  Delete
+                </MDBBtn>
+                {!user.approvedByAdmin && (
+                  <MDBBtn size="sm" color="warning">
+                    Approve
+                  </MDBBtn>
+                )}
+              </td>
                   </tr>
                 ))}
               </MDBTableBody>
@@ -298,13 +283,6 @@ const toggleModalAddNewTask =()=>setModalAddNewTaskOpen(!modalAddNewTask);
           </div>
         </div>
       )}
-{selectedChatUser && (
-  <ChatWindow
-  userId={authUser.id}
-  receiverId={selectedChatUser}
-  onClose={closeChat}
-/>
-)}
       <MDBRow>
       </MDBRow>
       </MDBContainer>

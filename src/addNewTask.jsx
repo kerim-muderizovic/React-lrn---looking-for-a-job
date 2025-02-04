@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-
+import './addNewTaskAdmin.css';
 export default function AddNewTaskAdmin({ users }) {
   // State for task details
   const [task, setTask] = useState({
@@ -55,7 +55,7 @@ export default function AddNewTaskAdmin({ users }) {
   return (
     <>
       {/* Button to trigger the modal */}
-      <button type="button" className="btn btn-primary" onClick={toggleModal}>
+      <button type="button" className="animated-button" onClick={toggleModal}>
         Add New Task
       </button>
 
