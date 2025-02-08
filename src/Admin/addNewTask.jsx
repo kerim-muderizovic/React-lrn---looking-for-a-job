@@ -55,6 +55,8 @@ export default function AddNewTaskAdmin({ users }) {
   return (
     <>
       {/* Button to trigger the modal */}
+      <div className='DivDodanog'>
+
       <button type="button" className="animated-button" onClick={toggleModal}>
         Add New Task
       </button>
@@ -66,7 +68,6 @@ export default function AddNewTaskAdmin({ users }) {
             <div className="modal-content">
               <div className="modal-header">
                 <h5 className="modal-title" id="taskModalLabel">Add New Task</h5>
-                <button type="button" className="btn-close" onClick={toggleModal} aria-label="Close"></button>
               </div>
               <form onSubmit={handleSubmit}>
                 <div className="modal-body">
@@ -114,22 +115,27 @@ export default function AddNewTaskAdmin({ users }) {
 
                   {/* Assigned Users */}
                   <div className="mb-3">
-                    <label htmlFor="assignedUsers" className="form-label">Assign Users</label>
-                    <select
-                      id="assignedUsers"
-                      className="form-select"
-                      name="assignedUsers"
-                      multiple
-                      value={task.assignedUsers}
-                      onChange={handleUserChange}
-                    >
-                      {users.filter((x)=>x.role!='admin').map((user) => (
-                        <option key={user.id} value={user.id}>
-                          {user.name}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
+                      <label htmlFor="assignedUsers" className="form-label">
+                        Assign Users
+                      </label>
+                      <select
+                        id="assignedUsers"
+                        className="form-select"
+                        name="assignedUsers"
+                        multiple // Enable multi-select
+                        value={task.assignedUsers}
+                        onChange={handleUserChange}
+                      >
+                        {users
+                          .filter((user) => user.role !== 'admin') // Filter out admins
+                          .map((user) => (
+                            <option key={user.id} value={user.id}>
+                              {user.name}
+                            </option>
+                          ))}
+                      </select>
+                      <small className="form-text text-muted">Hold Ctrl (or Cmd) to select multiple users.</small>
+                    </div>
 
                   {/* Task Progress */}
                   <div className="mb-3">
@@ -156,6 +162,7 @@ export default function AddNewTaskAdmin({ users }) {
           </div>
         </div>
       )}
+      </div>
       
       {/* Backdrop */}
       {showModal && <div className="modal-backdrop fade show"></div>}

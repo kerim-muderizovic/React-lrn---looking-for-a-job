@@ -1,6 +1,7 @@
 import React, { createContext, useState, useContext, useEffect } from 'react';
 import axios from 'axios';
-
+import './AuthContext.css';
+import Loading from './Admin/isLoading';
 // Create the AuthContext
 const AuthContext = createContext();
 
@@ -81,7 +82,7 @@ export const AuthProvider = ({ children }) => {
 
   // Provide loading state while initializing
   if (isLoading) {
-    return <div>Loading...</div>; // Replace with a spinner or loading component
+    <Loading/>
   }
 
   return (

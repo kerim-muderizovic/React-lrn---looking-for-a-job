@@ -1,0 +1,180 @@
+.activity-log {
+  font-family: Arial, sans-serif;
+  padding: 20px;
+  width: 87%;
+  margin-left: 13.02%;
+  background-color: #3f5164;
+height: 100vh;
+}
+
+.log-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 20px;
+}
+
+/* Table Header */
+.log-table thead tr {
+  background-color: #444;
+  color: white;
+  font-weight: bold;
+  text-transform: uppercase;
+}
+
+.log-table th {
+  padding: 15px;
+  text-align: center;
+}
+
+/* Colored Header Sections */
+.log-table th:nth-child(1) { background-color: #FFD700; } /* Yellow */
+.log-table th:nth-child(2) { background-color: #FF6347; } /* Red-Orange */
+.log-table th:nth-child(3) { background-color: #C71585; } /* Purple-Pink */
+.log-table th:nth-child(4) { background-color: #6A0DAD; } /* Dark Purple */
+
+/* Table Rows */
+.log-table tbody tr {
+  background-color: white;
+  transition: background 0.3s ease-in-out;
+}
+
+.log-table tbody tr:nth-child(even) {
+  background-color: #f8f8f8; /* Light gray for alternating rows */
+}
+
+/* Highlight Specific Row */
+
+
+/* Table Cells */
+.log-table td {
+  padding: 12px;
+  border-bottom: 1px solid #ddd;
+  text-align: center;
+}
+
+/* Align numbers to the right */
+.log-table td:nth-child(2),
+.log-table td:nth-child(3),
+.log-table td:nth-child(5) {
+  text-align: center;
+}
+
+/* Orange Text for Percentage Column */
+.log-table td:nth-child(3) {
+  color: #FF4500; /* Deep orange */
+  font-weight: bold;
+}
+
+/* Center YES/NO values */
+.log-table td:nth-child(4) {
+  text-align: center;
+  font-weight: bold;
+}
+
+/* Pagination */
+.pagination {
+  display: flex;
+  justify-content: center;
+  gap: 5px;
+  margin-top: 10px;
+}
+
+.pagination button {
+  padding: 8px 12px;
+  font-size: 14px;
+  cursor: pointer;
+  border: none;
+  background-color: #ddd;
+  transition: 0.2s;
+}
+
+.pagination button:hover {
+  background-color: #bbb;
+}
+
+
+/* From Uiverse.io by 3bdel3ziz-T */ 
+.select {
+  width: fit-content;
+  cursor: pointer;
+  position: relative;
+  transition: 300ms;
+  color: white;
+  overflow: hidden;
+}
+
+.selected {
+  background-color: #2a2f3b;
+  padding: 5px;
+  margin-bottom: 3px;
+  border-radius: 5px;
+  position: relative;
+  z-index: 100000;
+  font-size: 15px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.arrow {
+  position: relative;
+  right: 0px;
+  height: 10px;
+  transform: rotate(-90deg);
+  width: 25px;
+  fill: white;
+  z-index: 100000;
+  transition: 300ms;
+}
+
+.options {
+  display: flex;
+  flex-direction: column;
+  border-radius: 5px;
+  padding: 5px;
+  background-color: yellow;
+  position: relative;
+  top: -100px;
+  opacity: 0;
+  transition: 300ms;
+}
+
+.select:hover > .options {
+  opacity: 1;
+  top: 0;
+}
+
+.select:hover > .selected .arrow {
+  transform: rotate(0deg);
+}
+
+.option {
+  border-radius: 5px;
+  padding: 5px;
+  transition: 300ms;
+  background-color: yellow;
+  width: 150px;
+  font-size: 15px;
+}
+.option:hover {
+  background-color: #323741;
+}
+
+.options input[type="radio"] {
+  display: none;
+}
+
+.options label {
+  display: inline-block;
+}
+.options label::before {
+  content: attr(data-txt);
+}
+
+.options input[type="radio"]:checked + label {
+  display: none;
+}
+
+.options input[type="radio"]#all:checked + label {
+  display: none;
+}

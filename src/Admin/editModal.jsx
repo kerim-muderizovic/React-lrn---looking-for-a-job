@@ -8,6 +8,7 @@ const EditModal = ({
   onSave, 
   onClose 
 }) => {
+  console.log("Checking Modal Visibility: ", isOpen);
   if (!isOpen) return null; // Don't render anything if modal is closed
 
   return (

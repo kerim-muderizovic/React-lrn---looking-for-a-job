@@ -2,7 +2,8 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom'; // For navigation
 import './sideBar.css'; // Import your CSS file
 import AddNewTaskAdmin from './addNewTask';
-const Sidebar = ( {users} ) => {
+import Chat from './chat';
+const Sidebar = ( {users,setscreen,selectedScreen} ) => {
   const [isCollapsed, setIsCollapsed] = useState(false);
 
   const toggleSidebar = () => {
@@ -13,39 +14,43 @@ const Sidebar = ( {users} ) => {
     <div className={`sidebar ${isCollapsed ? 'collapsed' : ''}`}>
       {/* Sidebar Header */}
       <div className="sidebar-header">
-        <h3>Admin Panel</h3>
-        <button className="toggle-btn" onClick={toggleSidebar}>
-          {isCollapsed ? '>' : '<'}
-        </button>
+        <h3>{isCollapsed ? '' : 'Admin Panel'}</h3>
+       
       </div>
 
       {/* Sidebar Menu */}
       <ul className="sidebar-menu">
         <li>
-          <Link to="/dashboard">
+          <Link >
             <span className="icon">🏠</span>
             {!isCollapsed && <span className="text">Dashboard</span>}
           </Link>
         </li>
         <li>
-          <Link to="/users">
+          <Link>
             <span className="icon">👥</span>
-            {!isCollapsed && <span className="text">Users</span>}
+            {!isCollapsed && <span className="text" onClick={()=>setscreen('UserTask')}>Users</span>}
           </Link>
         </li>
         <li>
-          <Link to="/products">
-            <span className="icon">📦</span>
-            {!isCollapsed && <span className="text">Products</span>}
+          <Link>
+          <span className='icon'>
+          <i class="fa-solid fa-clock-rotate-left"></i>
+          </span>
+            {!isCollapsed && <span className="text" onClick={()=>setscreen('activityLog')} >Activity log</span>}
           </Link>
         </li>
         <li>
-          <Link to="/settings">
+          <Link >
             <span className="icon">⚙️</span>
-            {!isCollapsed && <span className="text">Settings</span>}
+            {!isCollapsed && <span className="text" onClick={()=>setscreen('Settings')}>Settings</span>}
           </Link>
-      <AddNewTaskAdmin users={users}/>
         </li>
+        <div>
+      <h1>Real-Time Chat</h1>
+      <Chat userId={1} adminId={2} /> {/* Replace with dynamic IDs */}
+    </div>
+       {selectedScreen==='UserTask' && <AddNewTaskAdmin users={users}/>}
       </ul>
     </div>
   );

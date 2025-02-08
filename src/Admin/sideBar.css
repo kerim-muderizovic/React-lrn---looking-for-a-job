@@ -4,7 +4,7 @@
     top: 54.3px;
     left: 0;
     height: 100vh;  /* Ensure sidebar stretches full height */
-    width: 250px;  /* Or any width you want */
+    width: 13.02%;  /* Or any width you want */
     background-color: #2c3e50;
     color: white;
     transition: width 0.3s ease;
@@ -22,7 +22,9 @@
     align-items: center;
     padding: 20px;
     background-color: #34495e;
+    height: 15%;
   }
+  
   
   .sidebar-header h3 {
     margin: 0;
@@ -35,9 +37,7 @@
     color: white;
     font-size: 1.5rem;
     cursor: pointer;
-    position: absolute;
-    top: 2%;  /* Position it inside the sidebar */
-    right: 2%;  /* Position it outside the sidebar when collapsed */
+    /* position: absolute; */
     z-index: 10;  /* Ensure it's on top of the sidebar */
   }
   /* Sidebar Menu */
@@ -51,7 +51,10 @@
     padding: 15px 20px;
     transition: background-color 0.3s ease;
   }
-  
+  i{
+    /* padding: 15px 20px; */
+    transition: background-color 0.3s ease;
+  }
   .sidebar-menu li:hover {
     background-color: #34495e;
   }
@@ -81,3 +84,5 @@
     font-size: 1.2rem;
     margin-right: 10px;
   }
+
+  

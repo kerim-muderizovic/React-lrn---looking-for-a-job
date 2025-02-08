@@ -243,7 +243,11 @@ fetchTasksPie();
   }, {});
 
   if (!authUser.isLoggedIn) {
-    return <div> loading</div>
+    <div class="three-body">
+    <div class="three-body__dot"></div>
+    <div class="three-body__dot"></div>
+    <div class="three-body__dot"></div>
+    </div>
   }
 
   const priorityColors = {

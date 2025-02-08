@@ -8,7 +8,7 @@ import Register from './register';
 import CRMApp from './crmMainPart';
 import '../node_modules/bootstrap/dist/css/bootstrap.min.css';
 import UserProfile from './user-profile';
-import AdminPage from './AdminPage';
+import AdminPage from './Admin/AdminPage';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import { ClipLoader } from 'react-spinners';
@@ -24,8 +24,11 @@ const isAdmin=authUser?.user?.role==="admin";
   // Show a loading spinner if user information is still being fetched
   if (isLoading) {
     return (
-      <div className="loading-container">
-        <ClipLoader color="#36d7b7" size={150} />
+    
+      <div class="three-body">
+      <div class="three-body__dot"></div>
+      <div class="three-body__dot"></div>
+      <div class="three-body__dot"></div>
       </div>
     );
   }

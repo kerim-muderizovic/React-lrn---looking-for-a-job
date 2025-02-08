@@ -4,6 +4,9 @@
     align-items: center;
     gap: 4px;
     padding: 16px 36px;
+    margin-top: 20%;
+    margin-left: auto;
+    margin-right: auto;
     border: 4px solid;
     border-color: transparent;
     font-size: 16px;
@@ -16,7 +19,12 @@
     overflow: hidden;
     transition: all 0.6s cubic-bezier(0.23, 1, 0.32, 1);
   }
-  
+  label{
+    color: black;
+  }
+  .DivDodanog{
+    z-index: 1001;
+  }
   .animated-button svg {
     position: absolute;
     width: 24px;
@@ -86,3 +94,24 @@
     opacity: 1;
   }
  
+
+  .modal-content
+  {
+    margin-top: 20%;
+    height: 40%;
+  }
+
+  /* addNewTaskAdmin.css */
+.form-select[multiple] {
+  height: auto; /* Allow the dropdown to expand based on the number of options */
+  padding: 0.5rem;
+}
+
+.form-select[multiple] option {
+  padding: 0.5rem;
+}
+
+.form-select[multiple] option:checked {
+  background-color: #007bff; /* Highlight selected options */
+  color: white;
+}
