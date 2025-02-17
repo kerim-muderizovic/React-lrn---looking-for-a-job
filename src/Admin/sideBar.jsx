@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom'; // For navigation
 import './sideBar.css'; // Import your CSS file
 import AddNewTaskAdmin from './addNewTask';
-import Chat from './chat';
 const Sidebar = ( {users,setscreen,selectedScreen} ) => {
   const [isCollapsed, setIsCollapsed] = useState(false);
 
@@ -47,8 +46,6 @@ const Sidebar = ( {users,setscreen,selectedScreen} ) => {
           </Link>
         </li>
         <div>
-      <h1>Real-Time Chat</h1>
-      <Chat userId={1} adminId={2} /> {/* Replace with dynamic IDs */}
     </div>
        {selectedScreen==='UserTask' && <AddNewTaskAdmin users={users}/>}
       </ul>

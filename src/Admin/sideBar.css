@@ -85,4 +85,48 @@
     margin-right: 10px;
   }
 
+  @media (max-width: 768px) {
+    .sidebar {
+        width: 60px; /* Collapse sidebar by default on small screens */
+    }
+
+    .sidebar-header {
+        padding: 10px; /* Reduce padding for small screens */
+    }
+
+    .sidebar-header h3 {
+        display: none; /* Hide the header text on small screens */
+    }
+
+    .toggle-btn {
+        font-size: 1.2rem; /* Reduce toggle button size */
+    }
+
+    .sidebar-menu li {
+        padding: 10px 15px; /* Reduce padding for menu items */
+    }
+
+    .sidebar-menu .icon {
+        font-size: 1rem; /* Reduce icon size */
+        margin-right: 0; /* Remove margin for icons */
+    }
+
+    .sidebar-menu .text {
+        display: none; /* Hide text on small screens */
+    }
+
+    /* Show text on hover for collapsed sidebar */
+    .sidebar.collapsed:hover {
+        width: 200px; /* Expand sidebar on hover */
+    }
+
+    .sidebar.collapsed:hover .text {
+        display: inline; /* Show text on hover */
+    }
+
+    .sidebar.collapsed:hover .sidebar-header h3 {
+        display: block; /* Show header text on hover */
+    }
+}
+
   

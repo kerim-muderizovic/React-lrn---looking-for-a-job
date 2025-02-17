@@ -28,7 +28,6 @@ import ActivityLog from './activityLog';
 import UserTask from './UsersTask';
 import Settings from './settings';
 import Loading from './isLoading';
-import Chat from './chat';
 const handleDeleteUser =()=>{
     console.log('clicked')
 }
@@ -183,7 +182,6 @@ const toggleModalAddNewTask =()=>setModalAddNewTaskOpen(!modalAddNewTask);
         
     {renderSelectedScreen()}
 {/* <AddNewTaskAdmin users={users} /> This component handles the task creation modal */}
-<Chat userId={1} adminId={2} /> {/* Replace with dynamic IDs */}
 
       
 <EditModal

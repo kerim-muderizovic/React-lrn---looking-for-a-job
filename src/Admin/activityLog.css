@@ -178,3 +178,42 @@ height: 100vh;
 .options input[type="radio"]#all:checked + label {
   display: none;
 }
+
+@media (max-width: 768px) {
+  .activity-log {
+    width: 83%; /* Full width on small screens */
+    margin-left: 17%; /* Remove left margin */
+    padding: 10px; /* Reduce padding */
+  }
+
+  .log-table th,
+  .log-table td {
+    padding: 8px; /* Reduce cell padding */
+    font-size: 12px; /* Reduce font size */
+  }
+
+  .log-table th {
+    font-size: 14px; /* Slightly larger header font size */
+  }
+
+  .pagination button {
+    padding: 6px 10px; /* Reduce button padding */
+    font-size: 12px; /* Reduce button font size */
+  }
+
+  .select {
+    width: 100%; /* Full width for dropdown */
+  }
+
+  .selected {
+    font-size: 14px; /* Reduce font size */
+  }
+
+  .options {
+    width: 100%; /* Full width for dropdown options */
+  }
+
+  .option {
+    width: 100%; /* Full width for dropdown options */
+  }
+}

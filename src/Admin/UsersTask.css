@@ -161,17 +161,37 @@ h1
   
   /* Responsive Table */
   @media (max-width: 768px) {
+    .UsersTask {
+        padding: 10px; /* Reduce padding for small screens */
+    }
+
+    .main-content {
+        padding: 10px; /* Reduce padding for small screens */
+    }
+
+    .UserH {
+        font-size: 20px; /* Adjust heading size for small screens */
+    }
+
     table {
-      font-size: 12px;
+        font-size: 12px; /* Reduce font size for small screens */
     }
-  
+
     th, td {
-      padding: 8px;
+        padding: 8px; /* Reduce cell padding for small screens */
     }
-  
+
+    th {
+        font-size: 14px; /* Reduce header font size for small screens */
+    }
+
     .MDBBtn {
-      padding: 4px 8px;
-      font-size: 10px;
+        padding: 4px 8px; /* Reduce button padding for small screens */
+        font-size: 10px; /* Reduce button font size for small screens */
     }
-  }
-  
+
+    .pagination button {
+        padding: 6px 10px; /* Reduce pagination button padding for small screens */
+        font-size: 12px; /* Reduce pagination button font size for small screens */
+    }
+}
