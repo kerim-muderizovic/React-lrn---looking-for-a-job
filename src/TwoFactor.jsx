@@ -4,12 +4,13 @@ import { MDBContainer, MDBRow, MDBCol, MDBInput, MDBBtn } from 'mdb-react-ui-kit
 import './twoFcator.css';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from './AuthContext';
+
 export default function TwoFactorAuth({ setView }) {
   const [code, setCode] = useState('');
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
-  const navigate=useNavigate();
-  const {setauthUser,logout}=useAuth();
+  const navigate = useNavigate();
+  const { setAuthUser, logout, fetchAuthenticatedUser } = useAuth();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -23,10 +24,18 @@ export default function TwoFactorAuth({ setView }) {
         headers: { 'Content-Type': 'application/json' },
       });
 
+      console.log('2FA verification successful:', response.data);
+      
+      // Update auth state with the response data
+      setAuthUser(response.data);
+      
+      // Double-check authentication state by fetching from server
+      await fetchAuthenticatedUser();
+      
       const { user } = response.data;
 
       if (user.role === 'admin') {
-       navigate('/adminPage'); // Navigate to admin dashboard
+        navigate('/AdminPage'); // Navigate to admin dashboard (note the capital P)
       } else {
         navigate('/crm'); // Navigate to CRM
       }

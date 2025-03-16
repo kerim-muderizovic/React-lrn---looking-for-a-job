@@ -1,7 +1,58 @@
-import React from 'react';
+import React, { useState } from 'react';
 import '../Admin/settings.css'; // Assuming you have a CSS file for styling
 
+const ToggleSwitch = ({ isOn, handleToggle, label }) => {
+  return (
+    <div className="toggle-switch-container">
+      <div className="toggle-switch">
+        <input
+          type="checkbox"
+          checked={isOn}
+          onChange={handleToggle}
+          className="toggle-switch-checkbox"
+          id={`toggle-switch-${label}`}
+        />
+        <label className="toggle-switch-label" htmlFor={`toggle-switch-${label}`}>
+          <span className="toggle-switch-inner"></span>
+          <span className="toggle-switch-switch"></span>
+        </label>
+      </div>
+    </div>
+  );
+};
+
 const Settings = () => {
+  // State for settings
+  const [settings, setSettings] = useState({
+    allowNewAccounts: true,
+    allowPasswordReset: true,
+    requireStrongPasswords: false,
+    gracePeriod: 30
+  });
+
+  // Handle checkbox changes
+  const handleCheckboxChange = (setting) => {
+    setSettings({
+      ...settings,
+      [setting]: !settings[setting]
+    });
+  };
+
+  // Handle number input changes
+  const handleNumberChange = (e) => {
+    setSettings({
+      ...settings,
+      gracePeriod: parseInt(e.target.value) || 0
+    });
+  };
+
+  // Save settings function
+  const saveSettings = () => {
+    // Here you would typically send the settings to your backend
+    console.log('Saving settings:', settings);
+    alert('Settings saved successfully!');
+  };
+
   return (
     <div className='jedanDIv'>
       <div className="admin-settings">
@@ -15,7 +66,11 @@ const Settings = () => {
                 <label>
                   Allow creating new accounts
                 </label>
-                <input type="checkbox" className='checkBoxAdminPanel' />
+                <ToggleSwitch 
+                  isOn={settings.allowNewAccounts}
+                  handleToggle={() => handleCheckboxChange('allowNewAccounts')}
+                  label="allowNewAccounts"
+                />
               </div>
               <p className='AdminPanelP'>By default, any user visiting your Baserow domain can sign up for a new account.</p>
               <div className='FamoznaLinija'>
@@ -27,7 +82,11 @@ const Settings = () => {
                 <label>
                   Allow resetting password
                 </label>
-                <input type="checkbox" className='checkBoxAdminPanel' />
+                <ToggleSwitch 
+                  isOn={settings.allowPasswordReset}
+                  handleToggle={() => handleCheckboxChange('allowPasswordReset')}
+                  label="allowPasswordReset"
+                />
               </div>
               <p className='AdminPanelP'>By default, users can request a password reset link.</p>
             </div>
@@ -39,29 +98,47 @@ const Settings = () => {
             <div className="setting">
               <div className='tajDrugiDiv'>
                 <label>
-                  Grace delay
-                  <input type="number" value="30" readOnly />
+                  Grace delay (days)
+                  <input 
+                    type="number" 
+                    value={settings.gracePeriod}
+                    onChange={handleNumberChange}
+                    min="1"
+                    max="365"
+                  />
                 </label>
               </div>
               <p>This is the number of days without a login after which an account scheduled for deletion is permanently deleted.</p>
             </div>
           </div>
 
-          {/* Section 3: Add more sections here if needed */}
-          {/* Example:
+          {/* Section 3: Security Settings */}
           <div className="section">
-            <h3>Another Section</h3>
+            <h3>Security Settings</h3>
             <div className="setting">
               <div className='tajDrugiDiv'>
                 <label>
-                  Example Setting
+                  Require strong passwords
                 </label>
-                <input type="checkbox" className='checkBoxAdminPanel' />
+                <ToggleSwitch 
+                  isOn={settings.requireStrongPasswords}
+                  handleToggle={() => handleCheckboxChange('requireStrongPasswords')}
+                  label="requireStrongPasswords"
+                />
               </div>
-              <p className='AdminPanelP'>This is an example setting description.</p>
+              <p className='AdminPanelP'>Enforce password complexity requirements for all users.</p>
             </div>
           </div>
-          */}
+
+          {/* Save Button */}
+          <div className="save-section">
+            <button 
+              className="save-button" 
+              onClick={saveSettings}
+            >
+              Save Changes
+            </button>
+          </div>
         </div>
       </div>
     </div>
