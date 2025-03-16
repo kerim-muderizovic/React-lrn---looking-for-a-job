@@ -62,31 +62,27 @@ export default function UserTask({ users, tasks, startChat, openEditModal, handl
                   <td>{user.email}</td>
                   <td>{user.role}</td>
                   <td>
-                    <MDBBtn size="sm" color="info" onClick={() => startChat(user.id)}>
-                      Chat
-                    </MDBBtn>
-                    <MDBBtn
-                      size="sm"
-                      color="primary"
-                      className="me-2"
-                      onClick={() => {
-                         // Debugging
-                        openEditModal("user", user)}}
-                    >
-                      Edit
-                    </MDBBtn>
-                    <MDBBtn
-                      size="sm"
-                      color="danger"
-                      onClick={() =>{ handleDeleteUser(user.id);console.log("Delete button clicked for task:", user);}}
-                    >
-                      Delete
-                    </MDBBtn>
-                    {!user.approvedByAdmin && (
-                      <MDBBtn size="sm" color="warning">
-                        Approve
-                      </MDBBtn>
-                    )}
+                  <button className="btn btn-info" onClick={() => startChat(user.id)}>
+    Chat
+  </button>
+  <button
+    className="btn btn-primary me-2"
+    onClick={() => openEditModal("user", user)}
+  >
+    Edit
+  </button>
+  <button
+    className="btn btn-danger"
+    onClick={() => {
+      handleDeleteUser(user.id);
+      console.log("Delete button clicked for task:", user);
+    }}
+  >
+    Delete
+  </button>
+  {!user.approvedByAdmin && (
+    <button className="btn btn-warning">Approve</button>
+  )}
                   </td>
                 </tr>
               ))}
@@ -115,9 +111,12 @@ export default function UserTask({ users, tasks, startChat, openEditModal, handl
                   <td>{index + 1}</td>
                   <td>{task.title}</td>
                   <td>
-                    <MDBBtn size="sm" color="info" onClick={() => showDescription(task)}>
-                      Show Description
-                    </MDBBtn>
+                  <button
+                    className="btn btn-info btn-sm"
+                    onClick={() => showDescription(task)}
+                  >
+                    Show Description
+                  </button>
                   </td>
                   <td>
                     {(task.users || []).length > 0
@@ -126,17 +125,18 @@ export default function UserTask({ users, tasks, startChat, openEditModal, handl
                   </td>
                   <td>{task.progress} %</td>
                   <td>
-                    <MDBBtn
-                      size="sm"
-                      color="primary"
-                      className="me-2"
-                      onClick={() => {openEditModal("task", task)}}
-                    >
-                      Edit
-                    </MDBBtn>
-                    <MDBBtn size="sm" color="danger" onClick={() => handleDeleteTask(task.id)}>
-                      Delete
-                    </MDBBtn>
+                  <button
+                    className="btn btn-primary me-2"
+                    onClick={() => openEditModal("task", task)}
+                  >
+                    Edit
+                  </button>
+                  <button
+                    className="btn btn-danger"
+                    onClick={() => handleDeleteTask(task.id)}
+                  >
+                    Delete
+                  </button>
                   </td>
                 </tr>
               ))}
@@ -161,9 +161,12 @@ export default function UserTask({ users, tasks, startChat, openEditModal, handl
                 {selectedTask.description ? selectedTask.description : 'No description available.'}
               </div>
               <div className="modal-footer">
-                <MDBBtn color="secondary" onClick={toggleModal}>
-                  Close
-                </MDBBtn>
+                                <button
+                    className="btn btn-secondary"
+                    onClick={toggleModal}
+                  >
+                    Close
+                  </button>
               </div>
             </div>
           </div>

@@ -152,3 +152,14 @@ main {
   }
  }
  
+ .mdb-btn {
+  transition: none !important;
+  animation: none !important;
+}
+
+/* If the animations are applied to pseudo-elements */
+.mdb-btn::before,
+.mdb-btn::after {
+  transition: none !important;
+  animation: none !important;
+}

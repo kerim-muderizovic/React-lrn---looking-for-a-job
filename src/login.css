@@ -1,3 +1,4 @@
+/* Divider Styling */
 .divider:after,
 .divider:before {
   content: "";
@@ -5,48 +6,108 @@
   height: 1px;
   background: #eee;
 }
+
+/* Custom Height Adjustment */
 .h-custom {
   height: calc(100% - 73px);
 }
+
 @media (max-width: 450px) {
   .h-custom {
-  height: 100%;
+    height: 100%;
   }
 }
 
+/* Global Styling */
 html, body {
-    height: 100%;
-    margin: 0;
-  }
-  
-  #root, .h-custom, .login-page {
-    height: 100%; /* Ensures the component takes the full height of the page */
-  }
-  
-  .login-page {
-    min-height: 100vh !important;
-overflow: hidden;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    background: linear-gradient(to right, #6a11cb, #2575fc); /* Adds a cool gradient */
-    color: white;
-    /* text-align: center; */
-  }
-  .imgLogin{
-    width: 600px;
-    margin-left: 17%; /* Moves image away from the left */
-  margin-bottom: 100px;
-  }
-  .divImfg{
-    display: flex;
-    justify-content: center;
+  height: 100%;
+  margin: 0;
+}
+
+#root, .h-custom, .login-page {
+  height: 100%; /* Ensures the component takes the full height of the page */
+}
+
+/* Login Page Styling */
+.login-page {
+  min-height: 100vh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background: linear-gradient(to right, #6a11cb, #2575fc); /* Adds a cool gradient */
+  color: white;
+  padding: 20px; /* Adds padding for better spacing on smaller screens */
+}
+
+/* Logo Container Styling */
+.divImfg {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20px; /* Adds spacing below the logo */
+}
+
+/* Logo Image Styling */
+.imgLogin {
+  width: 100%; /* Makes the logo responsive */
+  max-width: 600px; /* Limits the maximum width */
+  height: auto; /* Maintains aspect ratio */
+}
+
+/* Input Container Styling */
+.input-container {
+  width: 100%;
+  max-width: 400px; /* Limits the width of inputs */
+  margin: 0 auto; /* Centers the inputs */
+}
+
+/* Input Styling */
+.input-container input {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 15px; /* Adds spacing between inputs */
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  font-size: 16px;
+}
+
+/* Forgot Password Link Styling */
+.fPassword {
+  color: rgb(30, 255, 0);
+  font-size: 1.2rem; /* Uses relative units for better responsiveness */
+  font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+  text-decoration: none;
+  margin-top: 10px; /* Adds spacing above the link */
+  display: block; /* Ensures the link is on its own line */
+  text-align: center; /* Centers the link */
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+  .imgLogin {
+    max-width: 400px; /* Reduces logo size on tablets */
   }
 
-  .fPassword{
-    color: rgb(30, 255, 0);
-font-size: x-large;
-font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
-text-decoration: none;
+  .input-container {
+    max-width: 350px; /* Adjusts input width for tablets */
   }
+
+  .fPassword {
+    font-size: 1rem; /* Reduces font size for smaller screens */
+  }
+}
+
+@media (max-width: 480px) {
+  .imgLogin {
+    max-width: 300px; /* Further reduces logo size on mobile */
+  }
+
+  .input-container {
+    max-width: 300px; /* Further adjusts input width for mobile */
+  }
+
+  .fPassword {
+    font-size: 0.9rem; /* Further reduces font size for very small screens */
+  }
+}

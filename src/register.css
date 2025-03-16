@@ -13,6 +13,7 @@ div.custom-card {
   max-width: 800px !important;
   background-color: transparent !important;
   box-shadow: none !important;
+  margin: 0 auto; /* Center the card horizontally */
 }
 
 div.custom-card .card-body {
@@ -30,11 +31,13 @@ div.custom-card .card-body {
   text-align: center;
 }
 
-/* Ensure image is not too big */
+/* Ensure image is responsive */
 .imgC {
   width: 100%;
   max-width: 400px; /* Adjust max-width to control image size */
   height: auto;
+  display: block; /* Ensure the image behaves as a block element */
+  margin: 0 auto; /* Center the image */
 }
 
 /* Ensure Flex behavior is applied correctly */
@@ -42,7 +45,8 @@ div.custom-card .card-body {
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-left: 0;
+  margin: 0 !important; /* Remove margin */
+  padding: 0 !important; /* Remove padding */
 }
 
 .d-flex.flex-column {
@@ -58,19 +62,31 @@ div.custom-card .card-body {
   /* Ensure form columns take full width on smaller screens */
   .custom-card {
     max-width: 100%;
+    padding: 15px; /* Reduce padding on smaller screens */
   }
 
   .d-flex {
     flex-direction: column; /* Stack elements vertically on smaller screens */
   }
+
+  div.custom-card .card-body {
+    padding: 20px; /* Reduce padding on smaller screens */
+  }
 }
+
+/* Additional adjustments for very small screens */
+@media (max-width: 480px) {
+  .imgC {
+    max-width: 200px; /* Further reduce image size on very small screens */
+  }
+
+  div.custom-card .card-body {
+    padding: 15px; /* Further reduce padding */
+  }
+}
+
+/* Container adjustments */
 .mdb-container-fluid {
   margin-left: 0 !important;
   margin-right: 0 !important;
-}
-.d-flex {
-  margin: 0 !important; /* Remove margin */
-  padding: 0 !important; /* Remove padding */
-  justify-content: center !important;
-  align-items: center !important;
 }

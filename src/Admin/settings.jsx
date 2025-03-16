@@ -1,122 +1,71 @@
-import React, { useState } from 'react';
-import './settings.css';
+import React from 'react';
+import '../Admin/settings.css'; // Assuming you have a CSS file for styling
 
 const Settings = () => {
-    const [siteTitle, setSiteTitle] = useState("My Website");
-    const [tagline, setTagline] = useState("Just another amazing website");
-    const [email, setEmail] = useState("admin@example.com");
-    const [disableSignup, setDisableSignup] = useState(false);
-    const [newPassword, setNewPassword] = useState("");
-    const [emailMessage, setEmailMessage] = useState("");
+  return (
+    <div className='jedanDIv'>
+      <div className="admin-settings">
+        <h2 className='AdminH2'>Admin settings</h2>
+        <div className='AdminH3'>
+          {/* Section 1: Account restrictions */}
+          <div className="section">
+            <h3>Account restrictions</h3>
+            <div className="setting">
+              <div className='tajDrugiDiv'>
+                <label>
+                  Allow creating new accounts
+                </label>
+                <input type="checkbox" className='checkBoxAdminPanel' />
+              </div>
+              <p className='AdminPanelP'>By default, any user visiting your Baserow domain can sign up for a new account.</p>
+              <div className='FamoznaLinija'>
 
-    const saveSettings = () => {
-        alert("Settings saved successfully!");
-    };
-
-    return (
-        <div className="containerSettings">
-            <h2>Admin Settings</h2>
-
-            {/* Site Title */}
-            <div className='formaSetinga'>
-            <label className="search-label">
-                <input
-                    type="text"
-                    className="input"
-                    value={siteTitle}
-                    onChange={(e) => setSiteTitle(e.target.value)}
-                    placeholder="Enter site title..."
-                />
-                <kbd className="slash-icon">/</kbd>
-                <svg className="search-icon" xmlns="http://www.w3.org/2000/svg" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink" width="512" height="512" x="0" y="0" viewBox="0 0 56.966 56.966" style={{ enableBackground: 'new 0 0 512 512' }} xmlSpace="preserve">
-                    <g>
-                        <path d="M55.146 51.887 41.588 37.786A22.926 22.926 0 0 0 46.984 23c0-12.682-10.318-23-23-23s-23 10.318-23 23 10.318 23 23 23c4.761 0 9.298-1.436 13.177-4.162l13.661 14.208c.571.593 1.339.92 2.162.92.779 0 1.518-.297 2.079-.837a3.004 3.004 0 0 0 .083-4.242zM23.984 6c9.374 0 17 7.626 17 17s-7.626 17-17 17-17-7.626-17-17 7.626-17 17-17z" fill="currentColor" data-original="#000000"></path>
-                    </g>
-                </svg>
-            </label>
-
-            {/* Tagline */}
-            <label className="search-label">
-                <input
-                    type="text"
-                    className="input"
-                    value={tagline}
-                    onChange={(e) => setTagline(e.target.value)}
-                    placeholder="Enter tagline..."
-                />
-                <kbd className="slash-icon">/</kbd>
-                <svg className="search-icon" xmlns="http://www.w3.org/2000/svg" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink" width="512" height="512" x="0" y="0" viewBox="0 0 56.966 56.966" style={{ enableBackground: 'new 0 0 512 512' }} xmlSpace="preserve">
-                    <g>
-                        <path d="M55.146 51.887 41.588 37.786A22.926 22.926 0 0 0 46.984 23c0-12.682-10.318-23-23-23s-23 10.318-23 23 10.318 23 23 23c4.761 0 9.298-1.436 13.177-4.162l13.661 14.208c.571.593 1.339.92 2.162.92.779 0 1.518-.297 2.079-.837a3.004 3.004 0 0 0 .083-4.242zM23.984 6c9.374 0 17 7.626 17 17s-7.626 17-17 17-17-7.626-17-17 7.626-17 17-17z" fill="currentColor" data-original="#000000"></path>
-                    </g>
-                </svg>
-            </label>
-
-            {/* Admin Email */}
-            <label className="search-label">
-                <input
-                    type="email"
-                    className="input"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    placeholder="Enter admin email..."
-                />
-                <kbd className="slash-icon">/</kbd>
-                <svg className="search-icon" xmlns="http://www.w3.org/2000/svg" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink" width="512" height="512" x="0" y="0" viewBox="0 0 56.966 56.966" style={{ enableBackground: 'new 0 0 512 512' }} xmlSpace="preserve">
-                    <g>
-                        <path d="M55.146 51.887 41.588 37.786A22.926 22.926 0 0 0 46.984 23c0-12.682-10.318-23-23-23s-23 10.318-23 23 10.318 23 23 23c4.761 0 9.298-1.436 13.177-4.162l13.661 14.208c.571.593 1.339.92 2.162.92.779 0 1.518-.297 2.079-.837a3.004 3.004 0 0 0 .083-4.242zM23.984 6c9.374 0 17 7.626 17 17s-7.626 17-17 17-17-7.626-17-17 7.626-17 17-17z" fill="currentColor" data-original="#000000"></path>
-                    </g>
-                </svg>
-            </label>
-
-            {/* Change Password */}
-            <label className="search-label">
-                <input
-                    type="password"
-                    className="input"
-                    value={newPassword}
-                    onChange={(e) => setNewPassword(e.target.value)}
-                    placeholder="Enter new password..."
-                />
-                <kbd className="slash-icon">/</kbd>
-                <svg className="search-icon" xmlns="http://www.w3.org/2000/svg" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink" width="512" height="512" x="0" y="0" viewBox="0 0 56.966 56.966" style={{ enableBackground: 'new 0 0 512 512' }} xmlSpace="preserve">
-                    <g>
-                        <path d="M55.146 51.887 41.588 37.786A22.926 22.926 0 0 0 46.984 23c0-12.682-10.318-23-23-23s-23 10.318-23 23 10.318 23 23 23c4.761 0 9.298-1.436 13.177-4.162l13.661 14.208c.571.593 1.339.92 2.162.92.779 0 1.518-.297 2.079-.837a3.004 3.004 0 0 0 .083-4.242zM23.984 6c9.374 0 17 7.626 17 17s-7.626 17-17 17-17-7.626-17-17 7.626-17 17-17z" fill="currentColor" data-original="#000000"></path>
-                    </g>
-                </svg>
-            </label>
-
-            {/* Send Email to All Users */}
-            <label className="search-label">
-                <textarea
-                    className="input"
-                    value={emailMessage}
-                    onChange={(e) => setEmailMessage(e.target.value)}
-                    placeholder="Type your message here..."
-                />
-                <kbd className="slash-icon">/</kbd>
-                <svg className="search-icon" xmlns="http://www.w3.org/2000/svg" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink" width="512" height="512" x="0" y="0" viewBox="0 0 56.966 56.966" style={{ enableBackground: 'new 0 0 512 512' }} xmlSpace="preserve">
-                    <g>
-                        <path d="M55.146 51.887 41.588 37.786A22.926 22.926 0 0 0 46.984 23c0-12.682-10.318-23-23-23s-23 10.318-23 23 10.318 23 23 23c4.761 0 9.298-1.436 13.177-4.162l13.661 14.208c.571.593 1.339.92 2.162.92.779 0 1.518-.297 2.079-.837a3.004 3.004 0 0 0 .083-4.242zM23.984 6c9.374 0 17 7.626 17 17s-7.626 17-17 17-17-7.626-17-17 7.626-17 17-17z" fill="currentColor" data-original="#000000"></path>
-                    </g>
-                </svg>
-            </label>
-
-            {/* Disable Account Creation */}
-            <label className='modernCheckBox'>
-                <input className='invisible'
-                    type="checkbox"
-                    checked={disableSignup}
-                    onChange={() => setDisableSignup(!disableSignup)}
-                /> Disable Account Creation
-                  <div class="checkmark"></div>
-            </label>
-
-            {/* Save Button */}
-            <button onClick={saveSettings}>Save Changes</button>
+              </div>
             </div>
+            <div className="setting">
+              <div className='tajDrugiDiv'>
+                <label>
+                  Allow resetting password
+                </label>
+                <input type="checkbox" className='checkBoxAdminPanel' />
+              </div>
+              <p className='AdminPanelP'>By default, users can request a password reset link.</p>
+            </div>
+          </div>
+
+          {/* Section 2: User deletion */}
+          <div className="section">
+            <h3>User deletion</h3>
+            <div className="setting">
+              <div className='tajDrugiDiv'>
+                <label>
+                  Grace delay
+                  <input type="number" value="30" readOnly />
+                </label>
+              </div>
+              <p>This is the number of days without a login after which an account scheduled for deletion is permanently deleted.</p>
+            </div>
+          </div>
+
+          {/* Section 3: Add more sections here if needed */}
+          {/* Example:
+          <div className="section">
+            <h3>Another Section</h3>
+            <div className="setting">
+              <div className='tajDrugiDiv'>
+                <label>
+                  Example Setting
+                </label>
+                <input type="checkbox" className='checkBoxAdminPanel' />
+              </div>
+              <p className='AdminPanelP'>This is an example setting description.</p>
+            </div>
+          </div>
+          */}
         </div>
-    );
+      </div>
+    </div>
+  );
 };
 
 export default Settings;

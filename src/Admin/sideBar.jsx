@@ -28,7 +28,7 @@ const Sidebar = ( {users,setscreen,selectedScreen} ) => {
         <li>
           <Link>
             <span className="icon">👥</span>
-            {!isCollapsed && <span className="text" onClick={()=>setscreen('UserTask')}>Users</span>}
+            {!isCollapsed && <span className="text" onClick={()=>setscreen('UserTask')}>Tasks and Users</span>}
           </Link>
         </li>
         <li>
