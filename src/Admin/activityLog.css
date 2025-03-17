@@ -1,74 +1,119 @@
+@import '../colors.css';
+
 .activity-log {
   font-family: Arial, sans-serif;
   padding: 20px;
   width: 87%;
   margin-left: 13.02%;
-  background-color: #3f5164;
-height: 100vh;
+  background-color: var(--bg-light);
+  height: 100vh;
+  color: var(--text-primary);
+}
+
+.activity-log h2 {
+  color: var(--primary-800);
+  margin-bottom: 20px;
+  font-weight: 600;
+  text-align: center;
+}
+
+.filter-section {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+  background-color: var(--neutral-100);
+  padding: 15px;
+  border-radius: 8px;
+  box-shadow: var(--shadow-light);
+}
+
+.filter-section label {
+  margin-right: 10px;
+  font-weight: 500;
+  color: var(--text-primary);
 }
 
 .log-table {
   width: 100%;
   border-collapse: collapse;
   margin-bottom: 20px;
+  background-color: var(--bg-light);
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: var(--shadow-light);
 }
 
 /* Table Header */
 .log-table thead tr {
-  background-color: #444;
-  color: white;
-  font-weight: bold;
-  text-transform: uppercase;
+  background-color: var(--primary-600);
+  color: var(--text-light);
+  font-weight: 600;
 }
 
 .log-table th {
   padding: 15px;
-  text-align: center;
+  text-align: left;
 }
-
-/* Colored Header Sections */
-.log-table th:nth-child(1) { background-color: #FFD700; } /* Yellow */
-.log-table th:nth-child(2) { background-color: #FF6347; } /* Red-Orange */
-.log-table th:nth-child(3) { background-color: #C71585; } /* Purple-Pink */
-.log-table th:nth-child(4) { background-color: #6A0DAD; } /* Dark Purple */
 
 /* Table Rows */
 .log-table tbody tr {
-  background-color: white;
+  background-color: var(--bg-light);
   transition: background 0.3s ease-in-out;
 }
 
 .log-table tbody tr:nth-child(even) {
-  background-color: #f8f8f8; /* Light gray for alternating rows */
+  background-color: var(--neutral-50);
 }
 
-/* Highlight Specific Row */
-
+.log-table tbody tr:hover {
+  background-color: var(--primary-50);
+}
 
 /* Table Cells */
 .log-table td {
-  padding: 12px;
-  border-bottom: 1px solid #ddd;
-  text-align: center;
+  padding: 12px 15px;
+  border-bottom: 1px solid var(--border-light);
+  text-align: left;
 }
 
-/* Align numbers to the right */
-.log-table td:nth-child(2),
-.log-table td:nth-child(3),
-.log-table td:nth-child(5) {
-  text-align: center;
-}
-
-/* Orange Text for Percentage Column */
+/* Action column styling */
 .log-table td:nth-child(3) {
-  color: #FF4500; /* Deep orange */
-  font-weight: bold;
+  font-weight: 500;
 }
 
-/* Center YES/NO values */
-.log-table td:nth-child(4) {
-  text-align: center;
-  font-weight: bold;
+/* Activity type badges */
+.activity-badge {
+  display: inline-block;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.activity-badge.login {
+  background-color: var(--success-light);
+  color: var(--success-dark);
+}
+
+.activity-badge.logout {
+  background-color: var(--neutral-200);
+  color: var(--neutral-700);
+}
+
+.activity-badge.create {
+  background-color: var(--info-light);
+  color: var(--info-dark);
+}
+
+.activity-badge.update {
+  background-color: var(--warning-light);
+  color: var(--warning-dark);
+}
+
+.activity-badge.delete {
+  background-color: var(--error-light);
+  color: var(--error-dark);
 }
 
 /* Pagination */
@@ -76,7 +121,7 @@ height: 100vh;
   display: flex;
   justify-content: center;
   gap: 5px;
-  margin-top: 10px;
+  margin-top: 20px;
 }
 
 .pagination button {
@@ -84,28 +129,35 @@ height: 100vh;
   font-size: 14px;
   cursor: pointer;
   border: none;
-  background-color: #ddd;
-  transition: 0.2s;
+  background-color: var(--neutral-200);
+  color: var(--text-primary);
+  border-radius: 4px;
+  transition: all 0.2s ease;
 }
 
 .pagination button:hover {
-  background-color: #bbb;
+  background-color: var(--primary-100);
+  transform: translateY(-2px);
 }
 
+.pagination button.active {
+  background-color: var(--primary-500);
+  color: var(--text-light);
+}
 
-/* From Uiverse.io by 3bdel3ziz-T */ 
+/* Custom Select Dropdown */
 .select {
   width: fit-content;
   cursor: pointer;
   position: relative;
   transition: 300ms;
-  color: white;
+  color: var(--text-primary);
   overflow: hidden;
 }
 
 .selected {
-  background-color: #2a2f3b;
-  padding: 5px;
+  background-color: var(--neutral-200);
+  padding: 8px 12px;
   margin-bottom: 3px;
   border-radius: 5px;
   position: relative;
@@ -114,6 +166,8 @@ height: 100vh;
   display: flex;
   align-items: center;
   justify-content: space-between;
+  min-width: 180px;
+  box-shadow: var(--shadow-light);
 }
 
 .arrow {
@@ -122,7 +176,7 @@ height: 100vh;
   height: 10px;
   transform: rotate(-90deg);
   width: 25px;
-  fill: white;
+  fill: var(--text-primary);
   z-index: 100000;
   transition: 300ms;
 }
@@ -132,11 +186,13 @@ height: 100vh;
   flex-direction: column;
   border-radius: 5px;
   padding: 5px;
-  background-color: yellow;
+  background-color: var(--bg-light);
   position: relative;
   top: -100px;
   opacity: 0;
   transition: 300ms;
+  box-shadow: var(--shadow-medium);
+  z-index: 100001;
 }
 
 .select:hover > .options {
@@ -150,14 +206,15 @@ height: 100vh;
 
 .option {
   border-radius: 5px;
-  padding: 5px;
+  padding: 8px 12px;
   transition: 300ms;
-  background-color: yellow;
-  width: 150px;
+  background-color: var(--bg-light);
+  width: 180px;
   font-size: 15px;
 }
+
 .option:hover {
-  background-color: #323741;
+  background-color: var(--primary-50);
 }
 
 .options input[type="radio"] {
@@ -166,7 +223,9 @@ height: 100vh;
 
 .options label {
   display: inline-block;
+  cursor: pointer;
 }
+
 .options label::before {
   content: attr(data-txt);
 }
@@ -179,41 +238,67 @@ height: 100vh;
   display: none;
 }
 
+/* Empty state */
+.empty-state {
+  text-align: center;
+  padding: 40px 20px;
+  background-color: var(--neutral-50);
+  border-radius: 8px;
+  margin: 20px 0;
+}
+
+.empty-state p {
+  color: var(--text-secondary);
+  font-size: 16px;
+  margin-bottom: 15px;
+}
+
+/* Responsive styles */
 @media (max-width: 768px) {
   .activity-log {
-    width: 83%; /* Full width on small screens */
-    margin-left: 17%; /* Remove left margin */
-    padding: 10px; /* Reduce padding */
+    width: 83%;
+    margin-left: 17%;
+    padding: 10px;
+  }
+
+  .filter-section {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .filter-section label {
+    margin-bottom: 8px;
   }
 
   .log-table th,
   .log-table td {
-    padding: 8px; /* Reduce cell padding */
-    font-size: 12px; /* Reduce font size */
+    padding: 8px;
+    font-size: 12px;
   }
 
   .log-table th {
-    font-size: 14px; /* Slightly larger header font size */
+    font-size: 14px;
   }
 
   .pagination button {
-    padding: 6px 10px; /* Reduce button padding */
-    font-size: 12px; /* Reduce button font size */
+    padding: 6px 10px;
+    font-size: 12px;
   }
 
   .select {
-    width: 100%; /* Full width for dropdown */
+    width: 100%;
   }
 
   .selected {
-    font-size: 14px; /* Reduce font size */
+    font-size: 14px;
+    width: 100%;
   }
 
   .options {
-    width: 100%; /* Full width for dropdown options */
+    width: 100%;
   }
 
   .option {
-    width: 100%; /* Full width for dropdown options */
+    width: 100%;
   }
 }

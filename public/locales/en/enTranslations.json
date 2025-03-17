@@ -14,7 +14,37 @@
     "loggingIn": "Logging in...",
     "login": "Login",
     "noAccount": "Don't have an account?",
-    "register": "Register"
+    "register": "Register",
+    "logoAlt": "Brand Logo"
+  },
+  "register": {
+    "title": "Create Account",
+    "subtitle": "Join our community and start managing your tasks",
+    "name": "Your Name",
+    "namePlaceholder": "Enter your name",
+    "email": "Your Email",
+    "emailPlaceholder": "Enter your email",
+    "password": "Password",
+    "passwordPlaceholder": "Enter your password",
+    "confirmPassword": "Confirm Password",
+    "confirmPasswordPlaceholder": "Confirm your password",
+    "agreeTerms": "I agree to the terms and conditions",
+    "registerButton": "Register",
+    "registering": "Registering...",
+    "loading": "Loading...",
+    "haveAccount": "Already have an account?",
+    "loginLink": "Login",
+    "successMessage": "Registration successful! Check your email box.",
+    "errorMessage": "Registration failed",
+    "generalError": "An error occurred. Please try again.",
+    "imageAlt": "Support",
+    "welcomeTitle": "Welcome to Our Platform",
+    "welcomeMessage": "Manage your tasks efficiently and collaborate with your team",
+    "passwordStrength": {
+      "weak": "Weak",
+      "medium": "Medium",
+      "strong": "Strong"
+    }
   },
   "profile": {
     "avatarAlt": "avatar",
@@ -85,8 +115,17 @@
       "linkText": "Con2Cus.de",
       "linkUrl": "https://con2cus.de/"
     }
-  }
-  ,
+  },
+  "calendar": {
+    "previous": "Previous",
+    "next": "Next",
+    "month": "Month",
+    "week": "Week",
+    "day": "Day",
+    "task": "Task",
+    "description": "Description",
+    "today": "Today"
+  },
   "crm": {
     "tasks": {
       "title": "Tasks",
@@ -100,7 +139,9 @@
       "progress": "Progress",
       "delete": "Delete",
       "selectDueDate": "Select final date",
-      "due": "Due"
+      "due": "Due",
+      "sortOldest": "Sort by Oldest",
+      "sortNewest": "Sort by Newest"
     },
     "profile": {
       "profilePicture": "Profile Picture",
@@ -122,6 +163,65 @@
       "emptyTaskName": "Task name cannot be empty",
       "fetchUsers": "Error fetching users"
     }
-  }  
-  
+  },
+  "authRequired": "Authentication Required",
+  "twoFactor": {
+    "title": "Two-Factor Authentication",
+    "enterCode": "Enter Code",
+    "authCode": "Authentication Code",
+    "verifying": "Verifying...",
+    "verifyCode": "Verify Code",
+    "invalidCode": "You entered invalid code. Log in and try again!!!"
+  },
+  "admin": {
+    "panel": "Admin Panel",
+    "dashboard": "Dashboard",
+    "tasksAndUsers": "Tasks & Users",
+    "activityLog": "Activity Log",
+    "settings": "Settings",
+    "logout": "Logout",
+    "users": "Users",
+    "tasks": "Tasks",
+    "editUser": "Edit User",
+    "editTask": "Edit Task",
+    "deleteUser": "Delete User",
+    "deleteTask": "Delete Task",
+    "saveChanges": "Save Changes",
+    "cancel": "Cancel",
+    "addNewTask": "Add New Task",
+    "loading": "Loading...",
+    "description": "Description",
+    "actions": "Actions",
+    "name": "Name",
+    "email": "Email",
+    "role": "Role",
+    "status": "Status",
+    "lastLogin": "Last Login",
+    "accountRestrictions": "Account Restrictions",
+    "allowNewAccounts": "Allow creating new accounts",
+    "allowNewAccountsDesc": "By default, any user visiting your domain can sign up for a new account.",
+    "allowPasswordReset": "Allow resetting password",
+    "allowPasswordResetDesc": "By default, users can request a password reset link.",
+    "userDeletion": "User Deletion",
+    "graceDelay": "Grace delay (days)",
+    "graceDelayDesc": "This is the number of days without a login after which an account scheduled for deletion is permanently deleted.",
+    "securitySettings": "Security Settings",
+    "requireStrongPasswords": "Require strong passwords",
+    "requireStrongPasswordsDesc": "Enforce password complexity requirements for all users.",
+    "enableAuditLogs": "Enable audit logs",
+    "enableAuditLogsDesc": "Track all user actions for security and compliance purposes.",
+    "totalUsers": "Total Users",
+    "activeUsers": "Active Users",
+    "totalTasks": "Total Tasks",
+    "completedTasks": "Completed Tasks",
+    "pendingTasks": "Pending Tasks",
+    "highPriority": "High Priority",
+    "recentActivities": "Recent Activities",
+    "taskCompletion": "Task Completion",
+    "taskCompletionRate": "Task Completion Rate",
+    "noActivitiesFound": "No recent activities found",
+    "noTasksAvailable": "No tasks available",
+    "completed": "Completed",
+    "pending": "Pending"
+  }
 }

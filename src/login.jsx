@@ -75,13 +75,13 @@ export default function Login() {
             <img
               src="https://www.con2cus.de/img/c2c.svg"
               className="imgLogin"
-              alt={t('login.logoAlt') || 'Brand Logo'} // Add translation key for accessibility
+              alt={t('login.logoAlt')}
             />
           </MDBCol>
 
           <MDBCol col="4" md="6">
             <div className="d-flex flex-row align-items-center justify-content-center">
-              <p className="lead fw-normal mb-0 me-3">{t('login.signInWith') || 'Sign in with'}</p>
+              <p className="lead fw-normal mb-0 me-3">{t('login.signInWith')}</p>
               <MDBBtn floating size="md" tag="a" className="me-2">
                 <MDBIcon fab icon="facebook-f" />
               </MDBBtn>
@@ -94,13 +94,13 @@ export default function Login() {
             </div>
 
             <div className="divider d-flex align-items-center my-4">
-              <p className="text-center fw-bold mx-3 mb-0">{t('login.or') || 'Or'}</p>
+              <p className="text-center fw-bold mx-3 mb-0">{t('login.or')}</p>
             </div>
 
             <form onSubmit={handleSubmit}>
               <MDBInput
                 wrapperClass="mb-4"
-                label={t('login.email') || 'Email address'}
+                label={t('login.email')}
                 id="formControlLg"
                 type="email"
                 size="lg"
@@ -111,7 +111,7 @@ export default function Login() {
               />
               <MDBInput
                 wrapperClass="mb-4"
-                label={t('login.password') || 'Password'}
+                label={t('login.password')}
                 id="formControlLg"
                 type="password"
                 size="lg"
@@ -126,10 +126,10 @@ export default function Login() {
                   name="flexCheck"
                   value=""
                   id="flexCheckDefault"
-                  label={t('login.rememberMe') || 'Remember me'}
+                  label={t('login.rememberMe')}
                 />
                 <a href="/forgot-password" className="fPassword">
-                  {t('login.forgotPassword') || 'Forgot password?'}
+                  {t('login.forgotPassword')}
                 </a>
               </div>
 
@@ -137,12 +137,12 @@ export default function Login() {
 
               <div className="text-center text-md-start mt-4 pt-2">
                 <MDBBtn className="mb-0 px-5" size="lg" type="submit" disabled={loading}>
-                  {loading ? t('login.loggingIn') || 'Logging in...' : t('login.login') || 'Login'}
+                  {loading ? t('login.loggingIn') : t('login.login')}
                 </MDBBtn>
                 <p className="small fw-bold mt-2 pt-1 mb-2">
-                  {t('login.noAccount') || "Don't have an account?"}{' '}
+                  {t('login.noAccount')}{' '}
                   <a href="/register" className="link-danger">
-                    {t('login.register') || 'Register'}
+                    {t('login.register')}
                   </a>
                 </p>
               </div>

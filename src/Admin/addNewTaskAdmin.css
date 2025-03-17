@@ -1,23 +1,24 @@
+@import '../colors.css';
+
 .animated-button {
     position: relative;
     display: flex;
     align-items: center;
-    gap: 4px;
-    padding: 16px 36px;
-    margin-top: 20%;
-    margin-left: auto;
-    margin-right: auto;
-    border: 4px solid;
-    border-color: transparent;
-    font-size: 16px;
-    background-color: inherit;
-    border-radius: 100px;
+    justify-content: center;
+    gap: 8px;
+    padding: 12px 20px;
+    margin: 20px auto;
+    border: none;
+    font-size: 14px;
+    background-color: var(--secondary-500);
+    border-radius: 6px;
     font-weight: 600;
-    color: greenyellow;
-    box-shadow: 0 0 0 2px greenyellow;
+    color: var(--text-light);
     cursor: pointer;
     overflow: hidden;
-    transition: all 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+    transition: all 0.3s ease;
+    box-shadow: var(--shadow-light);
+    width: 80%;
   }
   label{
     color: black;
@@ -62,9 +63,9 @@
   }
   
   .animated-button:hover {
-    box-shadow: 0 0 0 12px transparent;
-    color: #212121;
-    border-radius: 12px;
+    background-color: var(--secondary-600);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-medium);
   }
   
   .animated-button:hover .arr-1 {
@@ -84,8 +85,8 @@
   }
   
   .animated-button:active {
-    scale: 0.95;
-    box-shadow: 0 0 0 4px greenyellow;
+    transform: translateY(0);
+    box-shadow: var(--shadow-light);
   }
   
   .animated-button:hover .circle {
@@ -114,4 +115,136 @@
 .form-select[multiple] option:checked {
   background-color: #007bff; /* Highlight selected options */
   color: white;
+}
+
+/* Modal Styling */
+.modal {
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+.modal-content {
+  background-color: var(--bg-light);
+  border-radius: 8px;
+  box-shadow: var(--shadow-medium);
+  border: none;
+  margin-top: 10%;
+  max-height: 80vh;
+  overflow-y: auto;
+}
+
+.modal-header {
+  background-color: var(--primary-700);
+  color: var(--text-light);
+  border-bottom: none;
+  padding: 16px;
+  border-top-left-radius: 8px;
+  border-top-right-radius: 8px;
+}
+
+.modal-title {
+  font-weight: 600;
+  font-size: 18px;
+  margin: 0;
+}
+
+.modal-body {
+  padding: 20px;
+  color: var(--text-primary);
+}
+
+.modal-footer {
+  background-color: var(--neutral-100);
+  border-top: 1px solid var(--border-light);
+  padding: 16px;
+  border-bottom-left-radius: 8px;
+  border-bottom-right-radius: 8px;
+}
+
+/* Form Elements */
+.form-label {
+  color: var(--text-primary);
+  font-weight: 500;
+  margin-bottom: 8px;
+  display: block;
+}
+
+.form-control, .form-select {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid var(--border-light);
+  border-radius: 4px;
+  background-color: var(--bg-light);
+  color: var(--text-primary);
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.form-control:focus, .form-select:focus {
+  outline: none;
+  border-color: var(--primary-400);
+  box-shadow: 0 0 0 2px var(--primary-100);
+}
+
+.form-text {
+  color: var(--text-secondary);
+  font-size: 12px;
+  margin-top: 4px;
+}
+
+.mb-3 {
+  margin-bottom: 16px;
+}
+
+/* Multi-select styling */
+.form-select[multiple] {
+  height: auto;
+  min-height: 100px;
+  padding: 8px;
+}
+
+.form-select[multiple] option {
+  padding: 8px;
+  border-radius: 4px;
+  margin-bottom: 2px;
+}
+
+.form-select[multiple] option:checked {
+  background-color: var(--primary-500);
+  color: var(--text-light);
+}
+
+/* Button styling */
+.btn {
+  padding: 8px 16px;
+  border-radius: 4px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border: none;
+}
+
+.btn-primary {
+  background-color: var(--primary-500);
+  color: var(--text-light);
+}
+
+.btn-primary:hover {
+  background-color: var(--primary-600);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-light);
+}
+
+.btn-secondary {
+  background-color: var(--neutral-400);
+  color: var(--text-light);
+}
+
+.btn-secondary:hover {
+  background-color: var(--neutral-500);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-light);
+}
+
+/* Modal backdrop */
+.modal-backdrop {
+  background-color: rgba(0, 0, 0, 0.5);
 }

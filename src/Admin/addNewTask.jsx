@@ -1,14 +1,18 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import axios from 'axios';
 import './addNewTaskAdmin.css';
+import { useTranslation } from 'react-i18next';
+
 export default function AddNewTaskAdmin({ users }) {
+  const { t } = useTranslation();
+  
   // State for task details
   const [task, setTask] = useState({
     title: '',
     description: '',
     assignedUsers: [],
     progress: 0,
-    priority: '', // Add priority here
+    priority: 'medium', // Default priority
   });
 
   // Modal open state
@@ -37,135 +41,142 @@ export default function AddNewTaskAdmin({ users }) {
     e.preventDefault();
 
     // Post task data to backend
-    axios.post('http://localhost:8000/Admin/AddTask', task, { withCredentials: true,withXSRFToken:true })
+    axios.post('http://localhost:8000/Admin/AddTask', task, { withCredentials: true, withXSRFToken: true })
       .then(response => {
         console.log('Task created:', response);
         // Clear the form after submission or handle success
-        setTask({ title: '', description: '', assignedUsers: [], progress: 0 });
-        setShowModal(false);  // Close the modal
+        setTask({ 
+          title: '', 
+          description: '', 
+          assignedUsers: [], 
+          progress: 0,
+          priority: 'medium'
+        });
+        // Close the modal
+        setShowModal(false);
       })
       .catch(error => {
         console.error('Error creating task:', error);
+        // Handle error
       });
   };
 
   // Toggle modal visibility
   const toggleModal = () => setShowModal(!showModal);
 
-  return (
-    <>
-      {/* Button to trigger the modal */}
-      <div className='DivDodanog'>
+  // Helper function to get color based on priority
+  const getPriorityColor = (priority) => {
+    switch (priority.toLowerCase()) {
+      case 'high':
+        return 'red';
+      case 'medium':
+        return 'orange';
+      case 'low':
+        return 'green';
+      default:
+        return 'gray';
+    }
+  };
 
-      <button type="button" className="animated-button" onClick={toggleModal}>
-        Add New Task
+  return (
+    <div className="add-task-container">
+      <button className="add-task-btn" onClick={toggleModal}>
+        <i className="fas fa-plus"></i> {t('admin.addNewTask')}
       </button>
 
       {/* Modal */}
       {showModal && (
-        <div className="modal show" tabIndex="-1" style={{ display: 'block' }} aria-labelledby="taskModalLabel" aria-hidden="false">
-          <div className="modal-dialog">
-            <div className="modal-content">
-              <div className="modal-header">
-                <h5 className="modal-title" id="taskModalLabel">Add New Task</h5>
-              </div>
+        <div className="task-modal">
+          <div className="task-modal-content">
+            <div className="task-modal-header">
+              <h2>{t('admin.addNewTask')}</h2>
+              <button className="close-btn" onClick={toggleModal}>&times;</button>
+            </div>
+            <div className="task-modal-body">
               <form onSubmit={handleSubmit}>
-                <div className="modal-body">
-                  {/* Task Title */}
-                  <div className="mb-3">
-                    <label htmlFor="taskTitle" className="form-label">Task Title</label>
-                    <input
-                      id="taskTitle"
-                      className="form-control"
-                      type="text"
-                      name="title"
-                      value={task.title}
-                      onChange={handleChange}
-                    />
-                  </div>
-
-                  {/* Task Description */}
-                  <div className="mb-3">
-                    <label htmlFor="taskDescription" className="form-label">Description</label>
-                    <textarea
-                      id="taskDescription"
-                      className="form-control"
-                      rows="4"
-                      name="description"
-                      value={task.description}
-                      onChange={handleChange}
-                    />
-                  </div>
-                  <div className="mb-3">
-  <label htmlFor="taskPriority" className="form-label">Priority</label>
-  <select
-    id="taskPriority"
-    className="form-select"
-    name="priority"
-    value={task.priority}
-    onChange={handleChange}
-  >
-    <option value="">Select Priority</option>
-    <option value="low">Low</option>
-    <option value="medium">Medium</option>
-    <option value="high">High</option>
-  </select>
-</div>
-
-
-                  {/* Assigned Users */}
-                  <div className="mb-3">
-                      <label htmlFor="assignedUsers" className="form-label">
-                        Assign Users
-                      </label>
-                      <select
-                        id="assignedUsers"
-                        className="form-select"
-                        name="assignedUsers"
-                        multiple // Enable multi-select
-                        value={task.assignedUsers}
-                        onChange={handleUserChange}
-                      >
-                        {users
-                          .filter((user) => user.role !== 'admin') // Filter out admins
-                          .map((user) => (
-                            <option key={user.id} value={user.id}>
-                              {user.name}
-                            </option>
-                          ))}
-                      </select>
-                      <small className="form-text text-muted">Hold Ctrl (or Cmd) to select multiple users.</small>
-                    </div>
-
-                  {/* Task Progress */}
-                  <div className="mb-3">
-                    <label htmlFor="taskProgress" className="form-label">Progress</label>
-                    <input
-                      id="taskProgress"
-                      className="form-control"
-                      type="number"
-                      name="progress"
-                      value={task.progress}
-                      min="0"
-                      max="100"
-                      onChange={handleChange}
-                    />
-                  </div>
+                <div className="form-group">
+                  <label>{t('crm.tasks.taskName')}</label>
+                  <input
+                    type="text"
+                    name="title"
+                    value={task.title}
+                    onChange={handleChange}
+                    required
+                    className="form-control"
+                  />
                 </div>
 
-                <div className="modal-footer">
-                  <button type="button" className="btn btn-secondary" onClick={toggleModal}>Close</button>
-                  <button type="submit" className="btn btn-primary">Add Task</button>
+                <div className="form-group">
+                  <label>{t('crm.tasks.taskDescription')}</label>
+                  <textarea
+                    name="description"
+                    value={task.description}
+                    onChange={handleChange}
+                    className="form-control"
+                    rows="4"
+                  ></textarea>
+                </div>
+
+                <div className="form-group">
+                  <label>{t('crm.tasks.priority')}</label>
+                  <select
+                    name="priority"
+                    value={task.priority}
+                    onChange={handleChange}
+                    className="form-control"
+                  >
+                    <option value="low">{t('crm.tasks.low')}</option>
+                    <option value="medium">{t('crm.tasks.medium')}</option>
+                    <option value="high">{t('crm.tasks.high')}</option>
+                  </select>
+                </div>
+
+                <div className="form-group">
+                  <label>{t('admin.users')}</label>
+                  <select
+                    multiple
+                    name="assignedUsers"
+                    value={task.assignedUsers}
+                    onChange={handleUserChange}
+                    className="form-control"
+                  >
+                    {users.map(user => (
+                      <option key={user.id} value={user.id}>
+                        {user.name}
+                      </option>
+                    ))}
+                  </select>
+                  <small className="form-text text-muted">
+                    Hold Ctrl (or Cmd) to select multiple users
+                  </small>
+                </div>
+
+                <div className="form-group">
+                  <label>{t('crm.tasks.progress')} ({task.progress}%)</label>
+                  <input
+                    type="range"
+                    name="progress"
+                    min="0"
+                    max="100"
+                    value={task.progress}
+                    onChange={handleChange}
+                    className="form-control-range"
+                  />
+                </div>
+
+                <div className="task-modal-footer">
+                  <button type="button" className="cancel-btn" onClick={toggleModal}>
+                    {t('admin.cancel')}
+                  </button>
+                  <button type="submit" className="save-btn">
+                    {t('modal.buttons.addTask')}
+                  </button>
                 </div>
               </form>
             </div>
           </div>
         </div>
       )}
-      </div>
-      
-      {/* Backdrop */}
-      {showModal && <div className="modal-backdrop fade show"></div>}
-    </>
+    </div>
   );
 }

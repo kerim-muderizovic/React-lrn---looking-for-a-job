@@ -14,7 +14,37 @@
     "loggingIn": "Einloggen...",
     "login": "Einloggen",
     "noAccount": "Noch kein Konto?",
-    "register": "Registrieren"
+    "register": "Registrieren",
+    "logoAlt": "Markenlogo"
+  },
+  "register": {
+    "title": "Konto erstellen",
+    "subtitle": "Treten Sie unserer Community bei und beginnen Sie mit der Verwaltung Ihrer Aufgaben",
+    "name": "Ihr Name",
+    "namePlaceholder": "Geben Sie Ihren Namen ein",
+    "email": "Ihre E-Mail",
+    "emailPlaceholder": "Geben Sie Ihre E-Mail ein",
+    "password": "Passwort",
+    "passwordPlaceholder": "Geben Sie Ihr Passwort ein",
+    "confirmPassword": "Passwort bestätigen",
+    "confirmPasswordPlaceholder": "Bestätigen Sie Ihr Passwort",
+    "agreeTerms": "Ich stimme den Nutzungsbedingungen zu",
+    "registerButton": "Registrieren",
+    "registering": "Registrierung...",
+    "loading": "Laden...",
+    "haveAccount": "Haben Sie bereits ein Konto?",
+    "loginLink": "Einloggen",
+    "successMessage": "Registrierung erfolgreich! Überprüfen Sie Ihren E-Mail-Posteingang.",
+    "errorMessage": "Registrierung fehlgeschlagen",
+    "generalError": "Ein Fehler ist aufgetreten. Bitte versuchen Sie es erneut.",
+    "imageAlt": "Support",
+    "welcomeTitle": "Willkommen auf unserer Plattform",
+    "welcomeMessage": "Verwalten Sie Ihre Aufgaben effizient und arbeiten Sie mit Ihrem Team zusammen",
+    "passwordStrength": {
+      "weak": "Schwach",
+      "medium": "Mittel",
+      "strong": "Stark"
+    }
   },
   "profile": {
     "avatarAlt": "Avatar",
@@ -86,7 +116,17 @@
       "linkUrl": "https://con2cus.de/"
     }
   },
-"modal": {
+  "calendar": {
+    "previous": "Zurück",
+    "next": "Weiter",
+    "month": "Monat",
+    "week": "Woche",
+    "day": "Tag",
+    "task": "Aufgabe",
+    "description": "Beschreibung",
+    "today": "Heute"
+  },
+  "modal": {
     "title": "Aufgabe hinzufügen",
     "placeholder": {
       "taskName": "Aufgabenname"
@@ -114,13 +154,74 @@
       "progress": "Fortschritt",
       "delete": "Löschen",
       "selectDueDate": "Ablaufdatum auswählen",
-      "due": "Zuletzt abgelaufen"
-
+      "due": "Zuletzt abgelaufen",
+      "sortOldest": "Nach Ältesten sortieren",
+      "sortNewest": "Nach Neuesten sortieren"
     },
     "profile": {
       "profilePicture": "Profilbild",
       "profileInfo": "Profilinformationen",
       "editProfile": "Profil bearbeiten"
     }
+  },
+  "authRequired": "Authentifizierung erforderlich",
+  "twoFactor": {
+    "title": "Zwei-Faktor-Authentifizierung",
+    "enterCode": "Code eingeben",
+    "authCode": "Authentifizierungscode",
+    "verifying": "Überprüfung...",
+    "verifyCode": "Code überprüfen",
+    "invalidCode": "Sie haben einen ungültigen Code eingegeben. Melden Sie sich an und versuchen Sie es erneut!!!"
+  },
+  "admin": {
+    "panel": "Admin-Panel",
+    "dashboard": "Dashboard",
+    "tasksAndUsers": "Aufgaben & Benutzer",
+    "activityLog": "Aktivitätsprotokoll",
+    "settings": "Einstellungen",
+    "logout": "Ausloggen",
+    "users": "Benutzer",
+    "tasks": "Aufgaben",
+    "editUser": "Benutzer bearbeiten",
+    "editTask": "Aufgabe bearbeiten",
+    "deleteUser": "Benutzer löschen",
+    "deleteTask": "Aufgabe löschen",
+    "saveChanges": "Änderungen speichern",
+    "cancel": "Abbrechen",
+    "addNewTask": "Neue Aufgabe hinzufügen",
+    "loading": "Laden...",
+    "description": "Beschreibung",
+    "actions": "Aktionen",
+    "name": "Name",
+    "email": "E-Mail",
+    "role": "Rolle",
+    "status": "Status",
+    "lastLogin": "Letzter Login",
+    "accountRestrictions": "Kontobeschränkungen",
+    "allowNewAccounts": "Erstellung neuer Konten erlauben",
+    "allowNewAccountsDesc": "Standardmäßig kann jeder Besucher Ihrer Domain ein neues Konto erstellen.",
+    "allowPasswordReset": "Passwort-Zurücksetzung erlauben",
+    "allowPasswordResetDesc": "Standardmäßig können Benutzer einen Link zur Passwort-Zurücksetzung anfordern.",
+    "userDeletion": "Benutzerlöschung",
+    "graceDelay": "Karenzzeit (Tage)",
+    "graceDelayDesc": "Dies ist die Anzahl der Tage ohne Anmeldung, nach der ein zur Löschung vorgesehenes Konto endgültig gelöscht wird.",
+    "securitySettings": "Sicherheitseinstellungen",
+    "requireStrongPasswords": "Starke Passwörter erforderlich",
+    "requireStrongPasswordsDesc": "Erzwingen Sie Anforderungen an die Passwortkomplexität für alle Benutzer.",
+    "enableAuditLogs": "Audit-Protokolle aktivieren",
+    "enableAuditLogsDesc": "Verfolgen Sie alle Benutzeraktionen für Sicherheits- und Compliance-Zwecke.",
+    "totalUsers": "Gesamtbenutzer",
+    "activeUsers": "Aktive Benutzer",
+    "totalTasks": "Gesamtaufgaben",
+    "completedTasks": "Abgeschlossene Aufgaben",
+    "pendingTasks": "Ausstehende Aufgaben",
+    "highPriority": "Hohe Priorität",
+    "recentActivities": "Neueste Aktivitäten",
+    "taskCompletion": "Aufgabenabschluss",
+    "taskCompletionRate": "Aufgabenabschlussrate",
+    "noActivitiesFound": "Keine aktuellen Aktivitäten gefunden",
+    "noTasksAvailable": "Keine Aufgaben verfügbar",
+    "completed": "Abgeschlossen",
+    "pending": "Ausstehend"
   }
 }

@@ -1,7 +1,14 @@
-.UsersTask{
-    background-color: #3f5164;
+@import '../colors.css';
+
+.UsersTask {
+    background-color: var(--bg-light);
     height: 100%;
-    overflow: hidden;
+    overflow: auto;
+    padding: 20px;
+    border-radius: 10px;
+    color: var(--text-primary);
+    width: 87%;
+    margin-left: 13.02%;
 }
 h1 
 {
@@ -10,188 +17,285 @@ h1
 
 .main-content{
     height: 100%;
+    padding: 20px;
+    border-radius: 10px;
 }
 
 .UserH{
-    margin-top: 0 !important;
-}
-.UsersTask {
-    background-color: #2c3e50; /* Dark background */
-    padding: 20px;
-    border-radius: 10px;
-  }
-  
-  .main-content {
-    padding: 20px;
-    border-radius: 10px;
-    color: white;
-  }
-  
-  .UserH {
-    color: white;
+    color: var(--primary-800);
     text-align: center;
     margin-bottom: 20px;
-  }
-  
-  /* Table Styling */
-  table {
+    font-weight: 600;
+}
+
+/* Table Styling */
+table {
     width: 100%;
     border-collapse: collapse;
-    background-color: #fff; /* White table background */
+    background-color: var(--bg-light);
     border-radius: 8px;
     overflow: hidden;
-  }
-  
-  th {
-    padding: 10px;
+    box-shadow: var(--shadow-light);
+}
+
+th {
+    padding: 12px;
     font-size: 16px;
-    font-weight: bold;
+    font-weight: 600;
     text-align: left;
-    color: white;
-  }
-  
-  td {
-    padding: 10px;
+    color: var(--text-light);
+    background-color: var(--primary-600);
+}
+
+td {
+    padding: 12px;
     font-size: 14px;
-    color: #333;
-    border-bottom: 1px solid #ddd;
-  }
-  
-  tr:nth-child(even) {
-    background-color: #f9f9f9; /* Light gray for striped effect */
-  }
-  
-  /* Header Colors */
-  th:nth-child(1) {
-    background-color: #f1c40f; /* Yellow */
-  }
-  
-  th:nth-child(2) {
-    background-color: #e67e22; /* Orange */
-  }
-  
-  th:nth-child(3) {
-    background-color: #9b59b6; /* Purple */
-  }
-  
-  th:nth-child(4) {
-    background-color: #8e44ad; /* Darker Purple */
-  }
-  th:nth-child(5) {
-    background-color: #10ae94; /* Darker Purple */
-  }
-  th:nth-child(6) {
-    background-color: #4e44ad; /* Darker Purple */
-  }
-  
-  /* Button Styling */
-  .MDBBtn {
-    border-radius: 5px;
-    padding: 5px 10px;
+    color: var(--text-primary);
+    border-bottom: 1px solid var(--border-light);
+}
+
+tr:nth-child(even) {
+    background-color: var(--neutral-50);
+}
+
+/* Button Group */
+.button-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+/* Button Styling */
+.btn {
+    border-radius: 4px;
+    padding: 6px 12px;
+    font-size: 14px;
+    margin-right: 0;
+    font-weight: 500;
+    transition: all 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.btn i {
+    margin-right: 4px;
+}
+
+.btn-info {
+    background-color: var(--info);
+    color: var(--text-light);
+    border: none;
+}
+
+.btn-info:hover {
+    background-color: var(--info-dark);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-light);
+}
+
+.btn-primary {
+    background-color: var(--primary-500);
+    color: var(--text-light);
+    border: none;
+}
+
+.btn-primary:hover {
+    background-color: var(--primary-600);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-light);
+}
+
+.btn-danger {
+    background-color: var(--error);
+    color: var(--text-light);
+    border: none;
+}
+
+.btn-danger:hover {
+    background-color: var(--error-dark);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-light);
+}
+
+.btn-warning {
+    background-color: var(--warning);
+    color: var(--text-primary);
+    border: none;
+}
+
+.btn-warning:hover {
+    background-color: var(--warning-dark);
+    color: var(--text-light);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-light);
+}
+
+.btn-secondary {
+    background-color: var(--neutral-500);
+    color: var(--text-light);
+    border: none;
+}
+
+.btn-secondary:hover {
+    background-color: var(--neutral-600);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-light);
+}
+
+/* Progress Bar */
+.progress {
+    height: 20px;
+    background-color: var(--neutral-200);
+    border-radius: 4px;
+    overflow: hidden;
+    box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+.progress-bar {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-light);
     font-size: 12px;
-  }
-  
-  .MDBBtn.info {
-    background-color: #3498db;
-    color: white;
-  }
-  
-  .MDBBtn.primary {
-    background-color: #2980b9;
-    color: white;
-  }
-  
-  .MDBBtn.danger {
-    background-color: #e74c3c;
-    color: white;
-  }
-  
-  .MDBBtn.warning {
-    background-color: #f39c12;
-    color: white;
-  }
-  
-  /* Action Text Styling */
-  td .action-text {
-    color: #e74c3c; /* Orange-Red like in the image */
-    font-weight: bold;
-    text-transform: lowercase;
-  }
-  
-  /* Pagination Styling */
-  .pagination {
+    font-weight: 600;
+    transition: width 0.6s ease;
+}
+
+/* Action Text Styling */
+td .action-text {
+    color: var(--primary-500);
+    font-weight: 600;
+}
+
+/* Pagination Styling */
+.pagination {
     display: flex;
     justify-content: center;
     margin-top: 20px;
-  }
-  
-  .pagination button {
-    background-color: #7f8c8d;
+}
+
+.pagination button {
+    background-color: var(--neutral-400);
     border: none;
-    color: white;
+    color: var(--text-light);
     padding: 8px 12px;
     margin: 0 5px;
     cursor: pointer;
-    border-radius: 5px;
-  }
-  
-  .pagination button.active {
-    background-color: #e67e22;
-  }
-  
-  /* Modal Styling */
-  .modal-content {
-    background-color: white;
-    border-radius: 10px;
-  }
-  
-  .modal-header {
-    background-color: #e67e22;
-    color: white;
-    font-weight: bold;
-  }
-  
-  .modal-body {
-    color: #333;
-  }
-  
-  .modal-footer {
-    background-color: #ecf0f1;
-  }
-  
-  /* Responsive Table */
-  @media (max-width: 768px) {
+    border-radius: 4px;
+    transition: all 0.2s ease;
+}
+
+.pagination button:hover {
+    background-color: var(--primary-400);
+    transform: translateY(-2px);
+}
+
+.pagination button.active {
+    background-color: var(--primary-500);
+}
+
+/* Modal Styling */
+.modal {
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+.modal-content {
+    background-color: var(--bg-light);
+    border-radius: 8px;
+    box-shadow: var(--shadow-medium);
+    border: none;
+}
+
+.modal-header {
+    background-color: var(--primary-500);
+    color: var(--text-light);
+    font-weight: 600;
+    border-bottom: none;
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+    padding: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.modal-title {
+    margin: 0;
+    font-size: 18px;
+}
+
+.btn-close {
+    background-color: transparent;
+    border: none;
+    color: var(--text-light);
+    font-size: 20px;
+    cursor: pointer;
+    opacity: 0.8;
+    transition: opacity 0.2s;
+}
+
+.btn-close:hover {
+    opacity: 1;
+}
+
+.modal-body {
+    color: var(--text-primary);
+    padding: 20px;
+}
+
+.modal-body h6 {
+    color: var(--primary-700);
+    font-weight: 600;
+    margin-bottom: 8px;
+}
+
+.modal-footer {
+    background-color: var(--neutral-100);
+    border-top: 1px solid var(--border-light);
+    border-bottom-left-radius: 8px;
+    border-bottom-right-radius: 8px;
+    padding: 12px 16px;
+}
+
+/* Responsive Table */
+@media (max-width: 768px) {
     .UsersTask {
-        padding: 10px; /* Reduce padding for small screens */
+        padding: 10px;
     }
 
     .main-content {
-        padding: 10px; /* Reduce padding for small screens */
+        padding: 10px;
     }
 
     .UserH {
-        font-size: 20px; /* Adjust heading size for small screens */
+        font-size: 20px;
     }
 
     table {
-        font-size: 12px; /* Reduce font size for small screens */
+        font-size: 12px;
     }
 
     th, td {
-        padding: 8px; /* Reduce cell padding for small screens */
+        padding: 8px;
     }
 
     th {
-        font-size: 14px; /* Reduce header font size for small screens */
+        font-size: 14px;
     }
 
-    .MDBBtn {
-        padding: 4px 8px; /* Reduce button padding for small screens */
-        font-size: 10px; /* Reduce button font size for small screens */
+    .btn {
+        padding: 4px 8px;
+        font-size: 12px;
+    }
+
+    .button-group {
+        flex-direction: column;
+        gap: 4px;
     }
 
     .pagination button {
-        padding: 6px 10px; /* Reduce pagination button padding for small screens */
-        font-size: 12px; /* Reduce pagination button font size for small screens */
+        padding: 6px 10px;
+        font-size: 12px;
     }
 }

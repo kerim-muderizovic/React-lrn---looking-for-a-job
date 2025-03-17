@@ -1,10 +1,12 @@
+@import './colors.css';
+
 /* Divider Styling */
 .divider:after,
 .divider:before {
   content: "";
   flex: 1;
   height: 1px;
-  background: #eee;
+  background: white;
 }
 
 /* Custom Height Adjustment */
@@ -36,9 +38,17 @@ html, body {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  background: linear-gradient(to right, #6a11cb, #2575fc); /* Adds a cool gradient */
+  background: linear-gradient(to right, #6a11cb, #2575fc); /* Keeping the original gradient */
   color: white;
   padding: 20px; /* Adds padding for better spacing on smaller screens */
+}
+
+/* Text colors for all elements inside the login page */
+.login-page p, 
+.login-page label, 
+.login-page .lead, 
+.login-page .fw-bold {
+  color: white !important;
 }
 
 /* Logo Container Styling */
@@ -63,13 +73,104 @@ html, body {
 }
 
 /* Input Styling */
+.form-control, 
+.form-outline .form-control,
 .input-container input {
-  width: 100%;
-  padding: 10px;
-  margin-bottom: 15px; /* Adds spacing between inputs */
-  border: 1px solid #ddd;
-  border-radius: 5px;
-  font-size: 16px;
+  border: 2px solid var(--neutral-300) !important;
+  border-radius: 6px !important;
+  padding: 10px 12px !important;
+  font-size: 16px !important;
+  background-color: white !important;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease !important;
+}
+
+.form-control:focus,
+.form-outline .form-control:focus,
+.input-container input:focus {
+  border-color: var(--primary-400) !important;
+  box-shadow: 0 0 0 0.25rem rgba(63, 81, 181, 0.15) !important;
+  outline: none !important;
+}
+
+/* MDB Input Styling */
+.form-outline .form-control {
+  border: 2px solid var(--neutral-300) !important;
+}
+
+/* Form Label Styling */
+.form-label {
+  color: white !important;
+  font-weight: bold !important;
+  font-size: 1rem !important;
+  margin-bottom: 0.5rem !important;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3) !important;
+}
+
+/* MDB Form Label Styling */
+.form-outline .form-label {
+  color: white !important;
+  background-color: transparent !important;
+  font-weight: bold !important;
+}
+
+.form-outline.focused .form-label {
+  color: rgb(30, 255, 0) !important;
+}
+
+/* Checkbox Label */
+.form-check-label {
+  color: white !important;
+  font-weight: normal !important;
+}
+
+/* Checkbox Styling */
+.form-check-input:checked {
+  background-color: rgb(30, 255, 0) !important;
+  border-color: rgb(30, 255, 0) !important;
+}
+
+/* Button Styling */
+.btn-primary {
+  background-color: rgb(30, 255, 0) !important;
+  border-color: rgb(30, 255, 0) !important;
+  color: #333 !important;
+  font-weight: bold !important;
+  transition: all 0.3s ease !important;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2) !important;
+}
+
+.btn-primary:hover {
+  background-color: rgb(20, 220, 0) !important;
+  border-color: rgb(20, 220, 0) !important;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3) !important;
+}
+
+.btn-primary:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2) !important;
+}
+
+.btn-primary:disabled {
+  background-color: rgba(30, 255, 0, 0.5) !important;
+  border-color: rgba(30, 255, 0, 0.5) !important;
+  color: rgba(51, 51, 51, 0.7) !important;
+  cursor: not-allowed;
+  transform: none !important;
+}
+
+/* Social Media Buttons */
+.btn-floating {
+  background-color: white !important;
+  border-color: white !important;
+  color: #6a11cb !important;
+  transition: all 0.3s ease !important;
+}
+
+.btn-floating:hover {
+  background-color: rgba(255, 255, 255, 0.8) !important;
+  border-color: rgba(255, 255, 255, 0.8) !important;
+  transform: translateY(-2px);
 }
 
 /* Forgot Password Link Styling */
@@ -81,6 +182,30 @@ html, body {
   margin-top: 10px; /* Adds spacing above the link */
   display: block; /* Ensures the link is on its own line */
   text-align: center; /* Centers the link */
+  transition: color 0.2s ease;
+}
+
+.fPassword:hover {
+  color: white;
+  text-decoration: underline;
+}
+
+/* Register Link Styling */
+.link-danger {
+  color: rgb(30, 255, 0) !important;
+  text-decoration: none;
+  transition: color 0.2s ease;
+  font-weight: bold;
+}
+
+.link-danger:hover {
+  color: white !important;
+  text-decoration: underline;
+}
+
+/* Text Colors */
+.text-danger {
+  color: rgb(255, 100, 100) !important;
 }
 
 /* Responsive Adjustments */

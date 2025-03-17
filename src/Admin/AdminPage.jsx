@@ -28,6 +28,9 @@ import ActivityLog from './activityLog';
 import UserTask from './UsersTask';
 import Settings from './settings';
 import Loading from './isLoading';
+import Dashboard from './Dashboard';
+import { useTranslation } from 'react-i18next';
+
 const handleDeleteUser =()=>{
     console.log('clicked')
 }
@@ -40,11 +43,14 @@ export default function AdminPage() {
     const [isEditModalOpen, setIsEditModalOpen] = useState(false);
     const [currentEditData, setCurrentEditData] = useState(null);
     const [editType, setEditType] = useState(null);
- const [isLoading,setLoading]=useState(true);
+    const [isLoading, setLoading] = useState(true);
+    const { t } = useTranslation();
 
-    const [selectedScreen,setscreen]=useState('UserTask');
+    const [selectedScreen, setscreen] = useState('Dashboard');
     const renderSelectedScreen = () => {
       switch (selectedScreen) {
+        case 'Dashboard':
+          return !isLoading ? <Dashboard users={users} tasks={tasks} /> : <Loading />;
         case 'activityLog':
           return <ActivityLog users={users} />;
         case 'UserTask':
@@ -95,14 +101,17 @@ const fetchTasks=()=>
     if (response.data && Array.isArray(response.data.tasks)) {
       setTasks(response.data.tasks);
       console.log(response.data.tasks,'fetch tasks');
-  setLoading(false);
+      setLoading(false);
     }
-
      else {
       console.error('Expected an array of tasks, but got:', response.data);
+      setLoading(false);
     }
   })
-  .catch(error => console.error('Error fetching tasks:', error));
+  .catch(error => {
+    console.error('Error fetching tasks:', error);
+    setLoading(false);
+  });
 }
   const saveChanges = () => {
     const url =

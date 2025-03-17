@@ -1,3 +1,5 @@
+@import './colors.css';
+
 html, body {
     height: 100% !important;
     margin: 0 !important;
@@ -16,6 +18,74 @@ html, body {
         flex-direction: column;
         justify-content: center;
         align-items: center;
-        background: linear-gradient(to right, #6a11cb, #2575fc); /* Adds a cool gradient */
-        color: white;
+        background: linear-gradient(to right, #6a11cb, #2575fc); /* Keeps the cool gradient */
+        color: white !important;
+  }
+
+  /* Text styling improvements */
+  .two-factor-auth .lead {
+    color: white !important;
+    font-size: 1.5rem !important;
+    font-weight: 600 !important;
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3) !important;
+  }
+
+  .two-factor-auth .divider p {
+    color: white !important;
+    font-size: 1.2rem !important;
+    font-weight: 700 !important;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3) !important;
+  }
+
+  /* Form styling */
+  .two-factor-auth .form-label {
+    color: white !important;
+    font-weight: 600 !important;
+  }
+
+  .two-factor-auth .form-outline .form-control:focus {
+    border-color: rgb(30, 255, 0) !important;
+    box-shadow: 0 0 0 0.25rem rgba(30, 255, 0, 0.25) !important;
+  }
+
+  .two-factor-auth .form-outline.focused .form-label {
+    color: rgb(30, 255, 0) !important;
+  }
+
+  /* Error message */
+  .two-factor-auth .text-danger {
+    color: rgb(255, 100, 100) !important;
+    font-weight: 600 !important;
+    background-color: rgba(0, 0, 0, 0.2) !important;
+    padding: 8px !important;
+    border-radius: 4px !important;
+    margin-top: 10px !important;
+  }
+
+  /* Button styling */
+  .two-factor-auth .btn-primary {
+    background-color: rgb(30, 255, 0) !important;
+    border-color: rgb(30, 255, 0) !important;
+    color: #333 !important;
+    font-weight: bold !important;
+    transition: all 0.3s ease !important;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2) !important;
+  }
+
+  .two-factor-auth .btn-primary:hover {
+    background-color: rgb(20, 220, 0) !important;
+    transform: translateY(-2px) !important;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3) !important;
+  }
+
+  .two-factor-auth .btn-primary:active {
+    transform: translateY(0) !important;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2) !important;
+  }
+
+  .two-factor-auth .btn-primary:disabled {
+    background-color: rgba(30, 255, 0, 0.5) !important;
+    border-color: rgba(30, 255, 0, 0.5) !important;
+    color: rgba(51, 51, 51, 0.7) !important;
+    cursor: not-allowed !important;
   }

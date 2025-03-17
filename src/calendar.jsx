@@ -3,8 +3,11 @@ import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import timeGridPlugin from "@fullcalendar/timegrid";
 import interactionPlugin from "@fullcalendar/interaction";
+import { useTranslation } from "react-i18next";
 import "./calendar.css";
+
 const Calendar = ({ tasks }) => {
+  const { t, i18n } = useTranslation();
   const calendarRef = useRef(null);
   const [view, setView] = useState("dayGridMonth"); // Default view
   const [currentMonth, setCurrentMonth] = useState(""); // State for current month & year
@@ -18,7 +21,8 @@ const Calendar = ({ tasks }) => {
     const calendarApi = calendarRef.current?.getApi();
     if (calendarApi) {
       const date = calendarApi.getDate();
-      const monthYear = new Intl.DateTimeFormat("en-US", {
+      // Use the current language for date formatting
+      const monthYear = new Intl.DateTimeFormat(i18n.language === 'de' ? 'de-DE' : 'en-US', {
         month: "long",
         year: "numeric",
       }).format(date);
@@ -68,14 +72,14 @@ const Calendar = ({ tasks }) => {
 
       {/* Custom Navigation Buttons */}
       <div style={{ marginBottom: "10px", textAlign: "center" }}>
-        <button className="buttons" onClick={handlePrev}>Previous</button>
+        <button className="buttons" onClick={handlePrev}>{t('calendar.previous')}</button>
         <button className="buttons" onClick={handleNext} style={{ marginLeft: "10px" }}>
-          Next
+          {t('calendar.next')}
         </button>
         <select className="buttons" onChange={handleViewChange} value={view} style={{ marginLeft: "10px" }}>
-          <option value="dayGridMonth">Month</option>
-          <option value="timeGridWeek">Week</option>
-          <option value="timeGridDay">Day</option>
+          <option value="dayGridMonth">{t('calendar.month')}</option>
+          <option value="timeGridWeek">{t('calendar.week')}</option>
+          <option value="timeGridDay">{t('calendar.day')}</option>
         </select>
       </div>
 
@@ -86,10 +90,11 @@ const Calendar = ({ tasks }) => {
         initialView={view}
         events={events}
         contentHeight="auto"
-        handleWindowResize={false}
+        handleWindowResize={true}
         headerToolbar={false}
+        locale={i18n.language}
         eventClick={(info) => {
-          alert(`Task: ${info.event.title}\nDescription: ${info.event.extendedProps.description}`);
+          alert(`${t('calendar.task')}: ${info.event.title}\n${t('calendar.description')}: ${info.event.extendedProps.description}`);
         }}
       />
     </div>

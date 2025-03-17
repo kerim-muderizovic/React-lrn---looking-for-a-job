@@ -52,10 +52,16 @@ export default function CRMApp() {
     datasets: [
       {
         data: taskProgressData,
-        backgroundColor: ['#ffc107', '#28a745', '#dc3545'], // Colors for each segment
-        hoverBackgroundColor: ['#e0a800', '#218838', '#c82333'],
+        backgroundColor: ['#ffeb3b', '#4caf50', '#f44336'], // Bright yellow, green, red
+        hoverBackgroundColor: ['#f57f17', '#2e7d32', '#c62828'], // Darker versions
+        borderColor: ['#ffffff', '#ffffff', '#ffffff'],
+        borderWidth: 2,
       },
     ],
+    options: {
+      responsive: true,
+      maintainAspectRatio: true,
+    }
   }), [taskProgressData]);
   const fetchTasksPie = async()=> {
     try {
@@ -74,7 +80,6 @@ export default function CRMApp() {
   useEffect(() => {
     console.log('user pri ucitavanju ', authUser);
 
-
     const fetchTasks = async () => {
       try {
      
@@ -84,7 +89,7 @@ export default function CRMApp() {
         console.log('Tasks response prilikom uzimanja za konkretnog', tasksResponse.data);
     
         // Set tasks in state
-      const filterTasks=(tasksResponse.data.tasks || []).filter(task=>task.progress<100);
+        const filterTasks=(tasksResponse.data.tasks || []).filter(task=>task.progress<100);
         setTasks(filterTasks);
       } catch (error) {
         console.error("Error fetching tasks:", error);
@@ -101,11 +106,13 @@ export default function CRMApp() {
         console.error("Error fetching users:", error);
       }
     };
-     axios.get('http://localhost:8000/sanctum/csrf-cookie', { withCredentials: true });
-fetchTasksPie();
-    fetchTasks();
-    fetchUsers();
-  }, []);
+
+    if (authUser.isLoggedIn) {
+      fetchTasks();
+      fetchUsers();
+      fetchTasksPie(); // Fetch pie chart data
+    }
+  }, [authUser.isLoggedIn]);
  
 
   
@@ -251,13 +258,12 @@ fetchTasksPie();
   }
 
   const priorityColors = {
-    High: "rgba(255, 0, 0, 0.2)",
-    high: "rgba(255, 0, 0, 0.2)",
-    medium: "rgba(255, 165, 0, 0.2)",
-    Medium: "rgba(255, 165, 0, 0.2)",
-    low: "rgba(0, 128, 0, 0.2)",
-    Low: "rgba(0, 128, 0, 0.2)",
-
+    High: "var(--error-light)",
+    high: "var(--error-light)",
+    medium: "var(--warning-light)",
+    Medium: "var(--warning-light)",
+    low: "var(--success-light)",
+    Low: "var(--success-light)",
   };
   
 
@@ -289,9 +295,9 @@ fetchTasksPie();
   
     <MDBRow className="h-100">
       <MDBCol size="3" className="bg-light p-3">
-        <MDBNavbar light bgColor="light" className="flex-column h-100">
+        <div className="sidebar-wrapper">
           {authUser.isLoggedIn && (
-            <div style={{ textAlign: 'center', marginBottom: '20px' }}>
+            <div style={{ textAlign: 'center', marginBottom: '10px' }}>
               <img
                 className="profileImage"
                 src={authUser.user.profilePicture || '/default-avatar.png'}
@@ -300,38 +306,90 @@ fetchTasksPie();
                   width: '100px',
                   height: '100px',
                   borderRadius: '50%',
-                  marginBottom: '10px',
+                  marginBottom: '5px',
                 }}
                 onClick={() => navigate('/user-profile')}
               />
-              <h5>{authUser.user.name}</h5>
+              <h5 style={{ marginBottom: '10px' }}>{authUser.user.name}</h5>
             </div>
           )}
 
-<div style={{ textAlign: 'center', marginBottom: '20px',width: "200px" }}>
-            <Pie data={dataa} />
+          <div className="chart-container">
+            <h6 className="chart-title">{t('crm.tasks.progressChart', 'Task Progress')}</h6>
+            {taskProgressData.every(value => value === 0) ? (
+              <div className="no-data-message" style={{ height: '150px' }}>
+                <p>{t('crm.tasks.noTaskData', 'No task data available')}</p>
+              </div>
+            ) : (
+              <Pie 
+                data={dataa} 
+                options={{
+                  plugins: {
+                    legend: {
+                      position: 'bottom',
+                      labels: {
+                        boxWidth: 12,
+                        padding: 10,
+                        font: {
+                          size: 12,
+                          weight: 'bold'
+                        },
+                        color: '#333333'
+                      }
+                    },
+                    tooltip: {
+                      backgroundColor: 'rgba(0,0,0,0.8)',
+                      padding: 10,
+                      titleFont: {
+                        size: 13,
+                        weight: 'bold'
+                      },
+                      bodyFont: {
+                        size: 12
+                      },
+                      displayColors: true,
+                      boxWidth: 8,
+                      callbacks: {
+                        label: function(context) {
+                          const label = context.label || '';
+                          const value = context.raw || 0;
+                          const total = context.chart.data.datasets[0].data.reduce((a, b) => a + b, 0);
+                          const percentage = Math.round((value / total) * 100);
+                          return `${label}: ${value} (${percentage}%)`;
+                        }
+                      }
+                    }
+                  },
+                  cutout: '40%',
+                  animation: {
+                    animateScale: true,
+                    animateRotate: true
+                  }
+                }}
+              />
+            )}
           </div>
  
-            <Calendar tasks={tasks} ></Calendar>
+          <div className="calendar-wrapper">
+            <Calendar tasks={tasks} />
+          </div>
 
-          <div className="addTaskBTN">
-            <MDBBtn color="primary" className="mt-3 w-100" onClick={toggleModal}>
+          <div className="addTaskBTN" style={{ marginTop: '10px' }}>
+            <MDBBtn color="primary" className="w-100" onClick={toggleModal}>
               {t('crm.tasks.addTask')}
             </MDBBtn>
           </div>
-        </MDBNavbar>
+        </div>
       </MDBCol>
       <MDBCol size="9" className="p-4">
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "10px" }}>
         <h2>{t("crm.tasks.title")}</h2>
         <button 
-  className="btn btn-primary btnSort" 
-  onClick={toggleSortOrder} 
-  style={{ transition: "none" }}
->
-  {sortOrder === "newest" ? "Sort by Oldest" : "Sort by Newest"}
-</button>
-
+          className="sort-button" 
+          onClick={toggleSortOrder}
+        >
+          {sortOrder === "newest" ? t("crm.tasks.sortOldest") : t("crm.tasks.sortNewest")}
+        </button>
       </div>
       <div className="task-list-container">
       {Object.entries(groupedTasks).map(([monthYear, tasks]) => (
@@ -344,36 +402,52 @@ fetchTasksPie();
                 backgroundColor: priorityColors[task.priority],
                 marginBottom: "15px",
                 position: "relative",
+                border: "3px solid #333",
+                borderRadius: "8px",
+                boxShadow: "0 4px 8px rgba(0, 0, 0, 0.3)",
+                overflow: "hidden"
               }}
             >
               <MDBCardBody className="Task">
-                <MDBCardTitle>
-                  {task.title}
-                  <span
-                    style={{
-                      backgroundColor: new Date(task.due_date) < new Date() ? "red" : "#ffc107",
-                      color: "#fff",
-                      fontSize: "12px",
-                      padding: "5px 8px",
-                      borderRadius: "5px",
-                      marginLeft: "10px",
-                    }}
+                <div className="task-header">
+                  <MDBCardTitle>
+                    {task.title}
+                    <span
+                      className="due-date-tag"
+                      style={{
+                        backgroundColor: new Date(task.due_date) < new Date() ? "var(--error)" : "var(--warning)",
+                        color: "#fff",
+                        fontSize: "12px",
+                        padding: "5px 8px",
+                        borderRadius: "5px",
+                        marginLeft: "10px",
+                      }}
+                    >
+                      📅 {t("crm.tasks.due")}: {new Date(task.due_date).toLocaleDateString()}
+                    </span>
+                  </MDBCardTitle>
+                  <MDBBtn
+                    color="danger"
+                    onClick={() => handleDeleteTask(task.id)}
+                    className="delete-btn"
                   >
-                    📅 {t("crm.tasks.due")}: {new Date(task.due_date).toLocaleDateString()}
-                  </span>
-                </MDBCardTitle>
-                <MDBCardText>{task.description}</MDBCardText>
-                <MDBCardText>
-                  {t("crm.tasks.progress")}: {task.progress}%
+                    {t("crm.tasks.delete")}
+                  </MDBBtn>
+                </div>
+                <MDBCardText className="task-description">{task.description}</MDBCardText>
+                <MDBCardText className="task-progress-text">
+                  {t("crm.tasks.progress")}: <span className="progress-value">{task.progress}%</span>
                 </MDBCardText>
 
                 <div
                   style={{
                     position: "relative",
                     height: "20px",
-                    backgroundColor: "#d3d3d3",
-                    borderRadius: "5px",
+                    backgroundColor: "var(--neutral-200)",
+                    borderRadius: "10px",
                     cursor: "pointer",
+                    border: "1px solid var(--border-light)",
+                    overflow: "hidden"
                   }}
                   onMouseDown={(e) => {
                     const boundingRect = e.target.getBoundingClientRect();
@@ -393,20 +467,15 @@ fetchTasksPie();
                     style={{
                       width: `${task.progress}%`,
                       height: "100%",
-                      backgroundColor: "#4caf50",
-                      borderRadius: "5px",
+                      backgroundColor: 
+                        task.progress < 30 ? "var(--error)" : 
+                        task.progress < 70 ? "var(--warning)" : 
+                        "var(--success)",
+                      borderRadius: "10px",
                       transition: "width 0.2s ease-in-out",
                     }}
                   />
                 </div>
-
-                <MDBBtn
-                  color="danger"
-                  onClick={() => handleDeleteTask(task.id)}
-                  style={{ position: "absolute", top: "10px", right: "10px" }}
-                >
-                  {t("crm.tasks.delete")}
-                </MDBBtn>
               </MDBCardBody>
             </MDBCard>
           ))}
