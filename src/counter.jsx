@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import axios from "axios";
+import axios from "./axiosConfig";
 
 export function PerfumesList() {
   const [perfumes, setPerfumes] = useState([]);
@@ -12,7 +12,7 @@ export function PerfumesList() {
   const fetchPerfumes = (page = 1) => {
     setLoading(true); // Start loading
     axios
-      .get(`http://localhost/dashboard/first2/public/perfumes?page=${page}`)
+      .get(`/perfumes?page=${page}`)
       .then((response) => {
         setPerfumes(response.data.data); // Store fetched perfumes
         setTotalPages(response.data.last_page); // Get total pages from API

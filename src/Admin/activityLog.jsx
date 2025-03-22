@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
+import axios from "../axiosConfig";
 import './activityLog.css';
 import Loading from './isLoading';
 import { useTranslation } from 'react-i18next';
@@ -34,9 +34,7 @@ const ActivityLog = ({ users }) => {
     const fetchActivityLogs = async () => {
       try {
         setIsLoading(true); // Set loading to true before fetching
-        const response = await axios.get("http://localhost:8000/Admin/GetAllActivities", {
-          withCredentials: true,
-        });
+        const response = await axios.get("/Admin/GetAllActivities");
 
         console.log(response.data, "Activity logs");
 

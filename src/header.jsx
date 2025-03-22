@@ -1,39 +1,27 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
+import axios from "./axiosConfig";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.bundle.min.js";
+import { useTranslation } from 'react-i18next';
+import { useAuth } from './AuthContext';
 
 export function Header() {
+  const { authUser, logout } = useAuth();
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const { t } = useTranslation();
 
   useEffect(() => {
-    const fetchAuthStatus = async () => {
-      try {
-        console.log("Login status:",isLoggedIn);
-        // Fetch CSRF token
-        await axios.get("http://localhost:8000/sanctum/csrf-cookie");
+    // Update login status when authUser changes
+    setIsLoggedIn(!!authUser?.isLoggedIn);
+  }, [authUser]);
 
-        // Check login status
-        const response = await axios.get("http://localhost:8000/auth/check", {
-          withCredentials: true, // Ensures session cookies are sent
-        });
-        setIsLoggedIn(response.data.isLoggedIn);
-      } catch (error) {
-        console.error("Error checking auth status:", error);
-      }
-    };
-
-    fetchAuthStatus();
-  }, []);
-
+  // Handle logout
   const handleLogout = async () => {
     try {
       await axios.post(
-        "http://localhost:8000/logout",
+        "/logout",
         {},
-        {withXSRFToken: true,
-          withCredentials: true,
-        }
+        { withXSRFToken: true }
       );
       setIsLoggedIn(false);
       window.location.href = "/";

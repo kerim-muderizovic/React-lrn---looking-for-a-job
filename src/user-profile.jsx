@@ -1,11 +1,11 @@
-import React, { useState } from 'react';
-import axios from 'axios';
+import React, { useState, useEffect } from 'react';
+import axios from './axiosConfig';
 import './user-profile.css';
 import { useAuth } from './AuthContext';
 import { useTranslation } from 'react-i18next';
 
 export default function UserProfile() {
-  const { authUser, setAuthUser } = useAuth();
+  const { authUser, setAuthUser, fetchAuthenticatedUser } = useAuth();
   const [url, setUrl] = useState('');
   const [name, setName] = useState(authUser?.user?.name || '');
   const [isEditingPhoto, setIsEditingPhoto] = useState(false);
@@ -13,70 +13,135 @@ export default function UserProfile() {
   const [isEditingPassword, setIsEditingPassword] = useState(false);
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
+  const [passwordError, setPasswordError] = useState('');
+  const [photoError, setPhotoError] = useState('');
+  const [nameError, setNameError] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const { t } = useTranslation();
 
+  useEffect(() => {
+    // Update the name state when authUser changes
+    if (authUser?.user?.name) {
+      setName(authUser.user.name);
+    }
+  }, [authUser]);
+
   const handleSavePhoto = async () => {
+    if (!url.trim()) {
+      setPhotoError(t('userProfile.enterValidUrl', 'Please enter a valid URL'));
+      return;
+    }
+    
+    setIsSubmitting(true);
+    setPhotoError('');
+    
     try {
-      await axios.put(
-        `http://localhost:8000/user/${authUser.user.id}/update-image`,
+      console.log('Updating profile photo', authUser);
+      const response = await axios.put(
+        `/user/${authUser.user.id}/update-image`,
         { url },
-        {
-          withXSRFToken: true,
-          withCredentials: true,
-        }
+        { withXSRFToken: true }
       );
-      console.log('Profile photo updated successfully');
-      setAuthUser((prev) => ({
+      console.log('Profile photo updated successfully', response.data);
+      
+      // Refresh the user data from the server to ensure we have the latest
+      await fetchAuthenticatedUser();
+      
+      // Also update local state
+      setAuthUser(prev => ({
         ...prev,
         user: {
           ...prev.user,
-          profilePicture: url,
-        },
+          url: url
+        }
       }));
+      
+      // Reset the state and close the editing UI
       setIsEditingPhoto(false);
     } catch (err) {
       console.error('Failed to update profile photo:', err);
+      setPhotoError(err.response?.data?.message || t('userProfile.errorUpdatingPhoto', 'Error updating photo. Please try again.'));
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
-  const handleSavePassword = async () => {
-    if (newPassword !== confirmPassword) {
-      alert('Passwords do not match!');
+  const handlePasswordSubmit = async (e) => {
+    e.preventDefault();
+    
+    // Validate password
+    if (!newPassword.trim()) {
+      setPasswordError(t('userProfile.enterValidPassword', 'Please enter a valid password'));
       return;
     }
+    
+    if (newPassword !== confirmPassword) {
+      setPasswordError(t('userProfile.passwordsDoNotMatch', 'Passwords do not match!'));
+      return;
+    }
+    
+    setIsSubmitting(true);
+    setPasswordError('');
+
     try {
-      await axios.post('http://localhost:8000/user/update-password', {
+      const response = await axios.post('/user/update-password', {
         password: newPassword,
         password_confirmation: confirmPassword,
-      }, {
-        withXSRFToken: true,
-        withCredentials: true
-      });
-      alert('Password updated successfully!');
+      }, { withXSRFToken: true });
+      
+      console.log('Password updated successfully', response.data);
+      setPasswordError('');
+      
+      // Refresh user data
+      await fetchAuthenticatedUser();
+      
+      // Reset state and close editing UI
       setIsEditingPassword(false);
       setNewPassword('');
       setConfirmPassword('');
-    } catch (error) {
-      console.error('Error updating password:', error);
-      alert('Failed to update password.');
+    } catch (err) {
+      console.error('Failed to update password:', err);
+      setPasswordError(err.response?.data?.message || t('userProfile.errorUpdatingPassword', 'Error updating password. Please try again.'));
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
   const handleSaveName = async () => {
+    if (!name.trim()) {
+      setNameError(t('userProfile.enterValidName', 'Please enter a valid name'));
+      return;
+    }
+    
+    setIsSubmitting(true);
+    setNameError('');
+    
     try {
-      await axios.put(
-        `http://localhost:8000/user/${authUser.user.id}/update-name`,
+      const response = await axios.put(
+        `/user/${authUser.user.id}/update-name`,
         { name },
-        {
-          withXSRFToken: true,
-          withCredentials: true,
-        }
+        { withXSRFToken: true }
       );
-      console.log('Name updated successfully');
-      authUser.user.name = name;
+      console.log('Name updated successfully', response.data);
+      
+      // Refresh the user data from the server
+      await fetchAuthenticatedUser();
+      
+      // Also update local state
+      setAuthUser(prev => ({
+        ...prev,
+        user: {
+          ...prev.user,
+          name: name
+        }
+      }));
+      
       setIsEditingName(false);
     } catch (err) {
       console.error('Failed to update name:', err);
+      setNameError(err.response?.data?.message || t('userProfile.errorUpdatingName', 'Error updating name. Please try again.'));
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -108,20 +173,39 @@ export default function UserProfile() {
                     <input
                       type="text"
                       value={url}
-                      onChange={(e) => setUrl(e.target.value)}
+                      onChange={(e) => {
+                        setUrl(e.target.value);
+                        setPhotoError(''); // Clear error when input changes
+                      }}
                       placeholder={t('profile.enterImageUrl', 'Enter Image URL')}
                       className="form-control profile-input"
                     />
+                    {photoError && (
+                      <div className="text-danger mt-2">{photoError}</div>
+                    )}
                     <div className="mt-3">
                       <button
                         onClick={handleSavePhoto}
                         className="profile-btn profile-btn-success me-2"
+                        disabled={isSubmitting}
                       >
-                        {t('profile.savePhoto', 'Save Photo')}
+                        {isSubmitting ? (
+                          <span>
+                            <i className="fas fa-spinner fa-spin me-1"></i>
+                            {t('profile.saving', 'Saving...')}
+                          </span>
+                        ) : (
+                          t('profile.savePhoto', 'Save Photo')
+                        )}
                       </button>
                       <button
-                        onClick={() => setIsEditingPhoto(false)}
+                        onClick={() => {
+                          setIsEditingPhoto(false);
+                          setPhotoError('');
+                          setUrl('');
+                        }}
                         className="profile-btn profile-btn-secondary"
+                        disabled={isSubmitting}
                       >
                         {t('profile.cancel', 'Cancel')}
                       </button>
@@ -144,19 +228,38 @@ export default function UserProfile() {
                         <input
                           type="text"
                           value={name}
-                          onChange={(e) => setName(e.target.value)}
+                          onChange={(e) => {
+                            setName(e.target.value);
+                            setNameError('');
+                          }}
                           placeholder={t('profile.enterName', 'Enter Name')}
                           className="form-control profile-input"
                         />
+                        {nameError && (
+                          <div className="text-danger mt-2">{nameError}</div>
+                        )}
                         <button
                           onClick={handleSaveName}
                           className="profile-btn profile-btn-success me-2"
+                          disabled={isSubmitting}
                         >
-                          {t('profile.saveName', 'Save Name')}
+                          {isSubmitting ? (
+                            <span>
+                              <i className="fas fa-spinner fa-spin me-1"></i>
+                              {t('profile.saving', 'Saving...')}
+                            </span>
+                          ) : (
+                            t('profile.saveName', 'Save Name')
+                          )}
                         </button>
                         <button
-                          onClick={() => setIsEditingName(false)}
+                          onClick={() => {
+                            setIsEditingName(false);
+                            setNameError('');
+                            setName(authUser?.user.name || '');
+                          }}
                           className="profile-btn profile-btn-secondary"
+                          disabled={isSubmitting}
                         >
                           {t('profile.cancel', 'Cancel')}
                         </button>
@@ -198,26 +301,49 @@ export default function UserProfile() {
                         <input
                           type="password"
                           value={newPassword}
-                          onChange={(e) => setNewPassword(e.target.value)}
+                          onChange={(e) => {
+                            setNewPassword(e.target.value);
+                            setPasswordError('');
+                          }}
                           placeholder={t('profile.enterNewPassword', 'Enter New Password')}
                           className="form-control profile-input"
                         />
                         <input
                           type="password"
                           value={confirmPassword}
-                          onChange={(e) => setConfirmPassword(e.target.value)}
+                          onChange={(e) => {
+                            setConfirmPassword(e.target.value);
+                            setPasswordError('');
+                          }}
                           placeholder={t('profile.confirmNewPassword', 'Confirm New Password')}
                           className="form-control profile-input"
                         />
+                        {passwordError && (
+                          <div className="text-danger mt-2">{passwordError}</div>
+                        )}
                         <button
-                          onClick={handleSavePassword}
+                          onClick={handlePasswordSubmit}
                           className="profile-btn profile-btn-success me-2"
+                          disabled={isSubmitting}
                         >
-                          {t('profile.savePassword', 'Save Password')}
+                          {isSubmitting ? (
+                            <span>
+                              <i className="fas fa-spinner fa-spin me-1"></i>
+                              {t('profile.saving', 'Saving...')}
+                            </span>
+                          ) : (
+                            t('profile.savePassword', 'Save Password')
+                          )}
                         </button>
                         <button
-                          onClick={() => setIsEditingPassword(false)}
+                          onClick={() => {
+                            setIsEditingPassword(false);
+                            setPasswordError('');
+                            setNewPassword('');
+                            setConfirmPassword('');
+                          }}
                           className="profile-btn profile-btn-secondary"
+                          disabled={isSubmitting}
                         >
                           {t('profile.cancel', 'Cancel')}
                         </button>

@@ -1,10 +1,30 @@
 @import '../colors.css';
 
 /* Main Admin Container */
-.glavniAdmin {
+.admin-container {
   display: flex;
   min-height: 100vh;
-  background-color: var(--background);
+  background-color: var(--bg-light);
+  position: relative;
+}
+
+/* Admin Content Area */
+.admin-content {
+  flex: 1;
+  margin-left: 13.02%; /* Match sidebar width */
+  padding: 20px;
+  min-height: calc(100vh - 54.3px); /* Match sidebar height */
+  background-color: var(--bg-light);
+  position: relative;
+  overflow-x: hidden;
+}
+
+/* For mobile devices */
+@media (max-width: 768px) {
+  .admin-content {
+    margin-left: 60px; /* Match collapsed sidebar width */
+    padding: 15px;
+  }
 }
 
 /* Animated Button */

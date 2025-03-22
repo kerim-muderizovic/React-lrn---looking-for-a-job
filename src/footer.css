@@ -1,23 +1,78 @@
+@import './colors.css';
+
 footer {
   width: 100%;
-  background: #f8f9fa;
+  background: var(--neutral-100);
   padding: 20px;
   text-align: center;
   margin-top: auto; /* Push footer to the bottom */
+  color: var(--text-primary);
+  border-top: 1px solid var(--border-light);
 }
 
+footer h6 {
+  font-size: 1rem;
+  font-weight: bold;
+  color: var(--primary-600);
+}
 
-  footer h6 {
-    font-size: 1rem;
-    font-weight: bold;
-  }
-  
-  footer p {
-    margin: 0.5rem 0;
-  }
-  
-  footer .social-icons a {
-    font-size: 1.2rem;
-    margin-right: 1rem;
-  }
+footer p {
+  margin: 0.5rem 0;
+  color: var(--text-primary);
+}
+
+footer .social-icons a {
+  font-size: 1.2rem;
+  margin-right: 1rem;
+  color: var(--primary-500);
+  transition: color 0.3s ease;
+}
+
+footer .social-icons a:hover {
+  color: var(--primary-700);
+}
+
+footer a.text-reset {
+  color: var(--primary-500) !important;
+  transition: color 0.3s ease;
+  text-decoration: none;
+}
+
+footer a.text-reset:hover {
+  color: var(--primary-700) !important;
+  text-decoration: underline;
+}
+
+.text-uppercase {
+  color: var(--primary-600);
+}
+
+.border-bottom {
+  border-bottom-color: var(--border-light) !important;
+}
+
+.footer-container {
+  background-color: var(--bg-light) !important;
+  color: var(--text-primary) !important;
+  text-align: center;
+  width: 100%;
+}
+
+.copyright-section {
+  text-align: center;
+  background-color: var(--neutral-50) !important;
+  color: var(--text-primary) !important;
+  border-top: 1px solid var(--border-light);
+}
+
+/* Make icons more visible */
+footer .me-2, 
+footer .me-3 {
+  color: var(--primary-500);
+}
+
+.footer-description {
+  color: var(--primary-600);
+  font-weight: 500;
+}
   

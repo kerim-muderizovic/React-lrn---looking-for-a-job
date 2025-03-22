@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import axios from 'axios';
+import axios from '../axiosConfig';
 import './addNewTaskAdmin.css';
 import { useTranslation } from 'react-i18next';
 
@@ -39,9 +39,9 @@ export default function AddNewTaskAdmin({ users }) {
   // Handle form submission
   const handleSubmit = (e) => {
     e.preventDefault();
-
+    
     // Post task data to backend
-    axios.post('http://localhost:8000/Admin/AddTask', task, { withCredentials: true, withXSRFToken: true })
+    axios.post('/Admin/AddTask', task, { withXSRFToken: true })
       .then(response => {
         console.log('Task created:', response);
         // Clear the form after submission or handle success
@@ -161,6 +161,43 @@ export default function AddNewTaskAdmin({ users }) {
                     value={task.progress}
                     onChange={handleChange}
                     className="form-control-range"
+                  />
+                </div>
+
+                <div className="form-group">
+                  <label>{t('crm.tasks.deadline')}</label>
+                  <input
+                    type="date"
+                    name="deadline"
+                    value={task.deadline}
+                    onChange={handleChange}
+                    className="form-control"
+                  />
+                </div>
+
+                <div className="form-group">
+                  <label>{t('crm.tasks.difficulty')}</label>
+                  <input
+                    type="range"
+                    name="difficulty"
+                    min="1"
+                    max="5"
+                    value={task.difficulty}
+                    onChange={handleChange}
+                    className="form-control"
+                  />
+                </div>
+
+                <div className="form-group">
+                  <label>{t('crm.tasks.importance')}</label>
+                  <input
+                    type="range"
+                    name="importance"
+                    min="1"
+                    max="5"
+                    value={task.importance}
+                    onChange={handleChange}
+                    className="form-control"
                   />
                 </div>
 

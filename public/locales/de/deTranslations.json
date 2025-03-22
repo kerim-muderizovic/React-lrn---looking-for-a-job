@@ -222,6 +222,26 @@
     "noActivitiesFound": "Keine aktuellen Aktivitäten gefunden",
     "noTasksAvailable": "Keine Aufgaben verfügbar",
     "completed": "Abgeschlossen",
-    "pending": "Ausstehend"
+    "pending": "Ausstehend",
+    "chat": "Chat",
+    "chatUsers": "Chat-Benutzer",
+    "selectUserPrompt": "Wählen Sie einen Benutzer aus, um zu chatten",
+    "selectUserDesc": "Wählen Sie einen Benutzer aus der Liste aus, um Ihre Konversation anzuzeigen",
+    "noChats": "Noch keine Chat-Historie",
+    "noMessages": "Noch keine Nachrichten"
+  },
+  "chat": {
+    "online": "Online",
+    "offline": "Offline",
+    "typeMessage": "Nachricht eingeben...",
+    "send": "Senden",
+    "noMessages": "Noch keine Nachrichten. Beginnen Sie die Konversation!",
+    "loading": "Nachrichten werden geladen...",
+    "messageSent": "Nachricht gesendet",
+    "newMessage": "Neue Nachricht",
+    "unreadMessages": "Ungelesene Nachrichten",
+    "openChat": "Chat öffnen",
+    "contactAdmin": "Admin kontaktieren",
+    "selectAdmin": "Wählen Sie einen Admin für den Chat aus"
   }
 }

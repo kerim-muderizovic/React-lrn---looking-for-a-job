@@ -1,5 +1,5 @@
 import React, { useContext, useState } from 'react';
-import axios from 'axios';
+import axios from './axiosConfig';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from './AuthContext'; // Import AuthContext
 import {
@@ -48,11 +48,11 @@ export default function Login() {
       // Redirect based on user role or 2FA status
       if (response.user.requires_2fa) {
         navigate('/2fa'); // Navigate to the 2FA route
-      } else if (user.role === 'admin') {
-        navigate('/AdminPage/*'); // Navigate to admin page
+      } else if (response.user.role === 'admin') {
+        navigate('/AdminPage'); // Navigate to admin page
       } else {
         navigate('/crm');
-      // Navigate to CRM dashboard
+        console.log("odgovor",response);
       }
     } catch (err) {
       console.error('Login error:', err);

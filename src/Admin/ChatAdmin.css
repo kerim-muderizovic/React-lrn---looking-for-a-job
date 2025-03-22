@@ -1,0 +1,237 @@
+@import '../colors.css';
+
+.chat-admin-container {
+  width: 100%;
+  height: 100%;
+  background-color: var(--bg-light);
+  color: var(--text-primary);
+  overflow-y: auto;
+  position: relative;
+  padding: 0;
+}
+
+.chat-admin-title {
+  font-size: 1.75rem;
+  font-weight: 600;
+  margin-bottom: 1.5rem;
+  color: var(--primary-700);
+  text-align: center;
+  padding-bottom: 10px;
+  border-bottom: 2px solid var(--primary-200);
+}
+
+.chat-admin-content {
+  display: flex;
+  height: calc(100vh - 170px);
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: var(--shadow-light);
+  background-color: white;
+}
+
+/* Chat users sidebar */
+.chat-users-sidebar {
+  width: 30%;
+  min-width: 300px;
+  background-color: var(--neutral-50);
+  border-right: 1px solid var(--border-light);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.chat-section-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  padding: 1rem;
+  margin: 0;
+  background-color: var(--primary-700);
+  color: white;
+}
+
+.user-list {
+  overflow-y: auto;
+  flex: 1;
+}
+
+/* User item styling */
+.user-item {
+  display: flex;
+  align-items: center;
+  padding: 1rem;
+  border-bottom: 1px solid var(--border-light);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.user-item:hover {
+  background-color: var(--primary-50);
+}
+
+.user-item.active {
+  background-color: var(--primary-100);
+  border-left: 4px solid var(--primary-500);
+}
+
+.user-avatar {
+  position: relative;
+  margin-right: 1rem;
+}
+
+.user-avatar img {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid var(--border-light);
+}
+
+.online-indicator {
+  position: absolute;
+  width: 12px;
+  height: 12px;
+  background-color: var(--success);
+  border-radius: 50%;
+  bottom: 0;
+  right: 0;
+  border: 2px solid white;
+}
+
+.user-info {
+  flex: 1;
+  overflow: hidden;
+}
+
+.user-name {
+  display: block;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 4px;
+}
+
+.last-message {
+  display: block;
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.unread-badge {
+  background-color: var(--primary-500);
+  color: white;
+  font-size: 0.75rem;
+  font-weight: 600;
+  min-width: 20px;
+  height: 20px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 6px;
+}
+
+/* Chat main area */
+.chat-main-area {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  background-color: white;
+  overflow: hidden;
+}
+
+/* Empty state */
+.select-user-prompt {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  padding: 2rem;
+  text-align: center;
+  color: var(--text-tertiary);
+}
+
+.prompt-icon {
+  font-size: 4rem;
+  color: var(--primary-200);
+  margin-bottom: 1.5rem;
+}
+
+.select-user-prompt h3 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 0.5rem;
+}
+
+.select-user-prompt p {
+  font-size: 1rem;
+  color: var(--text-secondary);
+  max-width: 400px;
+}
+
+/* No users message */
+.no-users-message {
+  padding: 2rem;
+  text-align: center;
+  color: var(--text-tertiary);
+}
+
+/* Loading spinner */
+.loading-spinner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+}
+
+.spinner {
+  width: 40px;
+  height: 40px;
+  border: 4px solid var(--primary-100);
+  border-top: 4px solid var(--primary-500);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-bottom: 1rem;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Responsive adjustments */
+@media (max-width: 992px) {
+  .chat-admin-content {
+    flex-direction: column;
+    height: auto;
+  }
+
+  .chat-users-sidebar {
+    width: 100%;
+    min-width: auto;
+    border-right: none;
+    border-bottom: 1px solid var(--border-light);
+    max-height: 300px;
+  }
+
+  .chat-main-area {
+    height: calc(100vh - 450px);
+    min-height: 400px;
+  }
+}
+
+@media (max-width: 768px) {
+  .user-item {
+    padding: 0.75rem;
+  }
+
+  .user-avatar img {
+    width: 40px;
+    height: 40px;
+  }
+} 

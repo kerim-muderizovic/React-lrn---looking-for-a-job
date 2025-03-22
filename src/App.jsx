@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import './App.css';
 import Navbar from './navbar';
@@ -15,12 +15,29 @@ import { ClipLoader } from 'react-spinners';
 import TwoFactorAuth from './TwoFactor';
 import { AuthProvider, useAuth } from './AuthContext';
 import RequireAuth from './RequireAuth';
-import { I18nextProvider } from 'react-i18next';import './i18';
+import { I18nextProvider } from 'react-i18next';
+import './i18';
 import i18n from './i18';
+import axios from './axiosConfig';
+
 function AppContent() {
   const { authUser, isLoading } = useAuth();
   console.log(authUser,"testttt");
-const isAdmin=authUser?.user?.role==="admin";
+  const isAdmin = authUser?.user?.role === "admin";
+  
+  // Fetch CSRF token when the app initializes
+  useEffect(() => {
+    const initializeCsrf = async () => {
+      try {
+        await axios.get('/sanctum/csrf-cookie');
+      } catch (error) {
+        console.error('Error fetching CSRF token:', error);
+      }
+    };
+    
+    initializeCsrf();
+  }, []);
+
   // Show a loading spinner if user information is still being fetched
   if (isLoading) {
     return (

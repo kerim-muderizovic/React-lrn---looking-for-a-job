@@ -22,6 +22,31 @@
   width: 100%;
 }
 
+.addTaskBTN button {
+  background-color: var(--primary-500) !important;
+  color: white !important;
+  border: none !important;
+  border-radius: 8px !important;
+  padding: 10px 16px !important;
+  font-weight: 600 !important;
+  box-shadow: var(--shadow-light) !important;
+  transition: all 0.3s ease !important;
+  text-transform: none !important;
+  letter-spacing: 0.5px !important;
+}
+
+.addTaskBTN button:hover {
+  background-color: var(--primary-600) !important;
+  transform: translateY(-2px) !important;
+  box-shadow: var(--shadow-medium) !important;
+}
+
+.addTaskBTN button:active {
+  background-color: var(--primary-700) !important;
+  transform: translateY(0) !important;
+  box-shadow: var(--shadow-light) !important;
+}
+
 /* Modal Overlay */
 .modal-overlay {
   position: fixed;
@@ -29,78 +54,216 @@
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(0, 0, 0, 0.7);
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(4px);
   display: flex;
   justify-content: center;
   align-items: center;
   z-index: 1050;
+  padding: 20px;
+  transition: all 0.3s ease;
 }
 
 /* Modal Content */
 .modal-content {
-  background: #fff !important;
+  background: var(--bg-light) !important;
   width: 100%;
   max-width: 500px;
-  border-radius: 10px;
-  padding: 20px;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+  height: auto !important;
+  min-height: auto !important;
+  max-height: none !important;
+  border-radius: 16px;
+  padding: 28px;
+  box-shadow: var(--shadow-medium), 0 10px 30px rgba(0, 0, 0, 0.1);
   text-align: center;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  transform: translateY(0);
+  animation: modalFadeIn 0.3s ease;
+  border: 1px solid var(--border-light);
+}
+
+@keyframes modalFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .modal-content h3 {
-  font-size: 1.5rem;
-  font-weight: 600;
-  color: white;
-  margin-bottom: 20px;
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: var(--primary-700);
+  margin-bottom: 24px;
   text-align: center;
+  position: relative;
+  padding-bottom: 12px;
+}
+
+.modal-content h3::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 60px;
+  height: 3px;
+  background: var(--primary-500);
+  border-radius: 3px;
 }
 
 .modal-content input,
 .modal-content textarea,
 .modal-content select {
   width: 100%;
-  padding: 10px;
-  margin-bottom: 1rem;
-  border: 1px solid #ddd;
-  border-radius: 8px;
+  padding: 14px 16px;
+  margin-bottom: 0;
+  border: 1px solid var(--border-light);
+  border-radius: 12px;
   font-size: 1rem;
-  transition: border-color 0.3s;
+  transition: all 0.3s ease;
+  background-color: white;
+  color: var(--text-primary);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
+}
+
+.modal-content textarea {
+  min-height: 120px;
+  resize: vertical;
 }
 
 .modal-content input:focus,
 .modal-content textarea:focus,
 .modal-content select:focus {
-  border-color: #007bff;
-  box-shadow: 0 0 4px rgba(0, 123, 255, 0.5);
+  border-color: var(--primary-400);
+  box-shadow: 0 0 0 3px var(--primary-100);
+  outline: none;
 }
 
-.modal-content button:not(.uiverse-btn) {
-    width: calc(50% - 10px);
-  padding: 10px;
-  margin: 0 5px;
-  font-size: 1rem;
+.modal-content input::placeholder,
+.modal-content textarea::placeholder,
+.modal-content select::placeholder {
+  color: var(--text-tertiary);
+  font-weight: 400;
+}
+
+/* Modal footer with buttons */
+.modal-footer {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  margin-top: 24px;
+  gap: 16px;
+}
+
+/* Modal buttons */
+.modal-btn {
+  flex: 1;
+  padding: 14px;
   border: none;
-  border-radius: 8px;
+  border-radius: 12px;
+  font-size: 16px;
+  font-weight: 600;
   cursor: pointer;
-  transition: background-color 0.3s, color 0.3s;
+  transition: all 0.3s ease;
+  position: static !important;
+  z-index: 1 !important;
 }
 
-.modal-content button:first-child {
-  background: #007bff;
-  color: #fff;
+.add-btn {
+  background-color: var(--primary-500);
+  color: white;
+  box-shadow: var(--shadow-light);
 }
 
-.modal-content button:first-child:hover:not(.uiverse-btn) {
-  background: #0056b3;
+.add-btn:hover {
+  background-color: var(--primary-600);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-medium);
 }
 
-.modal-content button:last-child:not(.uiverse-btn) {
-  background: #f0f0f0;
-  color: #333;
+.add-btn:active {
+  transform: translateY(0);
+  background-color: var(--primary-700);
+  box-shadow: var(--shadow-light);
 }
 
-.modal-content button:last-child:hover {
-  background: #e0e0e0;
+.close-btn {
+  background-color: var(--neutral-100);
+  color: var(--text-primary);
+  box-shadow: var(--shadow-light);
+  border: 1px solid var(--border-light);
+}
+
+.close-btn:hover {
+  background-color: var(--neutral-200);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-medium);
+}
+
+.close-btn:active {
+  transform: translateY(0);
+  background-color: var(--neutral-300);
+  box-shadow: var(--shadow-light);
+}
+
+/* Fix for DatePicker */
+.react-datepicker-wrapper,
+.react-datepicker__input-container,
+.react-datepicker__input-container input {
+  width: 100%;
+  display: block;
+}
+
+.react-datepicker__input-container input {
+  padding: 14px 16px;
+  border: 1px solid var(--border-light);
+  border-radius: 12px;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+  background-color: white;
+  color: var(--text-primary);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
+  cursor: pointer;
+}
+
+.react-datepicker__input-container input:focus {
+  border-color: var(--primary-400);
+  box-shadow: 0 0 0 3px var(--primary-100);
+  outline: none;
+}
+
+/* Fix the calendar dropdown position */
+.react-datepicker-popper {
+  z-index: 9999 !important;
+}
+
+/* Style the calendar */
+.react-datepicker {
+  font-family: inherit !important;
+  border-radius: 12px !important;
+  border: 1px solid var(--border-light) !important;
+  box-shadow: var(--shadow-medium) !important;
+}
+
+.react-datepicker__header {
+  background-color: var(--primary-50) !important;
+  border-bottom: 1px solid var(--primary-100) !important;
+}
+
+.react-datepicker__day--selected {
+  background-color: var(--primary-500) !important;
+  border-radius: 50% !important;
+}
+
+.react-datepicker__day:hover {
+  background-color: var(--primary-100) !important;
+  border-radius: 50% !important;
 }
 
 /* Task List Container */
@@ -210,20 +373,6 @@
   background-color: #e53935;
   transform: scale(1.1);
 }
-/* Fix cursor behavior */
-.react-datepicker__input-container {
-  cursor: pointer; /* Ensure the cursor is a pointer when hovering over the input */
-}
-
-.react-datepicker__input-container input {
-  cursor: pointer; /* Ensure the cursor is a pointer when hovering over the input */
-}
-
-/* Disable animations */
-.react-datepicker {
-  animation: none !important;
-  transition: none !important;
-}
 
 /* Remove weird hover effects */
 .react-datepicker__day--selected,
@@ -234,18 +383,6 @@
   border-radius: 0.3rem;
 }
 
-/* Fix the calendar dropdown position */
-.react-datepicker-popper {
-  z-index: 9999 !important; /* Ensure the calendar appears above other elements */
-}
-
-.modal-content button:last-child {
-  z-index: auto; /* Ensure it doesn't overlap the calendar */
-  position: static; /* Use default positioning */
-  cursor: pointer; /* Ensure the cursor is normal */
-  background-color: transparent; /* Example: Remove any conflicting background */
-  border: none; /* Example: Remove any conflicting borders */
-}
 .btnSort {
   animation: none !important;
   transition: none !important;
@@ -613,5 +750,69 @@
   background-color: white;
   border-radius: 10px;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+/* Input groups */
+.input-group {
+  position: relative;
+  margin-bottom: 16px;
+  width: 100%;
+}
+
+.input-group label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 500;
+  color: var(--text-primary);
+  text-align: left;
+}
+
+.input-group input,
+.input-group textarea,
+.input-group select {
+  width: 100%;
+  padding: 14px 16px;
+  border: 1px solid var(--border-light);
+  border-radius: 12px;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+  background-color: white;
+  color: var(--text-primary);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
+}
+
+.input-group textarea {
+  min-height: 120px;
+  resize: vertical;
+}
+
+.input-group input:focus,
+.input-group textarea:focus,
+.input-group select:focus {
+  border-color: var(--primary-400);
+  box-shadow: 0 0 0 3px var(--primary-100);
+  outline: none;
+}
+
+.input-group input::placeholder,
+.input-group textarea::placeholder,
+.input-group select::placeholder {
+  color: var(--text-tertiary);
+  font-weight: 400;
+}
+
+/* Add at the end of the file */
+.loading-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  width: 100%;
+}
+
+.loading-container p {
+  margin-top: 1rem;
+  color: #666;
 }
  

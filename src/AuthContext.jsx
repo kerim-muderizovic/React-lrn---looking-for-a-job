@@ -1,9 +1,8 @@
-import React, { createContext, useState, useContext, useEffect } from 'react';
-import axios from 'axios';
+import React, { useState, useContext, useEffect } from 'react';
+import axios from './axiosConfig';
 import './AuthContext.css';
 import Loading from './Admin/isLoading';
-// Create the AuthContext
-const AuthContext = createContext();
+import AuthContext from './contexts/AuthContext';
 
 // Custom hook to use AuthContext
 export const useAuth = () => useContext(AuthContext);
@@ -13,10 +12,11 @@ export const AuthProvider = ({ children }) => {
   const [authUser, setAuthUser] = useState(null); // Store the authenticated user
   const [isLoading, setIsLoading] = useState(true); // Track loading state
   const [loading, setLoading] = useState(false); // Central loading state
+  
   // Fetch CSRF token
   const fetchCsrfToken = async () => {
     try {
-      await axios.get('/sanctum/csrf-cookie', { withCredentials: true });
+      await axios.get('/sanctum/csrf-cookie');
       console.log('CSRF token fetched successfully');
     } catch (err) {
       console.error('Failed to fetch CSRF token:', err);
@@ -28,9 +28,7 @@ export const AuthProvider = ({ children }) => {
     setIsLoading(true);
     try {
       await fetchCsrfToken();
-      const response = await axios.get('http://localhost:8000/auth/check', {
-        withCredentials: true,
-      });
+      const response = await axios.get('/auth/check');
       setAuthUser(response.data); // Update user state
       console.log('Authenticated user fetched:', response.data);
     } catch (err) {
@@ -39,6 +37,7 @@ export const AuthProvider = ({ children }) => {
     }
     setIsLoading(false);
   };
+  
   useEffect(() => {
     fetchAuthenticatedUser();
   }, []);
@@ -47,12 +46,10 @@ export const AuthProvider = ({ children }) => {
   const login = async (credentials) => {
     setLoading(true); // Start global loading
     try {
-      const response = await axios.post('http://localhost:8000/loginn', credentials, {
+      const response = await axios.post('/loginn', credentials, {
         withXSRFToken: true,
         headers: { 'Content-Type': 'application/json' },
-        withCredentials: true,
       });
-      // const { user } = response.data;
       console.log(response.data);
       setAuthUser(response.data); // Update user state
       return response.data;
@@ -67,9 +64,8 @@ export const AuthProvider = ({ children }) => {
   const logout = async () => {
     setIsLoading(true);
     try {
-      await axios.post('http://localhost:8000/logout', {}, {
+      await axios.post('/logout', {}, {
         withXSRFToken: true,
-        withCredentials: true,
       });
       setAuthUser(null); // Clear user state
     } catch (error) {

@@ -1,3 +1,5 @@
+@import './colors.css';
+
 /* Ensure the navbar is fixed at the top */
 .mdb-navbar {
   position: fixed !important;
@@ -5,32 +7,155 @@
   left: 0;
   right: 0;
   z-index: 1050; /* Ensure it's above other elements */
-  background-color: #ffffff; /* Keep background solid */
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Add a shadow */
+  background-color: var(--bg-light) !important; /* Use color variable */
+  box-shadow: var(--shadow-medium) !important; /* Use shadow variable */
+  padding: 0.75rem 1rem !important;
+  transition: box-shadow 0.3s ease !important;
+  border-bottom: 1px solid var(--border-light);
 }
+
+/* Hover effect for navbar */
+.mdb-navbar:hover {
+  box-shadow: var(--shadow-dark) !important;
+}
+
 /* Push brand to the left */
 .navbar-brand {
   margin-right: auto;
+  padding: 0.5rem 0;
+  transition: transform 0.3s ease;
+  margin-left: 0 !important;
+}
+
+.navbar-brand:hover {
+  transform: translateY(-2px);
 }
 
 /* Push links to the right */
 .navbar-nav {
   margin-left: auto;
+  display: flex;
+  align-items: center;
 }
 
 /* Add spacing between nav items */
-.navbar-nav .nav-link {
-  margin-right: 1rem; /* Add space between links */
+.navbar-nav .nav-item {
+  margin: 0 0.25rem;
 }
 
-/* Button styling */
-.navbar .btn {
-  margin-left: 0.5rem;
-  height: auto;
+/* Style the nav links */
+.nav-link {
+  color: var(--text-primary) !important;
+  font-weight: 500 !important;
+  padding: 0.5rem 0.75rem !important;
+  border-radius: 6px !important;
+  transition: background-color 0.3s ease, color 0.3s ease !important;
 }
 
-.btn1 {
-  height: 22%;
+.nav-link:hover {
+  background-color: var(--primary-50) !important;
+  color: var(--primary-700) !important;
+}
+
+.nav-link:active {
+  background-color: var(--primary-100) !important;
+}
+
+/* Language buttons */
+.language-btn {
+  background: none !important;
+  border: none !important;
+  color: var(--text-secondary) !important;
+  font-weight: 600 !important;
+  font-size: 0.9rem !important;
+  padding: 0.4rem 0.6rem !important;
+  margin: 0 0.25rem !important;
+  border-radius: 4px !important;
+  transition: background-color 0.3s ease, color 0.3s ease !important;
+}
+
+.language-btn:hover {
+  background-color: var(--primary-50) !important;
+  color: var(--primary-600) !important;
+}
+
+.language-btn.active {
+  color: var(--primary-600) !important;
+  background-color: var(--primary-50) !important;
+}
+
+/* Auth buttons */
+.auth-btn {
+  background-color: transparent !important;
+  color: var(--primary-600) !important;
+  border: 1px solid var(--primary-200) !important;
+  border-radius: 6px !important;
+  padding: 0.5rem 1rem !important;
+  font-weight: 500 !important;
+  transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease !important;
+  margin-left: 0.5rem !important;
+}
+
+.auth-btn:hover {
+  background-color: var(--primary-500) !important;
+  color: white !important;
+  transform: translateY(-2px) !important;
+  box-shadow: var(--shadow-light) !important;
+}
+
+.auth-btn:active {
+  transform: translateY(0) !important;
+}
+
+.logout-btn {
+  background-color: var(--primary-500) !important;
+  color: white !important;
+}
+
+.logout-btn:hover {
+  background-color: var(--primary-600) !important;
+}
+
+/* Container styling */
+.navbar-container {
+  width: 100%;
+  max-width: 100% !important;
+  margin: 0 !important;
+  padding: 0 0.5rem !important;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/* Adjust container padding to move elements closer to edges */
+@media (min-width: 992px) {
+  .navbar-container {
+    padding: 0 1rem !important;
+  }
+  
+  .navbar-brand {
+    margin-left: 0 !important;
+  }
+  
+  .navbar-nav {
+    margin-right: 0 !important;
+  }
+}
+
+/* Responsive adjustments */
+@media (max-width: 992px) {
+  .navbar-nav {
+    padding: 1rem 0;
+  }
+  
+  .nav-item {
+    margin: 0.5rem 0;
+  }
+  
+  .auth-btn {
+    margin: 0.5rem 0 !important;
+    width: 100% !important;
+  }
 }
 
 /* Disable transitions on the navbar */
@@ -74,9 +199,6 @@
   animation: none !important; /* Disable button animations */
   transition: none !important; /* Remove transition effects */
 }
-
-/* Container styling for the buttons */
-
 
 /* General button styles */
 button {

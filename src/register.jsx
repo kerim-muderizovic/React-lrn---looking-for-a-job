@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
+import axios from './axiosConfig';
 import { MDBBtn, MDBContainer, MDBRow, MDBCol, MDBCard, MDBCardBody, MDBCardImage, MDBIcon, MDBCheckbox } from 'mdb-react-ui-kit';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
@@ -19,17 +19,11 @@ export default function Register() {
   const [isLoading, setIsLoading] = useState(false);
   const [passwordStrength, setPasswordStrength] = useState(0);
 
-  // Axios global settings
+  // Fetch CSRF token on component mount
   useEffect(() => {
-    axios.defaults.baseURL = 'http://localhost:8000';
-    axios.defaults.withCredentials = true; // Ensure cookies are sent with the request
-
-    // Fetch CSRF token
     const fetchCsrfToken = async () => {
       try {
-        await axios.get('/sanctum/csrf-cookie', {
-          withCredentials: true, // Required to send cookies with requests
-        });
+        await axios.get('/sanctum/csrf-cookie');
         console.log('CSRF token set successfully');
       } catch (err) {
         console.error('Failed to fetch CSRF cookie:', err);
@@ -93,8 +87,10 @@ export default function Register() {
 
     try {
       const response = await axios.post('/register', formData, {
-        withXSRFToken: true,
+        withCredentials: true,
+        withXSRFToken:true,
         headers: {
+          withXSRFToken:true,
           'Content-Type': 'application/json',
         },
       });

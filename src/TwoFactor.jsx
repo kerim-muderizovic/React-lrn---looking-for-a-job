@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import axios from 'axios';
+import axios from './axiosConfig';
 import { MDBContainer, MDBRow, MDBCol, MDBInput, MDBBtn } from 'mdb-react-ui-kit';
 import './twoFcator.css';
 import { useNavigate } from 'react-router-dom';
@@ -7,39 +7,38 @@ import { useAuth } from './AuthContext';
 import { useTranslation } from 'react-i18next';
 
 export default function TwoFactorAuth({ setView }) {
+  const { logout, setAuthUser } = useAuth();
   const { t } = useTranslation();
   const [code, setCode] = useState('');
   const [error, setError] = useState(null);
-  const [loading, setLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
-  const { setAuthUser, logout, fetchAuthenticatedUser } = useAuth();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setIsLoading(true);
     setError(null);
 
     try {
-      setLoading(true);
-      const response = await axios.post('http://localhost:8000/verify-2fa', { two_factor_key: code }, {
-        withCredentials: true,
-        withXSRFToken: true,
-        headers: { 'Content-Type': 'application/json' },
-      });
+      const response = await axios.post(
+        '/verify-2fa', 
+        { two_factor_key: code }, 
+        {
+          withXSRFToken: true,
+          headers: { 'Content-Type': 'application/json' },
+        }
+      );
 
       console.log('2FA verification successful:', response.data);
       
-      // Update auth state with the response data
+      // Update auth state with response data
       setAuthUser(response.data);
       
-      // Double-check authentication state by fetching from server
-      await fetchAuthenticatedUser();
-      
-      const { user } = response.data;
-
-      if (user.role === 'admin') {
-        navigate('/AdminPage'); // Navigate to admin dashboard (note the capital P)
+      // Redirect based on user role
+      if (response.data.user && response.data.user.role === 'admin') {
+        navigate('/AdminPage');
       } else {
-        navigate('/crm'); // Navigate to CRM
+        navigate('/crm');
       }
     } catch (err) {
       console.error('2FA verification error', err);
@@ -47,10 +46,10 @@ export default function TwoFactorAuth({ setView }) {
       setError(err.response?.data?.message || t('twoFactor.invalidCode'));
 
       setTimeout(() => {
-        navigate('/login');
-      }, 5000); // 5000ms = 5 seconds
+        navigate('/');
+      }, 3000);
     } finally {
-      setLoading(false);
+      setIsLoading(false);
     }
   };
 
@@ -91,8 +90,8 @@ export default function TwoFactorAuth({ setView }) {
               {error && <p className="text-danger">{error}</p>}
 
               <div className="text-center text-md-start mt-4 pt-2">
-                <MDBBtn className="mb-0 px-5" size="lg" type="submit" disabled={loading}>
-                  {loading ? t('twoFactor.verifying') : t('twoFactor.verifyCode')}
+                <MDBBtn className="mb-0 px-5" size="lg" type="submit" disabled={isLoading}>
+                  {isLoading ? t('twoFactor.verifying') : t('twoFactor.verifyCode')}
                 </MDBBtn>
               </div>
             </form>

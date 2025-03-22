@@ -51,6 +51,14 @@ const Sidebar = ({ users, setscreen, selectedScreen }) => {
             {!isCollapsed && <span className="text">Tasks & Users</span>}
           </Link>
         </li>
+        <li className={isActive('Chat')}>
+          <Link onClick={() => setscreen('Chat')}>
+            <span className="icon">
+              <i className="fas fa-comments"></i>
+            </span>
+            {!isCollapsed && <span className="text">Chat</span>}
+          </Link>
+        </li>
         <li className={isActive('activityLog')}>
           <Link onClick={() => setscreen('activityLog')}>
             <span className="icon">

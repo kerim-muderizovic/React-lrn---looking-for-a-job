@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import axios from '../axiosConfig';
 import './Dashboard.css';
 import { useTranslation } from 'react-i18next';
 
@@ -47,7 +47,7 @@ export default function Dashboard({ users, tasks }) {
 
   const fetchRecentActivities = () => {
     setIsLoading(true);
-    axios.get('http://localhost:8000/Admin/activities?limit=5')
+    axios.get('/Admin/activities?limit=5')
       .then(response => {
         if (response.data && Array.isArray(response.data.activities)) {
           setRecentActivities(response.data.activities);

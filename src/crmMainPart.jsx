@@ -1,8 +1,9 @@
 import React, { useState, useEffect,useMemo } from "react";
-import axios from "axios";
+import axios from "./axiosConfig";
 import { Await, Route, Routes, useNavigate } from "react-router-dom";
 import { Pie } from 'react-chartjs-2';
 import Calendar from "./calendar";
+import UserChatBubble from "./UserChatBubble";
 import {
   MDBContainer,
   MDBRow,
@@ -25,6 +26,7 @@ import "./crmMainPart.css";
 import 'react-datepicker/dist/react-datepicker.css'; // Import the default CSS
 import { useAuth } from "./AuthContext";
 import { useTranslation } from "react-i18next";
+
 export default function CRMApp() {
   const {t}=useTranslation();
   const { authUser,fetchAuthenticatedUser } = useAuth(); // Access the authenticated user from context
@@ -37,6 +39,7 @@ export default function CRMApp() {
     due_date: null, // Use null for react-datepicker
   });
   const [taskProgressData, setTaskProgressData] = useState([0, 0, 0]); // Default to 0 values
+  const [isLoading, setIsLoading] = useState(false); // Add isLoading state
   ChartJS.register(ArcElement, Tooltip, Legend);
   
   const [tasks, setTasks] = useState([]);
@@ -63,62 +66,63 @@ export default function CRMApp() {
       maintainAspectRatio: true,
     }
   }), [taskProgressData]);
-  const fetchTasksPie = async()=> {
+
+  // Define fetchTasksAndProgresses outside of useEffect so it can be reused
+  const fetchTasksAndProgresses = async () => {
     try {
-      const tasksProgressesResponse =await axios.get("http://localhost:8000/task-progresses", {
-        withCredentials: true,
-      });
-      console.log('Progresi taskova', tasksProgressesResponse.data);
-      setTaskProgressData([
-        tasksProgressesResponse.data.in_progress_tasks,  // In Progress
-        tasksProgressesResponse.data.completed_tasks,   // Completed
-        tasksProgressesResponse.data.not_started_tasks,  // Not Started
-      ]);  } catch (error) {
-      console.error("Error fetching tasks:", error);
+      setIsLoading(true);
+      
+      // Fetch task progresses
+      const tasksProgressesResponse = await axios.get("/task-progresses");
+      console.log('Task progresses:', tasksProgressesResponse.data);
+      
+      if (tasksProgressesResponse.data) {
+        setTaskProgressData([
+          tasksProgressesResponse.data.in_progress_tasks,  // In Progress
+          tasksProgressesResponse.data.completed_tasks,   // Completed
+          tasksProgressesResponse.data.not_started_tasks,  // Not Started
+        ]);
+      }
+
+      // Fetch tasks
+      const tasksResponse = await axios.get("/getUserTasks");
+      console.log('Tasks response:', tasksResponse.data);
+      
+      if (tasksResponse.data && tasksResponse.data.tasks) {
+        // Filter tasks with progress < 100
+        const filterTasks = (tasksResponse.data.tasks || []).filter(task => task.progress < 100);
+        setTasks(filterTasks);
+      }
+    } catch (error) {
+      console.error('Error fetching data:', error);
+    } finally {
+      setIsLoading(false);
     }
-  }
+  };
+
   useEffect(() => {
     console.log('user pri ucitavanju ', authUser);
 
-    const fetchTasks = async () => {
-      try {
-     
-        const tasksResponse = await axios.get("http://localhost:8000/getUserTasks", {
-          withCredentials: true,
-        });
-        console.log('Tasks response prilikom uzimanja za konkretnog', tasksResponse.data);
-    
-        // Set tasks in state
-        const filterTasks=(tasksResponse.data.tasks || []).filter(task=>task.progress<100);
-        setTasks(filterTasks);
-      } catch (error) {
-        console.error("Error fetching tasks:", error);
-      }
-    };
-
     const fetchUsers = async () => {
       try {
-        const { data } = await axios.get("http://localhost:8000/assignable-users", {
-          withCredentials: true,
-        });
+        const { data } = await axios.get("/assignable-users");
         setUsers(data);
       } catch (error) {
         console.error("Error fetching users:", error);
       }
     };
 
-    if (authUser.isLoggedIn) {
-      fetchTasks();
+    if (authUser && authUser.isLoggedIn) {
+      fetchTasksAndProgresses();
       fetchUsers();
-      fetchTasksPie(); // Fetch pie chart data
     }
-  }, [authUser.isLoggedIn]);
+  }, [authUser]);
  
+  // When dataa changes, update the component to show the new chart data
+  useEffect(() => {
+    console.log('Task progress data updated:', taskProgressData);
+  }, [taskProgressData]);
 
-  
-
-
-  
   const updateTaskProgress = async (taskId, newProgress) => {
     try {
         if (newProgress === 100) {
@@ -129,15 +133,15 @@ export default function CRMApp() {
         }
 
         // Ensure CSRF cookie is set first
-        await axios.get('http://localhost:8000/sanctum/csrf-cookie', { withCredentials: true });
+        await axios.get('/sanctum/csrf-cookie');
 
         // Now send the PUT request with the CSRF token
         const response = await axios.put(
-            `http://localhost:8000/tasks/${taskId}`,
+            `/tasks/${taskId}`,
             { progress: newProgress },
             { 
-                withCredentials: true, // Include credentials (cookies) in the request
-                withXSRFToken: true
+                withXSRFToken: true,
+                withCredentials: true
             }
         );
 
@@ -150,7 +154,10 @@ export default function CRMApp() {
                 )
         );
 
-        console.log('Task updated:', response.data); // Log the response
+        // Fetch updated pie chart data
+        fetchTasksAndProgresses();
+
+        console.log('Task updated:', response.data);
     } catch (error) {
         console.error("Error updating task progress:", error);
     }
@@ -162,21 +169,35 @@ export default function CRMApp() {
   const handleDeleteTask = async (taskId) => {
     try {
       // Send delete request to the backend
-      await axios.get('http://localhost:8000/sanctum/csrf-cookie');
+      await axios.get('/sanctum/csrf-cookie');
 
-      const response = await axios.delete(`http://localhost:8000/DeleteTask/${taskId}`, {
+      // First update the local state to provide immediate visual feedback
+      setTasks((prevTasks) => prevTasks.filter((task) => task.id !== taskId));
+      
+      // Then send the delete request to the server
+      const response = await axios.delete(`/DeleteTask/${taskId}`, {
         withXSRFToken: true,
         headers: { 'Content-Type': 'application/json' },
-        withCredentials: true, 
-        
       });
-      fetchTasksPie();
-      // If successful, remove the task from the UI state
-      setTasks((prevTasks) => prevTasks.filter((task) => task.id !== taskId));
+      
+      // Explicitly fetch updated task progress data to update the pie chart
+      fetchTasksAndProgresses();
+      
       console.log(response.data.message); // Success message from backend
     } catch (error) {
       console.error("Error deleting task:", error);
-      alert("There was an error deleting the task. Please try again.");
+      
+      // Restore the task in the UI since the deletion failed
+      fetchTasksAndProgresses();
+      
+      // Show specific error messages
+      if (error.response) {
+        alert(`Error: ${error.response.data.message || 'Failed to delete task'}`);
+      } else if (error.request) {
+        alert("Network error. Please check your connection and try again.");
+      } else {
+        alert("There was an error deleting the task. Please try again.");
+      }
     }
   };
   const navigate = useNavigate();
@@ -190,7 +211,7 @@ export default function CRMApp() {
 
         console.log("taskova vr:", newTask);
         const { data } = await axios.post(
-            "http://localhost:8000/postTask",
+            "/postTask",
             newData,
             { 
                 withXSRFToken: true,
@@ -202,8 +223,8 @@ export default function CRMApp() {
 
         console.log("Refetching task progress data...");
         
-        // Ensure fetchTasksPie updates state before continuing
-         fetchTasksPie();  
+        // Ensure fetchTasksAndProgresses updates state before continuing
+         await fetchTasksAndProgresses();  
 
         console.log("Task progress data refetched successfully.");
 
@@ -392,113 +413,131 @@ export default function CRMApp() {
         </button>
       </div>
       <div className="task-list-container">
-      {Object.entries(groupedTasks).map(([monthYear, tasks]) => (
-        <div key={monthYear}>
-          <h4 style={{ marginTop: "20px", color: "#555" }}>{monthYear}</h4>
-          {tasks.map((task) => (
-            <MDBCard
-              key={task.id}
-              style={{
-                backgroundColor: priorityColors[task.priority],
-                marginBottom: "15px",
-                position: "relative",
-                border: "3px solid #333",
-                borderRadius: "8px",
-                boxShadow: "0 4px 8px rgba(0, 0, 0, 0.3)",
-                overflow: "hidden"
-              }}
-            >
-              <MDBCardBody className="Task">
-                <div className="task-header">
-                  <MDBCardTitle>
-                    {task.title}
-                    <span
-                      className="due-date-tag"
-                      style={{
-                        backgroundColor: new Date(task.due_date) < new Date() ? "var(--error)" : "var(--warning)",
-                        color: "#fff",
-                        fontSize: "12px",
-                        padding: "5px 8px",
-                        borderRadius: "5px",
-                        marginLeft: "10px",
-                      }}
+      {isLoading ? (
+        <div className="loading-container">
+          <div className="spinner-border text-primary" role="status">
+            <span className="visually-hidden">{t('common.loading')}</span>
+          </div>
+          <p>{t('common.loading')}</p>
+        </div>
+      ) : (
+        Object.entries(groupedTasks).map(([monthYear, tasks]) => (
+          <div key={monthYear}>
+            <h4 style={{ marginTop: "20px", color: "#555" }}>{monthYear}</h4>
+            {tasks.map((task) => (
+              <MDBCard
+                key={task.id}
+                style={{
+                  backgroundColor: priorityColors[task.priority],
+                  marginBottom: "15px",
+                  position: "relative",
+                  border: "3px solid #333",
+                  borderRadius: "8px",
+                  boxShadow: "0 4px 8px rgba(0, 0, 0, 0.3)",
+                  overflow: "hidden"
+                }}
+              >
+                <MDBCardBody className="Task">
+                  <div className="task-header">
+                    <MDBCardTitle>
+                      {task.title}
+                      <span
+                        className="due-date-tag"
+                        style={{
+                          backgroundColor: new Date(task.due_date) < new Date() ? "var(--error)" : "var(--warning)",
+                          color: "#fff",
+                          fontSize: "12px",
+                          padding: "5px 8px",
+                          borderRadius: "5px",
+                          marginLeft: "10px",
+                        }}
+                      >
+                        📅 {t("crm.tasks.due")}: {new Date(task.due_date).toLocaleDateString()}
+                      </span>
+                    </MDBCardTitle>
+                    <MDBBtn
+                      color="danger"
+                      onClick={() => handleDeleteTask(task.id)}
+                      className="delete-btn"
                     >
-                      📅 {t("crm.tasks.due")}: {new Date(task.due_date).toLocaleDateString()}
-                    </span>
-                  </MDBCardTitle>
-                  <MDBBtn
-                    color="danger"
-                    onClick={() => handleDeleteTask(task.id)}
-                    className="delete-btn"
-                  >
-                    {t("crm.tasks.delete")}
-                  </MDBBtn>
-                </div>
-                <MDBCardText className="task-description">{task.description}</MDBCardText>
-                <MDBCardText className="task-progress-text">
-                  {t("crm.tasks.progress")}: <span className="progress-value">{task.progress}%</span>
-                </MDBCardText>
+                      {t("crm.tasks.delete")}
+                    </MDBBtn>
+                  </div>
+                  <MDBCardText className="task-description">{task.description}</MDBCardText>
+                  <MDBCardText className="task-progress-text">
+                    {t("crm.tasks.progress")}: <span className="progress-value">{task.progress}%</span>
+                  </MDBCardText>
 
-                <div
-                  style={{
-                    position: "relative",
-                    height: "20px",
-                    backgroundColor: "var(--neutral-200)",
-                    borderRadius: "10px",
-                    cursor: "pointer",
-                    border: "1px solid var(--border-light)",
-                    overflow: "hidden"
-                  }}
-                  onMouseDown={(e) => {
-                    const boundingRect = e.target.getBoundingClientRect();
-                    const offsetX = e.clientX - boundingRect.left;
-                    const newProgress = Math.min(100, Math.max(0, Math.round((offsetX / boundingRect.width) * 100)));
-                    updateTaskProgress(task.id, newProgress);
-                  }}
-                  onMouseMove={(e) => {
-                    if (e.buttons !== 1) return;
-                    const boundingRect = e.target.getBoundingClientRect();
-                    const offsetX = e.clientX - boundingRect.left;
-                    const newProgress = Math.min(100, Math.max(0, Math.round((offsetX / boundingRect.width) * 100)));
-                    updateTaskProgress(task.id, newProgress);
-                  }}
-                >
                   <div
                     style={{
-                      width: `${task.progress}%`,
-                      height: "100%",
-                      backgroundColor: 
-                        task.progress < 30 ? "var(--error)" : 
-                        task.progress < 70 ? "var(--warning)" : 
-                        "var(--success)",
+                      position: "relative",
+                      height: "20px",
+                      backgroundColor: "var(--neutral-200)",
                       borderRadius: "10px",
-                      transition: "width 0.2s ease-in-out",
+                      cursor: "pointer",
+                      border: "1px solid var(--border-light)",
+                      overflow: "hidden"
                     }}
-                  />
-                </div>
-              </MDBCardBody>
-            </MDBCard>
-          ))}
-        </div>
-      ))}</div>
+                    onMouseDown={(e) => {
+                      const boundingRect = e.target.getBoundingClientRect();
+                      const offsetX = e.clientX - boundingRect.left;
+                      const newProgress = Math.min(100, Math.max(0, Math.round((offsetX / boundingRect.width) * 100)));
+                      updateTaskProgress(task.id, newProgress);
+                    }}
+                    onMouseMove={(e) => {
+                      if (e.buttons !== 1) return;
+                      const boundingRect = e.target.getBoundingClientRect();
+                      const offsetX = e.clientX - boundingRect.left;
+                      const newProgress = Math.min(100, Math.max(0, Math.round((offsetX / boundingRect.width) * 100)));
+                      updateTaskProgress(task.id, newProgress);
+                    }}
+                  >
+                    <div
+                      style={{
+                        width: `${task.progress}%`,
+                        height: "100%",
+                        backgroundColor: 
+                          task.progress < 30 ? "var(--error)" : 
+                          task.progress < 70 ? "var(--warning)" : 
+                          "var(--success)",
+                        borderRadius: "10px",
+                        transition: "width 0.2s ease-in-out",
+                      }}
+                    />
+                  </div>
+                </MDBCardBody>
+              </MDBCard>
+            ))}
+          </div>
+        ))
+      )}
+    </div>
     </MDBCol>
     </MDBRow>
   
     {modalOpen && (
-          <div className="modal-overlay">
-          <div className="modal-content">
-            <h3>{t('crm.tasks.addTask')}</h3>
+      <div className="modal-overlay">
+        <div className="modal-content">
+          <h3>{t('crm.tasks.addTask')}</h3>
+          
+          <div className="input-group">
             <input
               type="text"
               placeholder={t('crm.tasks.taskName')}
               value={newTask.title}
               onChange={(e) => setNewTask((prev) => ({ ...prev, title: e.target.value }))}
             />
+          </div>
+          
+          <div className="input-group">
             <textarea
               placeholder={t('crm.tasks.taskDescription')}
               value={newTask.description}
               onChange={(e) => setNewTask((prev) => ({ ...prev, description: e.target.value }))}
             ></textarea>
+          </div>
+          
+          <div className="input-group">
             <select
               value={newTask.priority}
               onChange={(e) => setNewTask((prev) => ({ ...prev, priority: e.target.value }))}
@@ -507,18 +546,20 @@ export default function CRMApp() {
               <option value="medium">{t('crm.tasks.medium')}</option>
               <option value="high">{t('crm.tasks.high')}</option>
             </select>
-            {/* React DatePicker */}
+          </div>
+          
+          <div className="input-group">
             <DatePicker
               selected={newTask.due_date}
               onChange={(date) => setNewTask((prev) => ({ ...prev, due_date: format(new Date(date), 'yyyy-MM-dd') }))}
               dateFormat="yyyy-MM-dd"
               placeholderText={t('crm.tasks.selectDueDate')}
-              minDate={new Date()} // Optional: Restrict to future dates
+              minDate={new Date()}
               popperModifiers={[
                 {
                   name: 'offset',
                   options: {
-                    offset: [0, 10], // Adjust the position of the calendar dropdown
+                    offset: [0, 10],
                   },
                 },
                 {
@@ -529,20 +570,47 @@ export default function CRMApp() {
                   },
                 },
               ]}
-              withPortal 
+              withPortal
+              portalId="date-picker-portal"
+              popperProps={{
+                positionFixed: true,
+                modifiers: [
+                  {
+                    name: 'preventOverflow',
+                    options: {
+                      enabled: true,
+                      escapeWithReference: false,
+                      boundary: 'viewport',
+                    },
+                  },
+                ],
+              }}
             />
-            <div>
-            <button className="button2" onClick={() => handleAddTask(newTask)}>{t('crm.tasks.addTask')}</button>
-            <button className="button2" onClick={toggleModal}>{t('modal.buttons.close')}</button>
-            </div>
+          </div>
+          
+          <div className="modal-footer">
+            <button 
+              className="modal-btn add-btn"
+              onClick={() => handleAddTask(newTask)}
+            >
+              {t('crm.tasks.addTask')}
+            </button>
+            <button 
+              className="modal-btn close-btn"
+              onClick={toggleModal}
+            >
+              {t('modal.buttons.close')}
+            </button>
           </div>
         </div>
-    )
-    }
+      </div>
+    )}
   
     <Routes>
       <Route path="/login" element={<Login />} />
     </Routes>
+    
+    <UserChatBubble />
   </MDBContainer>
   
 )

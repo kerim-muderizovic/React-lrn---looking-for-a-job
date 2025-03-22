@@ -222,6 +222,26 @@
     "noActivitiesFound": "No recent activities found",
     "noTasksAvailable": "No tasks available",
     "completed": "Completed",
-    "pending": "Pending"
+    "pending": "Pending",
+    "chat": "Chat",
+    "chatUsers": "Chat Users",
+    "selectUserPrompt": "Select a user to start chatting",
+    "selectUserDesc": "Choose a user from the list to view your conversation",
+    "noChats": "No chat history yet",
+    "noMessages": "No messages yet"
+  },
+  "chat": {
+    "online": "Online",
+    "offline": "Offline",
+    "typeMessage": "Type your message...",
+    "send": "Send",
+    "noMessages": "No messages yet. Start the conversation!",
+    "loading": "Loading messages...",
+    "messageSent": "Message sent",
+    "newMessage": "New message",
+    "unreadMessages": "Unread messages",
+    "openChat": "Open chat",
+    "contactAdmin": "Contact Admin",
+    "selectAdmin": "Select an admin to chat with"
   }
 }

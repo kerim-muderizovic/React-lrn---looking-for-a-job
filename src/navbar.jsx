@@ -7,15 +7,18 @@ import {
   MDBNavbarItem,
   MDBNavbarLink,
   MDBCollapse,
+  MDBNavbarToggler,
 } from 'mdb-react-ui-kit';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from './AuthContext';
 import { useTranslation } from 'react-i18next';
 import './navbar.css';
+
 export default function Navbar() {
   const { logout, authUser } = useAuth();
   const navigate = useNavigate();
   const { t, i18n } = useTranslation();
+  const [showNav, setShowNav] = useState(false);
 
   // Local state to track login status
   const [isLoggedIn, setIsLoggedIn] = useState(authUser?.isLoggedIn || false);
@@ -42,10 +45,12 @@ export default function Navbar() {
     i18n.changeLanguage(lang);
   };
 
+  const currentLang = i18n.language;
+
   return (
-    <MDBNavbar expand="lg" light bgColor="light" className='mdb-navbar'>
-      <MDBContainer fluid>
-        <MDBNavbarBrand href="/" className="ms-3">
+    <MDBNavbar expand="lg" light className='mdb-navbar'>
+      <MDBContainer fluid className="navbar-container">
+        <MDBNavbarBrand href="/" className="navbar-brand">
           <img
             src="https://www.con2cus.de/img/c2c.svg"
             style={{ width: '100px', height: 'auto' }}
@@ -53,36 +58,47 @@ export default function Navbar() {
           />
         </MDBNavbarBrand>
 
-        <MDBCollapse navbar>
-          <MDBNavbarNav className="ms-auto d-flex align-items-center">
-            <MDBNavbarItem>
-              <button onClick={() => changeLanguage('en')} className="btn btn-link">
+        <MDBNavbarToggler
+          type='button'
+          aria-expanded='false'
+          aria-label='Toggle navigation'
+          onClick={() => setShowNav(!showNav)}
+        />
+
+        <MDBCollapse navbar show={showNav}>
+          <MDBNavbarNav className="ms-auto">
+            <MDBNavbarItem className="d-flex align-items-center">
+              <button 
+                onClick={() => changeLanguage('en')} 
+                className={`language-btn ${currentLang === 'en' ? 'active' : ''}`}
+              >
                 EN
               </button>
-            </MDBNavbarItem>
-            <MDBNavbarItem>
-              <button onClick={() => changeLanguage('de')} className="btn btn-link">
+              <button 
+                onClick={() => changeLanguage('de')} 
+                className={`language-btn ${currentLang === 'de' ? 'active' : ''}`}
+              >
                 DE
               </button>
             </MDBNavbarItem>
 
             {isLoggedIn ? (
               <MDBNavbarItem>
-                <MDBNavbarLink onClick={handleLogout} className="btn btn-link nav-link">
+                <button onClick={handleLogout} className="auth-btn logout-btn">
                   {t('navbar.logout')}
-                </MDBNavbarLink>
+                </button>
               </MDBNavbarItem>
             ) : (
               <>
                 <MDBNavbarItem>
-                  <MDBNavbarLink onClick={handleLogin} className="btn btn-link nav-link">
+                  <button onClick={handleLogin} className="auth-btn">
                     {t('navbar.signIn')}
-                  </MDBNavbarLink>
+                  </button>
                 </MDBNavbarItem>
                 <MDBNavbarItem>
-                  <MDBNavbarLink onClick={handleRegister} className="btn btn-link nav-link">
+                  <button onClick={handleRegister} className="auth-btn">
                     {t('navbar.register')}
-                  </MDBNavbarLink>
+                  </button>
                 </MDBNavbarItem>
               </>
             )}
