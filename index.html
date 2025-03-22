@@ -18,5 +18,17 @@
   <body>
     <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>
+    <script>
+      // Extract CSRF token from cookie if present
+      document.addEventListener('DOMContentLoaded', function() {
+        const xsrfCookie = document.cookie.split('; ')
+          .find(row => row.startsWith('XSRF-TOKEN='));
+        
+        if (xsrfCookie) {
+          const token = decodeURIComponent(xsrfCookie.split('=')[1]);
+          document.querySelector('meta[name="csrf-token"]').setAttribute('content', token);
+        }
+      });
+    </script>
   </body>
 </html>
