@@ -36,10 +36,11 @@ const ActivityLog = ({ users }) => {
         setIsLoading(true); // Set loading to true before fetching
         const response = await axios.get("/Admin/GetAllActivities");
 
-        console.log(response.data, "Activity logs");
+        console.log("Evo responsa konju",response, "Activity logs");
 
         if (response.data && Array.isArray(response.data.activityLogs)) {
           // Sort logs by date (newest first)
+          console.log(response.data.activityLogs, "Activity logs");
           const sortedLogs = response.data.activityLogs.sort((a, b) => 
             new Date(b.created_at) - new Date(a.created_at)
           );
