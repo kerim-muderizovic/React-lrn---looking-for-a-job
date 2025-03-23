@@ -15,6 +15,7 @@ const ChatWindow = ({ userId, receiverId, onClose, onMessageRead = () => {} }) =
     profile_image: null
   });
   const messagesEndRef = useRef(null);
+  const echoRef = useRef(null);
 
   // Scroll to bottom when messages change
   useEffect(() => {
@@ -23,6 +24,33 @@ const ChatWindow = ({ userId, receiverId, onClose, onMessageRead = () => {} }) =
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  };
+
+  // Fetch messages function for reuse
+  const fetchMessages = async () => {
+    setIsLoading(true);
+    try {
+      const response = await axios.get(`/messages/${userId}/${receiverId}`);
+      
+      if (response.data && Array.isArray(response.data.messages)) {
+        console.log('Fetched messages:', response.data.messages);
+        setMessages(response.data.messages);
+        
+        // Mark messages as read
+        if (response.data.unread_count > 0) {
+          await axios.post(
+            `/messages/mark-read/${receiverId}`, 
+            {}, 
+            { withXSRFToken: true }
+          );
+          onMessageRead();
+        }
+      }
+    } catch (error) {
+      console.error('Error fetching messages:', error);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   useEffect(() => {
@@ -43,45 +71,74 @@ const ChatWindow = ({ userId, receiverId, onClose, onMessageRead = () => {} }) =
       }
     };
 
-    // Fetch chat history when component mounts
-    const fetchMessages = async () => {
-      setIsLoading(true);
-      try {
-        const response = await axios.get(`/messages/${userId}/${receiverId}`);
-        
-        if (response.data && Array.isArray(response.data.messages)) {
-          setMessages(response.data.messages);
-          
-          // Mark messages as read
-          if (response.data.unread_count > 0) {
-            await axios.post(
-              `/messages/mark-read/${receiverId}`, 
-              {}, 
-              { withXSRFToken: true }
-            );
-            onMessageRead();
-          }
-        }
-      } catch (error) {
-        console.error('Error fetching messages:', error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
     fetchReceiverInfo();
     fetchMessages();
 
-    // Set up Pusher with Laravel Echo for real-time updates
-    const echo = createEchoInstance();
-
-    // Subscribe to the private channel for this chat
-    const channel = echo.private(`chat.${userId}.${receiverId}`)
-      .listen('MessageSent', (event) => {
-        // Add the new message to the state when it's received
-        setMessages(prevMessages => [...prevMessages, event.message]);
+    // Set up Echo instance only once
+    const setupEcho = () => {
+      if (!echoRef.current) {
+        console.log('Creating new Echo instance for chat window');
+        echoRef.current = createEchoInstance();
+      }
+      
+      // The channel we want to listen to
+      const channelName = `chat.${userId}.${receiverId}`;
+      console.log(`Setting up channel: ${channelName}`);
+      
+      // Check if we're already listening to this channel
+      const existingChannel = echoRef.current.connector.channels[channelName];
+      if (existingChannel) {
+        // Unbind existing listener to prevent duplicates
+        existingChannel.unbind('MessageSent');
+        console.log(`Unbound existing listener from ${channelName}`);
+      }
+      
+      // Subscribe to the private channel for this chat
+      const channel = echoRef.current.private(channelName);
+      
+      // Listen for new messages
+      channel.listen('MessageSent', (event) => {
+        console.log(`Received real-time message on ${channelName}:`, event);
         
-        // Mark messages as read if the chat window is open
+        // Safely update messages state to prevent duplicates
+        setMessages(prevMessages => {
+          // Don't add the message if it's from the current user (already handled by optimistic updates)
+          if (event.sender_id === userId) {
+            console.log('Ignoring own message from websocket');
+            return prevMessages;
+          }
+          
+          // Check if this is a duplicate message
+          const isDuplicate = prevMessages.some(msg => 
+            msg.id === (event.message.id || null) || 
+            (msg.message === event.message.message && 
+             msg.sender_id === event.sender_id && 
+             // Compare timestamps within 2 seconds to account for slight variations
+             Math.abs(new Date(msg.created_at || Date.now()) - new Date(event.timestamp || Date.now())) < 2000));
+          
+          if (isDuplicate) {
+            console.log('Duplicate message detected, not adding to UI');
+            return prevMessages;
+          }
+          
+          // Construct a proper message object if only partial data is received
+          const newMessage = typeof event.message === 'string' 
+            ? {
+                id: 'server-' + Date.now(),
+                sender_id: event.sender_id,
+                receiver_id: event.receiver_id,
+                message: event.message,
+                is_read: false,
+                created_at: event.timestamp,
+                updated_at: event.timestamp
+              }
+            : event.message;
+              
+          console.log('Adding new message from event to UI:', newMessage);
+          return [...prevMessages, newMessage];
+        });
+        
+        // Mark messages as read since the chat window is open
         axios.post(
           `/messages/mark-read/${receiverId}`, 
           {}, 
@@ -90,34 +147,74 @@ const ChatWindow = ({ userId, receiverId, onClose, onMessageRead = () => {} }) =
           onMessageRead();
         });
       });
-
-    // Clean up the echo instance when the component unmounts
-    return () => {
-      channel.unsubscribe();
-      echo.disconnect();
+      
+      return channelName;
     };
-  }, [receiverId, userId, onMessageRead]);
+    
+    const channelName = setupEcho();
+
+    // Clean up the subscription when the component unmounts or userId/receiverId changes
+    return () => {
+      if (echoRef.current) {
+        const existingChannel = echoRef.current.connector.channels[channelName];
+        if (existingChannel) {
+          existingChannel.unbind('MessageSent');
+          console.log(`Cleanup: Unbound from channel ${channelName}`);
+        }
+      }
+    };
+  }, [receiverId, userId, onMessageRead]); // Only recreate when these dependencies change
 
   const sendMessage = (e) => {
     e.preventDefault();
 
     if (newMessage.trim()) {
+      const messageText = newMessage.trim();
+      setNewMessage(''); // Clear input immediately for better UX
+      
+      // Create a temporary optimistic message to display immediately
+      const optimisticMessage = {
+        id: 'temp-' + Date.now(), // Temporary ID
+        sender_id: userId,
+        receiver_id: receiverId,
+        message: messageText,
+        is_read: false,
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString()
+      };
+      
+      // Add the optimistic message to the UI immediately
+      setMessages(prevMessages => [...prevMessages, optimisticMessage]);
+      
+      // Send to server
       axios.post(
         '/send-message',
         { 
           receiver_id: receiverId, 
-          message: newMessage 
+          message: messageText 
         },
         { withXSRFToken: true }
       )
       .then((response) => {
         if (response.data && response.data.message) {
-          setMessages(prevMessages => [...prevMessages, response.data.message]);
+          // Replace the temporary message with the real one from server
+          setMessages(prevMessages => 
+            prevMessages.map(msg => 
+              msg.id === optimisticMessage.id ? response.data.message : msg
+            )
+          );
+          
+          // Log successful send
+          console.log('Message sent successfully', response.data.message);
         }
-        setNewMessage('');
       })
       .catch((error) => {
         console.error('Error sending message:', error);
+        // If error, remove the optimistic message and restore the input
+        setMessages(prevMessages => 
+          prevMessages.filter(msg => msg.id !== optimisticMessage.id)
+        );
+        setNewMessage(messageText);
       });
     }
   };

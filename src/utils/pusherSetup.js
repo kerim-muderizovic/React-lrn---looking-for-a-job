@@ -16,7 +16,7 @@ export const createEchoInstance = () => {
   
   // Get the CSRF token from the meta tag
   const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
-  console.log('Creating Echo instance with key:', PUSHER_KEY, 'CSRF Token:', csrfToken);
+  console.log('Creating Echo instance with key:', PUSHER_KEY, 'cluster:', PUSHER_CLUSTER);
   
   // Get Laravel session cookie
   const sessionCookie = document.cookie
@@ -26,7 +26,8 @@ export const createEchoInstance = () => {
   
   console.log('Session cookie found:', !!sessionCookie);
   
-  return new Echo({
+  // Debug Pusher configuration
+  const echoInstance = new Echo({
     broadcaster: 'pusher',
     key: PUSHER_KEY,
     cluster: PUSHER_CLUSTER,
@@ -62,10 +63,26 @@ export const createEchoInstance = () => {
           })
           .catch(error => {
             console.error('Auth Error:', error);
+            console.error('Auth Error Details:', {
+              socketId,
+              channelName: channel.name,
+              error: error.response?.data || error.message
+            });
             callback(true, error);
           });
         }
       };
     }
   });
+
+  // Debug connection status
+  echoInstance.connector.pusher.connection.bind('connected', () => {
+    console.log('Successfully connected to Pusher!');
+  });
+
+  echoInstance.connector.pusher.connection.bind('error', (err) => {
+    console.error('Pusher connection error:', err);
+  });
+
+  return echoInstance;
 }; 

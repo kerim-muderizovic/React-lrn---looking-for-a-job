@@ -17,6 +17,7 @@ const UserChatBubble = () => {
   const [selectedAdmin, setSelectedAdmin] = useState(null);
   const messagesEndRef = useRef(null);
   const chatRef = useRef(null);
+  const echoRef = useRef(null);
 
   // Scroll to bottom of messages
   const scrollToBottom = () => {
@@ -73,37 +74,168 @@ const UserChatBubble = () => {
 
   // Set up real-time listener for new messages
   useEffect(() => {
-    if (!authUser?.isLoggedIn) return;
+    if (!authUser?.isLoggedIn || !authUser?.user?.id) return;
 
-    const setupEcho = () => {
-      const echo = createEchoInstance();
-
-      // Listen for new messages
-      if (authUser?.user?.id) {
-        echo.private(`chat.user.${authUser.user.id}`)
-          .listen('NewMessage', (event) => {
-            // Add the new message to state
-            setMessages(prevMessages => [...prevMessages, event.message]);
-            
-            // Update unread count if chat is closed
-            if (!isChatOpen) {
-              setUnreadCount(prev => prev + 1);
+    // Setup function to configure Echo listeners
+    const setupEchoListeners = () => {
+      // Create Echo instance once
+      if (!echoRef.current) {
+        console.log("Creating Echo instance for user chat");
+        echoRef.current = createEchoInstance();
+      }
+  
+      // Channel name for user-specific channel
+      const channelName = `chat.user.${authUser.user.id}`;
+      console.log(`Setting up listener on ${channelName}`);
+      
+      // Clean up any existing listeners to prevent duplicates
+      const existingChannel = echoRef.current.connector.channels[channelName];
+      if (existingChannel) {
+        existingChannel.unbind('MessageSent');
+        console.log(`Unbound existing listeners from ${channelName}`);
+      }
+      
+      // Listen for new messages on the user channel
+      const channel = echoRef.current.private(channelName);
+      
+      channel.listen('MessageSent', (event) => {
+        console.log('New message received in user chat:', event);
+        
+        // If this chat is open with the sender admin, add the message
+        if (selectedAdmin && event.sender_id === selectedAdmin.id) {
+          console.log('Adding new message to chat window from admin', selectedAdmin.id);
+          
+          // Add the new message to state if it's not a duplicate
+          setMessages(prevMessages => {
+            // Construct the message object based on what we receive
+            const messageObj = typeof event.message === 'string' 
+              ? {
+                  id: 'server-' + Date.now(),
+                  sender_id: event.sender_id,
+                  receiver_id: event.receiver_id,
+                  message: event.message,
+                  is_read: false,
+                  created_at: event.timestamp,
+                  updated_at: event.timestamp
+                }
+              : event.message;
+              
+            // Check if this message is already in the list
+            const isDuplicate = prevMessages.some(msg => 
+              (msg.id && msg.id === messageObj.id) || 
+              (msg.message === messageObj.message && 
+               msg.sender_id === event.sender_id &&
+               // Compare timestamps within 2 seconds to account for slight variations
+               Math.abs(new Date(msg.created_at || Date.now()) - new Date(messageObj.created_at || event.timestamp || Date.now())) < 2000));
+               
+            if (isDuplicate) {
+              console.log('Duplicate message detected, not adding to UI');
+              return prevMessages;
             }
+            
+            console.log('Adding new message from event to UI:', messageObj);
+            return [...prevMessages, messageObj];
           });
+          
+          // Mark as read automatically since chat is open
+          axios.post(`/messages/mark-read/${selectedAdmin.id}`, {}, { withXSRFToken: true })
+            .then(() => {
+              console.log('Marked message as read');
+              setUnreadCount(prev => Math.max(0, prev - 1)); // Decrement unread count
+            })
+            .catch(error => {
+              console.error('Error marking message as read:', error);
+            });
+        } else {
+          // Otherwise just update the unread count
+          console.log('Updating unread count');
+          setUnreadCount(prev => prev + 1);
+        }
+      });
+  
+      // If an admin is selected, also listen for direct messages
+      let directChannelName = null;
+      if (selectedAdmin) {
+        directChannelName = `chat.${authUser.user.id}.${selectedAdmin.id}`;
+        console.log(`Also setting up listener on direct channel: ${directChannelName}`);
+        
+        const existingDirectChannel = echoRef.current.connector.channels[directChannelName];
+        if (existingDirectChannel) {
+          existingDirectChannel.unbind('MessageSent');
+          console.log(`Unbound existing listeners from ${directChannelName}`);
+        }
+        
+        const directChannel = echoRef.current.private(directChannelName);
+        
+        directChannel.listen('MessageSent', (event) => {
+          console.log(`New message received on direct channel ${directChannelName}:`, event);
+          
+          // Only process if it's from the selected admin (to avoid duplicates)
+          if (event.sender_id === selectedAdmin.id) {
+            // Add the new message to state
+            setMessages(prevMessages => {
+              // Construct the message object based on what we receive
+              const messageObj = typeof event.message === 'string' 
+                ? {
+                    id: 'server-' + Date.now(),
+                    sender_id: event.sender_id,
+                    receiver_id: event.receiver_id,
+                    message: event.message,
+                    is_read: false,
+                    created_at: event.timestamp,
+                    updated_at: event.timestamp
+                  }
+                : event.message;
+                
+              // Check if this message is already in the list
+              const isDuplicate = prevMessages.some(msg => 
+                (msg.id && msg.id === messageObj.id) || 
+                (msg.message === messageObj.message && 
+                 msg.sender_id === event.sender_id &&
+                 // Compare timestamps within 2 seconds to account for slight variations
+                 Math.abs(new Date(msg.created_at || Date.now()) - new Date(messageObj.created_at || event.timestamp || Date.now())) < 2000));
+                 
+              if (isDuplicate) {
+                console.log('Duplicate direct message detected, not adding to UI');
+                return prevMessages;
+              }
+              
+              console.log('Adding new direct message from event to UI:', messageObj);
+              return [...prevMessages, messageObj];
+            });
+          }
+        });
       }
-
-      return echo;
+      
+      return { userChannel: channelName, directChannel: directChannelName };
     };
-
-    const echo = setupEcho();
-
-    // Cleanup
+    
+    // Set up the listeners and get channel names for cleanup
+    const channels = setupEchoListeners();
+  
+    // Cleanup function
     return () => {
-      if (echo) {
-        echo.disconnect();
+      if (echoRef.current) {
+        // Unbind from user channel
+        if (channels.userChannel) {
+          const userChannel = echoRef.current.connector.channels[channels.userChannel];
+          if (userChannel) {
+            userChannel.unbind('MessageSent');
+            console.log(`Cleanup: Unbound from ${channels.userChannel}`);
+          }
+        }
+        
+        // Unbind from direct channel if it exists
+        if (channels.directChannel) {
+          const directChannel = echoRef.current.connector.channels[channels.directChannel];
+          if (directChannel) {
+            directChannel.unbind('MessageSent');
+            console.log(`Cleanup: Unbound from ${channels.directChannel}`);
+          }
+        }
       }
     };
-  }, [authUser?.isLoggedIn, authUser?.user?.id, isChatOpen]);
+  }, [authUser?.isLoggedIn, authUser?.user?.id, selectedAdmin]);
 
   // Fetch messages when selectedAdmin changes or chat opens
   useEffect(() => {
@@ -167,25 +299,84 @@ const UserChatBubble = () => {
   const sendMessage = async (e) => {
     e.preventDefault();
     
-    if (!selectedAdmin || !newMessage.trim()) return;
+    if (!selectedAdmin || !newMessage.trim() || !authUser?.isLoggedIn) {
+      console.error('Cannot send message: missing admin, message, or not logged in');
+      return;
+    }
+    
+    const messageText = newMessage.trim();
+    // Clear input immediately for better UX
+    setNewMessage('');
+    
+    // Create a temporary optimistic message to display immediately
+    const optimisticMessage = {
+      id: 'temp-' + Date.now(), // Temporary ID
+      sender_id: authUser.user.id,
+      receiver_id: selectedAdmin.id,
+      message: messageText,
+      is_read: false,
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString()
+    };
+    
+    // Add the optimistic message to the UI immediately
+    setMessages(prevMessages => [...prevMessages, optimisticMessage]);
     
     try {
+      // First ensure we have a valid CSRF token
+      await axios.get('/sanctum/csrf-cookie');
+      
+      // Then send the message with proper authentication
       const response = await axios.post(
         '/send-message',
         {
           receiver_id: selectedAdmin.id,
-          message: newMessage.trim()
+          message: messageText
         },
-        { withXSRFToken: true }
+        { 
+          withCredentials: true,
+          withXSRFToken: true,
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+            'X-Requested-With': 'XMLHttpRequest'
+          }
+        }
       );
       
       if (response.data && response.data.message) {
-        setMessages(prevMessages => [...prevMessages, response.data.message]);
+        // Replace the temporary message with the real one from server
+        setMessages(prevMessages => 
+          prevMessages.map(msg => 
+            msg.id === optimisticMessage.id ? response.data.message : msg
+          )
+        );
+        
+        console.log('Message sent successfully', response.data.message);
       }
-      
-      setNewMessage('');
     } catch (error) {
       console.error('Error sending message:', error);
+      
+      // Log specific details about the error for debugging
+      if (error.response) {
+        // The request was made and the server responded with a status code
+        // that falls out of the range of 2xx
+        console.error('Error response data:', error.response.data);
+        console.error('Error response status:', error.response.status);
+        console.error('Error response headers:', error.response.headers);
+      } else if (error.request) {
+        // The request was made but no response was received
+        console.error('No response received:', error.request);
+      } else {
+        // Something happened in setting up the request that triggered an Error
+        console.error('Error message:', error.message);
+      }
+      
+      // If error, remove the optimistic message and restore the input
+      setMessages(prevMessages => 
+        prevMessages.filter(msg => msg.id !== optimisticMessage.id)
+      );
+      setNewMessage(messageText);
     }
   };
 
@@ -308,7 +499,7 @@ const UserChatBubble = () => {
                 <button 
                   type="submit" 
                   className="send-button"
-                  disabled={!newMessage.trim() || !selectedAdmin}
+                  disabled={!newMessage.trim()}
                 >
                   <i className="fas fa-paper-plane"></i>
                 </button>

@@ -47,10 +47,11 @@ export default function Dashboard({ users, tasks }) {
 
   const fetchRecentActivities = () => {
     setIsLoading(true);
-    axios.get('/Admin/activities?limit=5')
+    axios.get('/Admin/Get5ActivityLogs')
       .then(response => {
-        if (response.data && Array.isArray(response.data.activities)) {
-          setRecentActivities(response.data.activities);
+        if (response.data && Array.isArray(response.data.activityLogs)) {
+          console.log(response.data.activityLogs, "Activity logs");
+          setRecentActivities(response.data.activityLogs);
         }
         setIsLoading(false);
       })
@@ -166,15 +167,15 @@ export default function Dashboard({ users, tasks }) {
               {recentActivities.map((activity, index) => (
                 <div className="activity-item" key={index}>
                   <div className="activity-icon">
-                    <span className={`activity-badge ${getActivityBadgeClass(activity.type)}`}>
-                      {activity.type?.charAt(0).toUpperCase()}
-                    </span>
+                    {/* <span className={`activity-badge ${getActivityBadgeClass(activity.type)}`}> */}
+                      {/* {activity.type?.charAt(0).toUpperCase()} */}
+                    {/* </span> */}
                   </div>
                   <div className="activity-content">
                     <p className="activity-text">
-                      <strong>{activity.user}</strong> {activity.description}
+                      <strong>{activity.user_id}</strong> {activity.activity}
                     </p>
-                    <p className="activity-time">{formatDate(activity.timestamp)}</p>
+                    <p className="activity-time">{formatDate(activity.created_at)}</p>
                   </div>
                 </div>
               ))}
