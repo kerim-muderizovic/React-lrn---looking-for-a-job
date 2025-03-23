@@ -73,19 +73,50 @@ const ChatAdmin = () => {
     channel.listen('MessageSent', (event) => {
       console.log('New message received in admin channel:', event);
       
-      // Update unread count for the sender
+      // Update unread count for the sender without fetching all users
       setUnreadCounts(prev => ({
         ...prev,
         [event.sender_id]: (prev[event.sender_id] || 0) + 1
       }));
       
-      // If chat with sender is currently open, add message to the UI
-      if (selectedUser && selectedUser.id === event.sender_id) {
-        console.log('Chat with sender is open, message will be displayed in ChatWindow');
-      }
-      
-      // Refresh user list to show latest message
-      fetchUsers();
+      // Update the user list locally without fetching
+      setUsers(prevUsers => {
+        // Find the user who sent the message
+        const userIndex = prevUsers.findIndex(user => user.id === event.sender_id);
+        
+        if (userIndex === -1) {
+          // If user not in list (rare case), don't modify
+          return prevUsers;
+        }
+        
+        // Create a new array to trigger render
+        const newUsers = [...prevUsers];
+        
+        // Update the user's last message
+        const messageObj = typeof event.message === 'string' 
+          ? { message: event.message, time: event.timestamp }
+          : { message: event.message.message, time: event.message.created_at };
+        
+        newUsers[userIndex] = {
+          ...newUsers[userIndex],
+          last_message: {
+            message: messageObj.message,
+            time: messageObj.time,
+            is_from_admin: false
+          },
+          unread_count: (newUsers[userIndex].unread_count || 0) + 1
+        };
+        
+        // Sort users to bring the one with new message to top
+        return newUsers.sort((a, b) => {
+          // If no last message, put at bottom
+          if (!a.last_message) return 1;
+          if (!b.last_message) return -1;
+          
+          // Compare times - newest first
+          return new Date(b.last_message.time) - new Date(a.last_message.time);
+        });
+      });
     });
 
     // Listen for direct messages if a user is selected
@@ -104,14 +135,49 @@ const ChatAdmin = () => {
       directChannel.listen('MessageSent', (event) => {
         console.log(`New message received on direct admin-user channel ${directChannelName}:`, event);
         
-        // If it's from the selected user, refresh their messages
+        // If it's from the selected user, the ChatWindow component will handle displaying it
         if (event.sender_id === selectedUser.id) {
           console.log('Message from currently selected user, ChatWindow will handle display');
+          
+          // For admin-sent messages, update the users list
+          if (event.sender_id === authUser.user.id) {
+            // Update the user list locally without fetching
+            setUsers(prevUsers => {
+              // Find the user who will receive the message
+              const userIndex = prevUsers.findIndex(user => user.id === selectedUser.id);
+              
+              if (userIndex === -1) return prevUsers;
+              
+              // Create a new array
+              const newUsers = [...prevUsers];
+              
+              // Update the last message
+              const messageObj = typeof event.message === 'string' 
+                ? { message: event.message, time: event.timestamp }
+                : { message: event.message.message, time: event.message.created_at };
+              
+              newUsers[userIndex] = {
+                ...newUsers[userIndex],
+                last_message: {
+                  message: messageObj.message,
+                  time: messageObj.time,
+                  is_from_admin: true
+                }
+              };
+              
+              // Sort users to bring the one with new message to top
+              return newUsers.sort((a, b) => {
+                if (!a.last_message) return 1;
+                if (!b.last_message) return -1;
+                return new Date(b.last_message.time) - new Date(a.last_message.time);
+              });
+            });
+          }
         }
       });
     }
 
-    // Initial fetch
+    // Initial fetch - only do this once when component mounts
     fetchUsers();
 
     // Cleanup

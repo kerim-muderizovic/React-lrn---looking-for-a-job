@@ -33,7 +33,7 @@ const ChatWindow = ({ userId, receiverId, onClose, onMessageRead = () => {} }) =
       const response = await axios.get(`/messages/${userId}/${receiverId}`);
       
       if (response.data && Array.isArray(response.data.messages)) {
-        console.log('Fetched messages:', response.data.messages);
+        console.log('Fetched messages:', response.data.messages.length);
         setMessages(response.data.messages);
         
         // Mark messages as read
@@ -53,6 +53,7 @@ const ChatWindow = ({ userId, receiverId, onClose, onMessageRead = () => {} }) =
     }
   };
 
+  // Separate useEffect for initial data loading
   useEffect(() => {
     // Fetch receiver info
     const fetchReceiverInfo = async () => {
@@ -71,9 +72,13 @@ const ChatWindow = ({ userId, receiverId, onClose, onMessageRead = () => {} }) =
       }
     };
 
+    console.log(`Loading initial data for chat between ${userId} and ${receiverId}`);
     fetchReceiverInfo();
     fetchMessages();
+  }, [userId, receiverId]); // Only run this when users change
 
+  // Separate useEffect for Echo setup
+  useEffect(() => {
     // Set up Echo instance only once
     const setupEcho = () => {
       if (!echoRef.current) {
@@ -108,19 +113,6 @@ const ChatWindow = ({ userId, receiverId, onClose, onMessageRead = () => {} }) =
             return prevMessages;
           }
           
-          // Check if this is a duplicate message
-          const isDuplicate = prevMessages.some(msg => 
-            msg.id === (event.message.id || null) || 
-            (msg.message === event.message.message && 
-             msg.sender_id === event.sender_id && 
-             // Compare timestamps within 2 seconds to account for slight variations
-             Math.abs(new Date(msg.created_at || Date.now()) - new Date(event.timestamp || Date.now())) < 2000));
-          
-          if (isDuplicate) {
-            console.log('Duplicate message detected, not adding to UI');
-            return prevMessages;
-          }
-          
           // Construct a proper message object if only partial data is received
           const newMessage = typeof event.message === 'string' 
             ? {
@@ -133,7 +125,20 @@ const ChatWindow = ({ userId, receiverId, onClose, onMessageRead = () => {} }) =
                 updated_at: event.timestamp
               }
             : event.message;
-              
+          
+          // Check if this is a duplicate message
+          const isDuplicate = prevMessages.some(msg => 
+            (msg.id && newMessage.id && msg.id === newMessage.id) || 
+            (msg.message === newMessage.message && 
+             msg.sender_id === event.sender_id && 
+             // Compare timestamps within 2 seconds to account for slight variations
+             Math.abs(new Date(msg.created_at || Date.now()) - new Date(newMessage.created_at || event.timestamp || Date.now())) < 2000));
+          
+          if (isDuplicate) {
+            console.log('Duplicate message detected, not adding to UI');
+            return prevMessages;
+          }
+                
           console.log('Adding new message from event to UI:', newMessage);
           return [...prevMessages, newMessage];
         });
