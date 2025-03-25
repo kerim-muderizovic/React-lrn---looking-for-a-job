@@ -4,6 +4,8 @@ import './index.css';
 import App from './App.jsx';
 import Pusher from 'pusher-js';
 import { getCSRFToken } from './axiosConfig';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 // Make Pusher available globally and set the key
 window.Pusher = Pusher;
@@ -23,6 +25,18 @@ Pusher.logToConsole = true; // Enable logging for debugging
     root.render(
       <React.StrictMode>
         <App />
+        <ToastContainer
+          position="top-right"
+          autoClose={5000}
+          hideProgressBar={false}
+          newestOnTop
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
+          theme="light"
+        />
       </React.StrictMode>
     );
   } catch (error) {

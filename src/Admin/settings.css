@@ -1,124 +1,76 @@
 @import '../colors.css';
 
 .admin-settings {
-  font-family: Arial, sans-serif;
-  padding: 20px;
-  color: var(--text-primary);
-  width: 87%;
-  margin-left: 13.02%;
-}
-
-.section {
-  margin-bottom: 20px;
-  background-color: var(--bg-light);
-  border-radius: 8px;
-  padding: 20px;
-  box-shadow: var(--shadow-light);
-}
-
-.section h3 {
-  color: var(--primary-700);
-  margin-top: 0;
-  font-weight: 600;
-  border-bottom: 2px solid var(--primary-100);
-  padding-bottom: 10px;
-  margin-bottom: 20px;
-}
-
-.instance-id {
-  display: flex;
-  align-items: center;
-  margin-bottom: 10px;
-}
-
-.instance-id span {
-  margin-right: 10px;
-  font-family: monospace;
-  background-color: var(--neutral-100);
-  padding: 4px 8px;
-  border-radius: 4px;
-}
-
-.setting {
-  margin-bottom: 15px;
-  border-bottom: 1px solid var(--border-light);
-  padding-bottom: 15px;
-}
-
-.setting:last-child {
-  border-bottom: none;
-}
-
-.setting label {
-  display: flex;
-  align-items: center;
-  font-weight: 500;
-  color: var(--text-primary);
-}
-
-.setting input[type="checkbox"] {
-  margin-right: 10px;
-}
-
-.setting input[type="number"] {
-  margin-left: 10px;
-  width: 70px;
-  padding: 6px;
-  border: 1px solid var(--border-light);
-  border-radius: 4px;
-  background-color: var(--bg-light);
-  color: var(--text-primary);
-}
-
-p {
-  margin: 5px 0;
-  color: var(--text-secondary);
-}
-
-.jedanDIv {
-  margin-left: 22%;
+  background-color: white;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  width: 90%;
   max-width: 800px;
+  margin: 20px auto;
+  overflow: hidden;
+  padding: 24px;
 }
 
 .AdminH2 {
-  font-weight: bold;
-  font-size: 32px;
-  color: var(--primary-800);
-  margin-bottom: 20px;
+  font-size: 24px;
+  color: var(--primary-700);
+  margin-bottom: 24px;
+  font-weight: 600;
+  text-align: center;
+  border-bottom: 1px solid var(--border-light);
+  padding-bottom: 16px;
 }
 
 .AdminH3 {
-  margin-top: 30px;
+  padding: 0 20px;
+}
+
+.section {
+  margin-bottom: 30px;
+}
+
+.section h3 {
+  font-size: 18px;
+  color: var(--primary-600);
+  margin-bottom: 16px;
+  font-weight: 500;
+  border-left: 4px solid var(--primary-500);
+  padding-left: 12px;
+}
+
+.setting {
+  background-color: var(--bg-light);
+  border-radius: 8px;
+  padding: 16px;
+  margin-bottom: 16px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
 }
 
 .tajDrugiDiv {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 10px;
+  margin-bottom: 8px;
 }
 
-.checkBoxAdminPanel {
-  margin-left: 5%;
+.setting label {
+  font-weight: 500;
+  font-size: 16px;
+  color: var(--text-primary);
 }
 
 .AdminPanelP {
+  margin: 0;
   color: var(--text-secondary);
   font-size: 14px;
 }
 
-/* Toggle Switch Styles */
+/* Toggle Switch Styling */
 .toggle-switch-container {
-  display: flex;
-  align-items: center;
-}
-
-.toggle-switch {
   position: relative;
-  width: 60px;
   display: inline-block;
-  vertical-align: middle;
-  margin-left: 20px;
+  width: 60px;
+  height: 30px;
 }
 
 .toggle-switch-checkbox {
@@ -132,8 +84,8 @@ p {
   display: block;
   overflow: hidden;
   cursor: pointer;
-  border: 0 solid var(--border-light);
-  border-radius: 20px;
+  border: 0;
+  border-radius: 15px;
   margin: 0;
 }
 
@@ -141,19 +93,18 @@ p {
   display: block;
   width: 200%;
   margin-left: -100%;
-  transition: margin 0.3s ease-in 0s;
+  transition: margin 0.2s ease-in-out;
 }
 
 .toggle-switch-inner:before,
 .toggle-switch-inner:after {
-  display: block;
   float: left;
   width: 50%;
-  height: 24px;
+  height: 30px;
   padding: 0;
-  line-height: 24px;
-  font-size: 14px;
+  line-height: 30px;
   color: white;
+  font-weight: bold;
   box-sizing: border-box;
 }
 
@@ -161,30 +112,28 @@ p {
   content: "";
   padding-left: 10px;
   background-color: var(--primary-500);
-  color: var(--text-light);
 }
 
 .toggle-switch-inner:after {
   content: "";
   padding-right: 10px;
   background-color: var(--neutral-400);
-  color: var(--text-light);
   text-align: right;
 }
 
 .toggle-switch-switch {
   display: block;
-  width: 18px;
-  height: 18px;
-  margin: 3px;
-  background: var(--bg-light);
+  width: 22px;
+  height: 22px;
+  margin: 4px;
+  background: white;
   position: absolute;
   top: 0;
   bottom: 0;
-  right: 36px;
-  border: 0 solid var(--border-light);
-  border-radius: 20px;
-  transition: all 0.3s ease-in 0s;
+  right: 30px;
+  border-radius: 15px;
+  transition: all 0.2s ease-in-out;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
 .toggle-switch-checkbox:checked + .toggle-switch-label .toggle-switch-inner {
@@ -195,32 +144,126 @@ p {
   right: 0px;
 }
 
-/* Save Button Styles */
+.toggle-switch.disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.toggle-switch.disabled .toggle-switch-label {
+  cursor: not-allowed;
+}
+
+/* Input styling */
+input[type="number"] {
+  width: 80px;
+  padding: 8px 12px;
+  border: 1px solid var(--border-light);
+  border-radius: 4px;
+  font-size: 14px;
+  color: var(--text-primary);
+  text-align: center;
+}
+
+input[type="number"]:focus {
+  outline: none;
+  border-color: var(--primary-400);
+  box-shadow: 0 0 0 2px var(--primary-100);
+}
+
+input[type="number"]:disabled {
+  background-color: var(--neutral-200);
+  cursor: not-allowed;
+}
+
+/* Save button */
 .save-section {
-  margin-top: 30px;
   display: flex;
-  justify-content: flex-end;
+  justify-content: center;
+  margin-top: 30px;
+  padding-top: 20px;
+  border-top: 1px solid var(--border-light);
 }
 
 .save-button {
-  background-color: var(--primary-600);
-  color: var(--text-light);
+  background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+  color: white;
   border: none;
-  padding: 12px 24px;
-  border-radius: 4px;
-  cursor: pointer;
+  border-radius: 8px;
+  padding: 12px 30px;
   font-size: 16px;
-  font-weight: 500;
-  transition: background-color 0.3s, transform 0.2s;
-  box-shadow: var(--shadow-light);
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  min-width: 180px;
 }
 
 .save-button:hover {
-  background-color: var(--primary-700);
   transform: translateY(-2px);
-  box-shadow: var(--shadow-medium);
+  box-shadow: 0 6px 12px rgba(106, 17, 203, 0.2);
+  background: linear-gradient(135deg, #5b0fb0 0%, #1e68e0 100%);
 }
 
-.save-button:active {
-  transform: translateY(0);
+.save-button:disabled {
+  background: linear-gradient(135deg, #b8a0d4 0%, #9ebcfa 100%);
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+  opacity: 0.8;
+}
+
+/* Loading state */
+.loading-spinner {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 300px;
+  font-size: 18px;
+  color: var(--primary-500);
+}
+
+.loading-spinner::after {
+  content: "";
+  display: block;
+  width: 30px;
+  height: 30px;
+  margin-left: 10px;
+  border-radius: 50%;
+  border: 4px solid rgba(106, 17, 203, 0.25);
+  border-top-color: var(--primary-500);
+  animation: spinner 0.8s linear infinite;
+}
+
+@keyframes spinner {
+  to {transform: rotate(360deg);}
+}
+
+/* Make responsive for smaller screens */
+@media (max-width: 768px) {
+  .admin-settings {
+    width: 95%;
+    padding: 16px;
+  }
+  
+  .tajDrugiDiv {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+  
+  .toggle-switch-container {
+    align-self: flex-start;
+  }
+  
+  .setting {
+    padding: 14px;
+  }
+  
+  .AdminH2 {
+    font-size: 20px;
+  }
+  
+  .section h3 {
+    font-size: 16px;
+  }
 }

@@ -3,47 +3,60 @@
 /* Sidebar Container */
 .sidebar {
     position: fixed;  /* Fix the sidebar to the left */
-    top: 54.3px;
+    top: 0;
     left: 0;
-    height: calc(100vh - 54.3px);  /* Ensure sidebar stretches full height minus navbar */
-    width: 13.02%;  /* Or any width you want */
-    background-color: var(--primary-800);
-    color: var(--text-light);
+    height: 100vh;
+    width: 250px;
+    background: linear-gradient(135deg, #2c3e50 0%, #1a1a2e 100%);
+    color: #fff;
     transition: all 0.3s ease;
-    z-index: 1000;
-    box-shadow: var(--shadow-medium);
+    overflow-y: auto;
+    z-index: 100;
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
 }
   
 /* Collapsed Sidebar */
 .sidebar.collapsed {
-    width: 60px;
+    width: 70px;
 }
   
 /* Sidebar Header */
 .sidebar-header {
+    padding: 20px;
+    background: rgba(0, 0, 0, 0.1);
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 20px;
-    background-color: var(--primary-900);
-    height: 80px;
-    border-bottom: 1px solid var(--primary-700);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
   
 .sidebar-header h3 {
     margin: 0;
-    font-size: 1.2rem;
+    font-size: 18px;
     font-weight: 600;
-    color: var(--text-light);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
   
 .toggle-btn {
-    background: none;
+    background: transparent;
     border: none;
-    color: var(--text-light);
-    font-size: 1.5rem;
+    color: #fff;
     cursor: pointer;
-    z-index: 10;  /* Ensure it's on top of the sidebar */
+    font-size: 18px;
+    padding: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    transition: background-color 0.2s;
+}
+
+.toggle-btn:hover {
+    background-color: rgba(255, 255, 255, 0.1);
 }
 
 /* Sidebar Menu */
@@ -54,156 +67,97 @@
 }
   
 .sidebar-menu li {
+    margin: 0;
     padding: 0;
-    transition: background-color 0.3s ease;
-    border-bottom: 1px solid var(--primary-700);
+    transition: background-color 0.3s;
 }
 
-.sidebar-menu li:last-child {
-    border-bottom: none;
-}
-  
-i {
-    transition: all 0.3s ease;
-}
-  
-.sidebar-menu li:hover {
-    background-color: var(--primary-700);
-}
-  
-.sidebar-menu a {
-    color: var(--text-light);
-    text-decoration: none;
+.sidebar-menu li a {
     display: flex;
     align-items: center;
     padding: 15px 20px;
-    cursor: pointer;
-    transition: all 0.3s ease;
+    color: #ddd;
+    text-decoration: none;
+    transition: all 0.3s;
 }
 
-.sidebar-menu a:hover {
-    background-color: var(--primary-700);
-}
-  
-.sidebar-menu .icon {
-    font-size: 1.2rem;
-    margin-right: 15px;
-    width: 20px;
-    text-align: center;
-    color: var(--primary-200);
-}
-  
-.sidebar-menu .text {
-    font-size: 0.95rem;
-    font-weight: 500;
+.sidebar-menu li a:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+    color: #fff;
 }
 
-/* Active menu item */
-.sidebar-menu li.active {
-    background-color: var(--primary-600);
-    border-left: 4px solid var(--secondary-500);
+.sidebar-menu li.active a {
+    background: linear-gradient(90deg, rgba(106, 17, 203, 0.8) 0%, rgba(37, 117, 252, 0.8) 100%);
+    color: #fff;
+    border-left: 4px solid #fff;
 }
 
-.sidebar-menu li.active .icon {
-    color: var(--secondary-300);
+.icon {
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
 }
-  
-/* Collapsed State */
-.sidebar.collapsed .text {
-    display: none;
+
+.text {
+    margin-left: 15px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 /* Add Task Button */
-.add-task-btn {
-    margin: 20px;
-    padding: 10px 15px;
-    background-color: var(--secondary-500);
-    color: var(--text-light);
+.add-task-container {
+    padding: 15px;
+    margin-top: 20px;
+    display: flex;
+    justify-content: center;
+}
+
+.sidebar .add-task-btn {
+    width: 100%;
+    background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+    color: white;
     border: none;
-    border-radius: 4px;
+    border-radius: 8px;
+    padding: 10px 15px;
+    font-size: 14px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     cursor: pointer;
-    font-weight: 500;
-    display: flex;
-    align-items: center;
-    justify-content: center;
     transition: all 0.3s ease;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
-.add-task-btn:hover {
-    background-color: var(--secondary-600);
+.sidebar .add-task-btn:hover {
     transform: translateY(-2px);
-    box-shadow: var(--shadow-light);
+    box-shadow: 0 6px 12px rgba(106, 17, 203, 0.2);
+    background: linear-gradient(135deg, #5b0fb0 0%, #1e68e0 100%);
 }
 
-.add-task-btn .icon {
+.sidebar .add-task-btn i {
     margin-right: 8px;
+    font-size: 16px;
 }
 
-.sidebar.collapsed .add-task-btn {
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    padding: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin: 10px auto;
-}
-
-.sidebar.collapsed .add-task-btn span {
-    display: none;
-}
-
+/* Responsive Breakpoints */
 @media (max-width: 768px) {
     .sidebar {
-        width: 60px; /* Collapse sidebar by default on small screens */
+        width: 70px;
     }
-
-    .sidebar-header {
-        padding: 10px; /* Reduce padding for small screens */
-        height: 60px;
+    
+    .sidebar:not(.collapsed) {
+        width: 250px;
     }
-
-    .sidebar-header h3 {
-        display: none; /* Hide the header text on small screens */
-    }
-
-    .toggle-btn {
-        font-size: 1.2rem; /* Reduce toggle button size */
-    }
-
-    .sidebar-menu li {
-        padding: 0; /* Reduce padding for menu items */
-    }
-
-    .sidebar-menu a {
-        padding: 12px 15px;
-    }
-
-    .sidebar-menu .icon {
-        font-size: 1rem; /* Reduce icon size */
-        margin-right: 0; /* Remove margin for icons */
-    }
-
-    .sidebar-menu .text {
-        display: none; /* Hide text on small screens */
-    }
-
-    /* Show text on hover for collapsed sidebar */
-    .sidebar:hover {
-        width: 200px; /* Expand sidebar on hover */
-    }
-
-    .sidebar:hover .text {
-        display: inline; /* Show text on hover */
-    }
-
-    .sidebar:hover .sidebar-header h3 {
-        display: block; /* Show header text on hover */
-    }
-
-    .sidebar:hover .sidebar-menu .icon {
-        margin-right: 15px;
+    
+    .sidebar.collapsed {
+        width: 0;
+        padding: 0;
+        overflow: hidden;
     }
 }
   

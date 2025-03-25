@@ -141,7 +141,10 @@
       "selectDueDate": "Select final date",
       "due": "Due",
       "sortOldest": "Sort by Oldest",
-      "sortNewest": "Sort by Newest"
+      "sortNewest": "Sort by Newest",
+      "enterTaskName": "Enter task name",
+      "enterDescription": "Enter task description",
+      "deadline": "Deadline"
     },
     "profile": {
       "profilePicture": "Profile Picture",

@@ -52,42 +52,32 @@
   position: fixed;
   top: 0;
   left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.6);
-  backdrop-filter: blur(4px);
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 1050;
-  padding: 20px;
-  transition: all 0.3s ease;
+  z-index: 1000;
+  backdrop-filter: blur(3px);
 }
 
-/* Modal Content */
-.modal-content {
-  background: var(--bg-light) !important;
+/* New Task Modal */
+.task-modal {
+  background-color: #ffffff;
   width: 100%;
-  max-width: 500px;
-  height: auto !important;
-  min-height: auto !important;
-  max-height: none !important;
-  border-radius: 16px;
-  padding: 28px;
-  box-shadow: var(--shadow-medium), 0 10px 30px rgba(0, 0, 0, 0.1);
-  text-align: center;
+  max-width: 550px;
+  border-radius: 12px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+  overflow: hidden;
+  animation: slide-up 0.3s ease-out;
   position: relative;
-  display: flex;
-  flex-direction: column;
-  transform: translateY(0);
-  animation: modalFadeIn 0.3s ease;
-  border: 1px solid var(--border-light);
 }
 
-@keyframes modalFadeIn {
+@keyframes slide-up {
   from {
     opacity: 0;
-    transform: translateY(20px);
+    transform: translateY(30px);
   }
   to {
     opacity: 1;
@@ -95,175 +85,180 @@
   }
 }
 
-.modal-content h3 {
-  font-size: 1.75rem;
-  font-weight: 700;
-  color: var(--primary-700);
-  margin-bottom: 24px;
-  text-align: center;
-  position: relative;
-  padding-bottom: 12px;
-}
-
-.modal-content h3::after {
-  content: '';
-  position: absolute;
-  bottom: 0;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 60px;
-  height: 3px;
-  background: var(--primary-500);
-  border-radius: 3px;
-}
-
-.modal-content input,
-.modal-content textarea,
-.modal-content select {
-  width: 100%;
-  padding: 14px 16px;
-  margin-bottom: 0;
-  border: 1px solid var(--border-light);
-  border-radius: 12px;
-  font-size: 1rem;
-  transition: all 0.3s ease;
-  background-color: white;
-  color: var(--text-primary);
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
-}
-
-.modal-content textarea {
-  min-height: 120px;
-  resize: vertical;
-}
-
-.modal-content input:focus,
-.modal-content textarea:focus,
-.modal-content select:focus {
-  border-color: var(--primary-400);
-  box-shadow: 0 0 0 3px var(--primary-100);
-  outline: none;
-}
-
-.modal-content input::placeholder,
-.modal-content textarea::placeholder,
-.modal-content select::placeholder {
-  color: var(--text-tertiary);
-  font-weight: 400;
-}
-
-/* Modal footer with buttons */
-.modal-footer {
+.task-modal-header {
   display: flex;
   justify-content: space-between;
-  width: 100%;
-  margin-top: 24px;
-  gap: 16px;
-}
-
-/* Modal buttons */
-.modal-btn {
-  flex: 1;
-  padding: 14px;
-  border: none;
-  border-radius: 12px;
-  font-size: 16px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  position: static !important;
-  z-index: 1 !important;
-}
-
-.add-btn {
-  background-color: var(--primary-500);
+  align-items: center;
+  padding: 20px 24px;
+  background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
   color: white;
-  box-shadow: var(--shadow-light);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-.add-btn:hover {
-  background-color: var(--primary-600);
-  transform: translateY(-2px);
-  box-shadow: var(--shadow-medium);
+.task-modal-header h3 {
+  margin: 0;
+  font-weight: 600;
+  font-size: 1.2rem;
 }
 
-.add-btn:active {
-  transform: translateY(0);
-  background-color: var(--primary-700);
-  box-shadow: var(--shadow-light);
-}
-
-.close-btn {
-  background-color: var(--neutral-100);
-  color: var(--text-primary);
-  box-shadow: var(--shadow-light);
-  border: 1px solid var(--border-light);
-}
-
-.close-btn:hover {
-  background-color: var(--neutral-200);
-  transform: translateY(-2px);
-  box-shadow: var(--shadow-medium);
-}
-
-.close-btn:active {
-  transform: translateY(0);
-  background-color: var(--neutral-300);
-  box-shadow: var(--shadow-light);
-}
-
-/* Fix for DatePicker */
-.react-datepicker-wrapper,
-.react-datepicker__input-container,
-.react-datepicker__input-container input {
-  width: 100%;
-  display: block;
-}
-
-.react-datepicker__input-container input {
-  padding: 14px 16px;
-  border: 1px solid var(--border-light);
-  border-radius: 12px;
-  font-size: 1rem;
-  transition: all 0.3s ease;
-  background-color: white;
-  color: var(--text-primary);
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
+.close-modal-btn {
+  background: transparent;
+  border: none;
+  color: white;
+  font-size: 1.2rem;
   cursor: pointer;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: background-color 0.2s;
 }
 
-.react-datepicker__input-container input:focus {
-  border-color: var(--primary-400);
-  box-shadow: 0 0 0 3px var(--primary-100);
+.close-modal-btn:hover {
+  background-color: rgba(255, 255, 255, 0.2);
+}
+
+.task-modal-content {
+  padding: 24px;
+  max-height: 70vh;
+  overflow-y: auto;
+}
+
+.form-group {
+  margin-bottom: 20px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 500;
+  color: #495057;
+}
+
+.form-control {
+  width: 100%;
+  padding: 12px 16px;
+  font-size: 16px;
+  border: 1px solid #ced4da;
+  border-radius: 8px;
+  background-color: #f8f9fa;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.form-control:focus {
+  border-color: #6a11cb;
   outline: none;
+  box-shadow: 0 0 0 3px rgba(106, 17, 203, 0.2);
 }
 
-/* Fix the calendar dropdown position */
-.react-datepicker-popper {
-  z-index: 9999 !important;
+select.form-control {
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%23495057' viewBox='0 0 16 16'%3E%3Cpath d='M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  padding-right: 40px;
 }
 
-/* Style the calendar */
+.date-picker-wrapper {
+  width: 100%;
+}
+
+.task-modal-footer {
+  display: flex;
+  justify-content: flex-end;
+  padding: 16px 24px;
+  background-color: #f8f9fa;
+  border-top: 1px solid #e9ecef;
+  gap: 12px;
+}
+
+.cancel-btn, .save-btn {
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-weight: 500;
+  transition: all 0.2s;
+  cursor: pointer;
+  border: none;
+}
+
+.cancel-btn {
+  background-color: #f8f9fa;
+  border: 1px solid #ced4da;
+  color: #495057;
+}
+
+.cancel-btn:hover {
+  background-color: #e9ecef;
+}
+
+.save-btn {
+  background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+  color: white;
+}
+
+.save-btn:hover {
+  background: linear-gradient(135deg, #5b0fb0 0%, #1e68e0 100%);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(106, 17, 203, 0.2);
+}
+
+.save-btn:disabled {
+  background: linear-gradient(135deg, #b8a0d4 0%, #9ebcfa 100%);
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+/* Style the DatePicker specifically */
 .react-datepicker {
-  font-family: inherit !important;
-  border-radius: 12px !important;
-  border: 1px solid var(--border-light) !important;
-  box-shadow: var(--shadow-medium) !important;
+  font-family: inherit;
+  border-radius: 8px;
+  border: 1px solid #ced4da;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
 }
 
 .react-datepicker__header {
-  background-color: var(--primary-50) !important;
-  border-bottom: 1px solid var(--primary-100) !important;
+  background-color: #6a11cb;
+  border-bottom: none;
+  color: white;
+  border-top-left-radius: 8px;
+  border-top-right-radius: 8px;
+  padding-top: 10px;
 }
 
-.react-datepicker__day--selected {
-  background-color: var(--primary-500) !important;
-  border-radius: 50% !important;
+.react-datepicker__current-month, 
+.react-datepicker__day-name {
+  color: white;
+}
+
+.react-datepicker__day--selected,
+.react-datepicker__day--keyboard-selected {
+  background-color: #6a11cb;
+  border-radius: 50%;
 }
 
 .react-datepicker__day:hover {
-  background-color: var(--primary-100) !important;
-  border-radius: 50% !important;
+  background-color: #e9ecef;
+  border-radius: 50%;
+}
+
+/* Additional responsive styles */
+@media (max-width: 600px) {
+  .task-modal {
+    width: 90%;
+    max-height: 80vh;
+  }
+  
+  .task-modal-content {
+    padding: 16px;
+  }
+  
+  .form-control {
+    padding: 10px 14px;
+    font-size: 14px;
+  }
 }
 
 /* Task List Container */

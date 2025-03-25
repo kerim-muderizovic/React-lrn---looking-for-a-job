@@ -156,7 +156,10 @@
       "selectDueDate": "Ablaufdatum auswählen",
       "due": "Zuletzt abgelaufen",
       "sortOldest": "Nach Ältesten sortieren",
-      "sortNewest": "Nach Neuesten sortieren"
+      "sortNewest": "Nach Neuesten sortieren",
+      "enterTaskName": "Aufgabenname eingeben",
+      "enterDescription": "Beschreibung der Aufgabe eingeben",
+      "deadline": "Fälligkeitsdatum"
     },
     "profile": {
       "profilePicture": "Profilbild",

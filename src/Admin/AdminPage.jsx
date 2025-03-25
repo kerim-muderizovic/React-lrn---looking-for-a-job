@@ -22,6 +22,7 @@ import {
 import ChatWindow from '../chatWindows';
 import EditModal from './editModal';
 import './AdminPage.css'; // Optional CSS file for custom styles
+import './addNewTaskAdmin.css'; // Import the task modal styling
 import AddNewTaskAdmin from './addNewTask';
 import { useAuth } from '../AuthContext';
 import ActivityLog from './activityLog';

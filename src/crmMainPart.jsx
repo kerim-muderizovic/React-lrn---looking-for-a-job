@@ -1,4 +1,4 @@
-import React, { useState, useEffect,useMemo } from "react";
+import React, { useState, useEffect,useMemo, createPortal } from "react";
 import axios from "./axiosConfig";
 import { Await, Route, Routes, useNavigate } from "react-router-dom";
 import { Pie } from 'react-chartjs-2';
@@ -515,102 +515,105 @@ export default function CRMApp() {
     </MDBCol>
     </MDBRow>
   
-    {modalOpen && (
-      <div className="modal-overlay">
-        <div className="modal-content">
-          <h3>{t('crm.tasks.addTask')}</h3>
-          
-          <div className="input-group">
-            <input
-              type="text"
-              placeholder={t('crm.tasks.taskName')}
-              value={newTask.title}
-              onChange={(e) => setNewTask((prev) => ({ ...prev, title: e.target.value }))}
-            />
-          </div>
-          
-          <div className="input-group">
-            <textarea
-              placeholder={t('crm.tasks.taskDescription')}
-              value={newTask.description}
-              onChange={(e) => setNewTask((prev) => ({ ...prev, description: e.target.value }))}
-            ></textarea>
-          </div>
-          
-          <div className="input-group">
-            <select
-              value={newTask.priority}
-              onChange={(e) => setNewTask((prev) => ({ ...prev, priority: e.target.value }))}
-            >
-              <option value="low">{t('crm.tasks.low')}</option>
-              <option value="medium">{t('crm.tasks.medium')}</option>
-              <option value="high">{t('crm.tasks.high')}</option>
-            </select>
-          </div>
-          
-          <div className="input-group">
-            <DatePicker
-              selected={newTask.due_date}
-              onChange={(date) => setNewTask((prev) => ({ ...prev, due_date: format(new Date(date), 'yyyy-MM-dd') }))}
-              dateFormat="yyyy-MM-dd"
-              placeholderText={t('crm.tasks.selectDueDate')}
-              minDate={new Date()}
-              popperModifiers={[
-                {
-                  name: 'offset',
-                  options: {
-                    offset: [0, 10],
-                  },
-                },
-                {
-                  name: 'preventOverflow',
-                  options: {
-                    rootBoundary: 'viewport',
-                    tether: false,
-                  },
-                },
-              ]}
-              withPortal
-              portalId="date-picker-portal"
-              popperProps={{
-                positionFixed: true,
-                modifiers: [
-                  {
-                    name: 'preventOverflow',
-                    options: {
-                      enabled: true,
-                      escapeWithReference: false,
-                      boundary: 'viewport',
-                    },
-                  },
-                ],
-              }}
-            />
-          </div>
-          
-          <div className="modal-footer">
-            <button 
-              className="modal-btn add-btn"
-              onClick={() => handleAddTask(newTask)}
-            >
-              {t('crm.tasks.addTask')}
-            </button>
-            <button 
-              className="modal-btn close-btn"
-              onClick={toggleModal}
-            >
-              {t('modal.buttons.close')}
-            </button>
-          </div>
-        </div>
-      </div>
-    )}
-  
     <Routes>
       <Route path="/login" element={<Login />} />
     </Routes>
     
     <UserChatBubble />
+    
+    {/* Task modal - moved outside of the main component tree to render properly */}
+    {modalOpen && (
+      <div className="modal-overlay">
+        <div className="task-modal">
+          <div className="task-modal-header">
+            <h3>{t('crm.tasks.addTask')}</h3>
+            <button 
+              className="close-modal-btn"
+              onClick={toggleModal}
+              aria-label="Close"
+            >
+              <i className="fas fa-times"></i>
+            </button>
+          </div>
+          
+          <div className="task-modal-content">
+            <div className="form-group">
+              <label htmlFor="taskTitle">{t('crm.tasks.taskName')}</label>
+              <input
+                id="taskTitle"
+                type="text"
+                placeholder={t('crm.tasks.taskName')}
+                value={newTask.title}
+                onChange={(e) => setNewTask((prev) => ({ ...prev, title: e.target.value }))}
+                className="form-control"
+              />
+            </div>
+            
+            <div className="form-group">
+              <label htmlFor="taskDescription">{t('crm.tasks.taskDescription')}</label>
+              <textarea
+                id="taskDescription"
+                placeholder={t('crm.tasks.taskDescription')}
+                value={newTask.description}
+                onChange={(e) => setNewTask((prev) => ({ ...prev, description: e.target.value }))}
+                className="form-control"
+                rows="4"
+              ></textarea>
+            </div>
+            
+            <div className="form-group">
+              <label htmlFor="taskPriority">{t('crm.tasks.priority')}</label>
+              <select
+                id="taskPriority"
+                value={newTask.priority}
+                onChange={(e) => setNewTask((prev) => ({ ...prev, priority: e.target.value }))}
+                className="form-control"
+              >
+                <option value="Low">{t('crm.tasks.low')}</option>
+                <option value="Medium">{t('crm.tasks.medium')}</option>
+                <option value="High">{t('crm.tasks.high')}</option>
+              </select>
+            </div>
+            
+            <div className="form-group">
+              <label htmlFor="taskDueDate">{t('crm.tasks.dueDate')}</label>
+              <DatePicker
+                id="taskDueDate"
+                selected={newTask.due_date ? new Date(newTask.due_date) : null}
+                onChange={(date) => setNewTask((prev) => ({ 
+                  ...prev, 
+                  due_date: date ? format(new Date(date), 'yyyy-MM-dd') : null 
+                }))}
+                dateFormat="yyyy-MM-dd"
+                placeholderText={t('crm.tasks.selectDueDate')}
+                minDate={new Date()}
+                className="form-control"
+                wrapperClassName="date-picker-wrapper"
+                popperClassName="date-picker-popper"
+                popperPlacement="bottom"
+                withPortal
+              />
+            </div>
+          </div>
+          
+          <div className="task-modal-footer">
+            <button 
+              className="cancel-btn"
+              onClick={toggleModal}
+            >
+              {t('modal.buttons.cancel')}
+            </button>
+            <button 
+              className="save-btn"
+              onClick={() => handleAddTask(newTask)}
+              disabled={!newTask.title || !newTask.due_date}
+            >
+              {t('crm.tasks.addTask')}
+            </button>
+          </div>
+        </div>
+      </div>
+    )}
   </MDBContainer>
   
 )
