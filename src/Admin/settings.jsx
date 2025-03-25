@@ -38,6 +38,15 @@ const Settings = () => {
     enable_reset_password: true
   });
 
+  // Log for debugging
+  useEffect(() => {
+    console.log('Current i18n settings in Settings component:', {
+      language: i18n.language,
+      isInitialized: i18n.isInitialized,
+      resources: i18n.options.resources
+    });
+  }, [i18n]);
+
   // Fetch settings from backend
   useEffect(() => {
     const fetchSettings = async () => {
@@ -108,7 +117,7 @@ const Settings = () => {
             <div className="setting">
               <div className='tajDrugiDiv'>
                 <label>
-                  {t('admin.allowCreatingAccounts')}
+                  {t('admin.allowNewAccounts')}
                 </label>
                 <ToggleSwitch 
                   isOn={settings.allow_creating_accounts} 
@@ -116,12 +125,12 @@ const Settings = () => {
                   label="allow_creating_accounts" 
                 />
               </div>
-              <p className='AdminPanelP'>{t('admin.allowCreatingAccountsDescription')}</p>
+              <p className='AdminPanelP'>{t('admin.allowNewAccountsDesc')}</p>
             </div>
             <div className="setting">
               <div className='tajDrugiDiv'>
                 <label>
-                  {t('admin.allowResetPassword')}
+                  {t('admin.allowPasswordReset')}
                 </label>
                 <ToggleSwitch 
                   isOn={settings.enable_reset_password} 
@@ -129,7 +138,7 @@ const Settings = () => {
                   label="enable_reset_password" 
                 />
               </div>
-              <p className='AdminPanelP'>{t('admin.allowResetPasswordDescription')}</p>
+              <p className='AdminPanelP'>{t('admin.allowPasswordResetDesc')}</p>
             </div>
           </div>
           
@@ -139,7 +148,7 @@ const Settings = () => {
             <div className="setting">
               <div className='tajDrugiDiv'>
                 <label>
-                  {t('admin.gracePeriod')} (days)
+                  {t('admin.graceDelay')}
                 </label>
                 <input 
                   type="number" 
@@ -149,7 +158,7 @@ const Settings = () => {
                   max="365"
                 />
               </div>
-              <p className='AdminPanelP'>{t('admin.gracePeriodDescription')}</p>
+              <p className='AdminPanelP'>{t('admin.graceDelayDesc')}</p>
             </div>
           </div>
 
@@ -159,7 +168,7 @@ const Settings = () => {
             <div className="setting">
               <div className='tajDrugiDiv'>
                 <label>
-                  {t('admin.requireStrongPassword')}
+                  {t('admin.requireStrongPasswords')}
                 </label>
                 <ToggleSwitch 
                   isOn={settings.requireStrongPassword} 
@@ -167,7 +176,7 @@ const Settings = () => {
                   label="requireStrongPassword" 
                 />
               </div>
-              <p className='AdminPanelP'>{t('admin.requireStrongPasswordDescription')}</p>
+              <p className='AdminPanelP'>{t('admin.requireStrongPasswordsDesc')}</p>
             </div>
             <div className="setting">
               <div className='tajDrugiDiv'>
@@ -180,7 +189,7 @@ const Settings = () => {
                   label="enable_audit_logs" 
                 />
               </div>
-              <p className='AdminPanelP'>{t('admin.enableAuditLogsDescription')}</p>
+              <p className='AdminPanelP'>{t('admin.enableAuditLogsDesc')}</p>
             </div>
           </div>
         

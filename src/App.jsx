@@ -1,10 +1,12 @@
 import React, { useEffect } from 'react';
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate, useLocation, useNavigate } from 'react-router-dom';
 import './App.css';
 import Navbar from './navbar';
 import Footer from './footer';
 import Login from './login';
 import Register from './register';
+import ForgotPassword from './ForgotPassword';
+import ResetPassword from './ResetPassword';
 import CRMApp from './crmMainPart';
 import '../node_modules/bootstrap/dist/css/bootstrap.min.css';
 import UserProfile from './user-profile';
@@ -19,6 +21,39 @@ import { I18nextProvider } from 'react-i18next';
 import './i18';
 import i18n from './i18';
 import axios from './axiosConfig';
+
+// Component to handle the password reset redirection
+function PasswordResetRedirect() {
+  const location = useLocation();
+  const navigate = useNavigate();
+  
+  useEffect(() => {
+    // Extract token from the URL
+    const pathSegments = location.pathname.split('/');
+    if (pathSegments.length >= 3) {
+      const token = pathSegments[2];
+      // Extract email from query params
+      const searchParams = new URLSearchParams(location.search);
+      const email = searchParams.get('email');
+      
+      if (token && email) {
+        // Redirect to the reset-password route with token and email as query parameters
+        navigate(`/reset-password?token=${token}&email=${email}`);
+      } else {
+        // If token or email is missing, redirect to forgot password
+        navigate('/forgot-password');
+      }
+    }
+  }, [location, navigate]);
+  
+  return (
+    <div className="d-flex justify-content-center align-items-center" style={{ height: '100vh' }}>
+      <div className="spinner-border text-primary" role="status">
+        <span className="visually-hidden">Loading...</span>
+      </div>
+    </div>
+  );
+}
 
 function AppContent() {
   const { authUser, isLoading } = useAuth();
@@ -60,6 +95,9 @@ function AppContent() {
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route path="/2fa" element={<TwoFactorAuth />} />
+          <Route path="/forgot-password" element={<ForgotPassword />} />
+          <Route path="/reset-password" element={<ResetPassword />} />
+          <Route path="/password-reset/:token" element={<PasswordResetRedirect />} />
   
           <Route element={<RequireAuth />}>
             <Route path="/user-profile" element={<UserProfile />} />

@@ -127,8 +127,7 @@
   border-radius: 8px;
   box-shadow: var(--shadow-medium);
   border: none;
-  margin-top: 10%;
-  max-height: 80vh;
+  /* margin-top: 10%; */
   overflow-y: auto;
 }
 
@@ -363,7 +362,6 @@
 /* Modal Body */
 .task-modal-body {
   padding: 24px;
-  /* max-height: 70vh; */
   overflow-y: auto;
 }
 

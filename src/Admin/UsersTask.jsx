@@ -7,11 +7,18 @@ import {
   MDBTableHead,
   MDBTableBody,
 } from 'mdb-react-ui-kit';
-import editModal from './editModal';
 import './UsersTask.css';
 import { useTranslation } from 'react-i18next';
 
-export default function UserTask({ users, tasks, startChat, openEditModal, handleDeleteUser, handleDeleteTask }) {
+export default function UserTask({ 
+  users, 
+  tasks, 
+  startChat, 
+  openEditModal, 
+  handleDeleteUser, 
+  handleDeleteTask,
+  handleApproveUser 
+}) {
   const [selectedTask, setSelectedTask] = useState(null);
   const [modalOpen, setModalOpen] = useState(false);
   const { t } = useTranslation();
@@ -31,6 +38,30 @@ export default function UserTask({ users, tasks, startChat, openEditModal, handl
     if (e.target.classList.contains('modal')) {
       toggleModal();
     }
+  };
+
+  // Handle opening the edit modal
+  const handleOpenEditModal = (type, data) => {
+    console.log(`Opening ${type} edit modal with data:`, data);
+    if (!data || !data.id) {
+      console.error('Invalid data for edit modal');
+      return;
+    }
+    
+    // Create a copy of the data to avoid reference issues
+    const dataCopy = JSON.parse(JSON.stringify(data));
+    
+    // Add debug information
+    console.log('Debug: About to call openEditModal with:', {
+      type,
+      dataCopy
+    });
+    
+    // Call the openEditModal function from props
+    openEditModal(type, dataCopy);
+    
+    // Confirm the call has been made
+    console.log('Debug: openEditModal called');
   };
 
   return (
@@ -61,24 +92,31 @@ export default function UserTask({ users, tasks, startChat, openEditModal, handl
                         <button 
                           className="btn btn-info" 
                           onClick={() => startChat(user.id)}
+                          title={t('chat.openChat')}
                         >
-                          <i className="fas fa-comment-alt mr-1"></i> {t('admin.startChat')}
+                          <i className="fas fa-comment-alt mr-1"></i> {t('chat.openChat')}
                         </button>
                         <button
                           className="btn btn-primary"
-                          onClick={() => openEditModal("user", user)}
+                          onClick={() => handleOpenEditModal("user", user)}
+                          title={t('admin.editUser')}
                         >
                           <i className="fas fa-edit mr-1"></i> {t('admin.editUser')}
                         </button>
                         <button
                           className="btn btn-danger"
                           onClick={() => handleDeleteUser(user.id)}
+                          title={t('admin.deleteUser')}
                         >
                           <i className="fas fa-trash-alt mr-1"></i> {t('admin.deleteUser')}
                         </button>
                         {!user.approvedByAdmin && (
-                          <button className="btn btn-warning">
-                            <i className="fas fa-check mr-1"></i> Approve
+                          <button 
+                            className="btn btn-warning"
+                            onClick={() => handleApproveUser(user.id)}
+                            title={t('admin.approveUser')}
+                          >
+                            <i className="fas fa-check mr-1"></i> {t('admin.approveUser', 'Approve')}
                           </button>
                         )}
                       </div>
@@ -98,8 +136,9 @@ export default function UserTask({ users, tasks, startChat, openEditModal, handl
                 <tr>
                   <th>#</th>
                   <th>{t('crm.tasks.taskName')}</th>
-                  <th>{t('crm.tasks.priority')}</th>
                   <th>{t('admin.description')}</th>
+                  <th>{t('admin.assignedUsers', 'Assigned Users')}</th>
+                  <th>{t('crm.tasks.progress')}</th>
                   <th>{t('admin.actions')}</th>
                 </tr>
               </MDBTableHead>
@@ -112,14 +151,15 @@ export default function UserTask({ users, tasks, startChat, openEditModal, handl
                       <button
                         className="btn btn-info"
                         onClick={() => showDescription(task)}
+                        title={t('admin.viewDetails', 'View Details')}
                       >
-                        <i className="fas fa-eye mr-1"></i> View
+                        <i className="fas fa-eye mr-1"></i> {t('admin.viewDetails', 'View')}
                       </button>
                     </td>
                     <td>
                       {(task.users || []).length > 0
                         ? task.users.map((user) => user.name).join(', ')
-                        : 'No users assigned'}
+                        : t('admin.noUsersAssigned', 'No users assigned')}
                     </td>
                     <td>
                       <div className="progress" style={{ height: '20px' }}>
@@ -145,15 +185,17 @@ export default function UserTask({ users, tasks, startChat, openEditModal, handl
                       <div className="button-group">
                         <button
                           className="btn btn-primary"
-                          onClick={() => openEditModal("task", task)}
+                          onClick={() => handleOpenEditModal("task", task)}
+                          title={t('admin.editTask')}
                         >
-                          <i className="fas fa-edit mr-1"></i> Edit
+                          <i className="fas fa-edit mr-1"></i> {t('admin.editTask')}
                         </button>
                         <button
                           className="btn btn-danger"
                           onClick={() => handleDeleteTask(task.id)}
+                          title={t('admin.deleteTask')}
                         >
-                          <i className="fas fa-trash-alt mr-1"></i> Delete
+                          <i className="fas fa-trash-alt mr-1"></i> {t('admin.deleteTask')}
                         </button>
                       </div>
                     </td>
@@ -175,7 +217,7 @@ export default function UserTask({ users, tasks, startChat, openEditModal, handl
               <div className="modal-content">
                 <div className="modal-header">
                   <h5 className="modal-title">
-                    Task Details: {selectedTask.title}
+                    {t('admin.taskDetails', 'Task Details')}: {selectedTask.title}
                   </h5>
                   <button 
                     type="button" 
@@ -185,10 +227,10 @@ export default function UserTask({ users, tasks, startChat, openEditModal, handl
                   ></button>
                 </div>
                 <div className="modal-body">
-                  <h6>Description:</h6>
-                  <p>{selectedTask.description ? selectedTask.description : 'No description available.'}</p>
+                  <h6>{t('admin.description')}:</h6>
+                  <p>{selectedTask.description ? selectedTask.description : t('admin.noDescriptionAvailable', 'No description available.')}</p>
                   
-                  <h6 className="mt-3">Progress:</h6>
+                  <h6 className="mt-3">{t('crm.tasks.progress')}:</h6>
                   <div className="progress" style={{ height: '20px' }}>
                     <div 
                       className="progress-bar" 
@@ -213,7 +255,7 @@ export default function UserTask({ users, tasks, startChat, openEditModal, handl
                     className="btn btn-secondary"
                     onClick={toggleModal}
                   >
-                    Close
+                    {t('admin.close', 'Close')}
                   </button>
                 </div>
               </div>

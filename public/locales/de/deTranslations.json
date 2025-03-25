@@ -176,6 +176,14 @@
     "verifyCode": "Code überprüfen",
     "invalidCode": "Sie haben einen ungültigen Code eingegeben. Melden Sie sich an und versuchen Sie es erneut!!!"
   },
+  "common": {
+    "saveChanges": "Änderungen speichern",
+    "saving": "Speichern...",
+    "cancel": "Abbrechen",
+    "success": "Erfolg!",
+    "error": "Fehler",
+    "loading": "Laden..."
+  },
   "admin": {
     "panel": "Admin-Panel",
     "dashboard": "Dashboard",
@@ -231,7 +239,24 @@
     "selectUserPrompt": "Wählen Sie einen Benutzer aus, um zu chatten",
     "selectUserDesc": "Wählen Sie einen Benutzer aus der Liste aus, um Ihre Konversation anzuzeigen",
     "noChats": "Noch keine Chat-Historie",
-    "noMessages": "Noch keine Nachrichten"
+    "noMessages": "Noch keine Nachrichten",
+    "enableAuditLogsDescription": "",
+    "requireStrongPasswordsDescription": "",
+    "approveUser": "Benutzer genehmigen",
+    "assignedUsers": "Zugewiesene Benutzer",
+    "noUsersAssigned": "Keine Benutzer zugewiesen",
+    "viewDetails": "Details anzeigen",
+    "taskDetails": "Aufgabendetails",
+    "noDescriptionAvailable": "Keine Beschreibung verfügbar",
+    "close": "Schließen",
+    "userApproved": "Benutzer erfolgreich genehmigt",
+    "userDeleted": "Benutzer erfolgreich gelöscht",
+    "taskDeleted": "Aufgabe erfolgreich gelöscht",
+    "errorApproving": "Fehler beim Genehmigen des Benutzers",
+    "errorDeleting": "Fehler beim Löschen des Benutzers/der Aufgabe",
+    "confirmDelete": "Sind Sie sicher, dass Sie dies löschen möchten?",
+    "yes": "Ja",
+    "no": "Nein"
   },
   "chat": {
     "online": "Online",
@@ -246,5 +271,42 @@
     "openChat": "Chat öffnen",
     "contactAdmin": "Admin kontaktieren",
     "selectAdmin": "Wählen Sie einen Admin für den Chat aus"
+  },
+  "settings": {
+    "title": "Einstellungen",
+    "description": "Verwalten Sie Ihre Einstellungen",
+    "save": "Speichern",
+    "cancel": "Abbrechen",
+    "allowNewAccounts": "Erstellung neuer Konten erlauben",
+    "allowNewAccountsDesc": "Standardmäßig kann jeder Besucher Ihrer Domain ein neues Konto erstellen.",
+    "allowPasswordReset": "Passwort-Zurücksetzung erlauben",
+    "allowPasswordResetDesc": "Standardmäßig können Benutzer einen Link zur Passwort-Zurücksetzung anfordern.",
+    "userDeletion": "Benutzerlöschung"
+  },
+  "forgotPassword": {
+    "title": "Passwort vergessen",
+    "description": "Geben Sie Ihre E-Mail-Adresse ein und wir senden Ihnen einen Link zum Zurücksetzen Ihres Passworts.",
+    "email": "E-Mail-Adresse",
+    "emailPlaceholder": "Geben Sie Ihre E-Mail ein",
+    "submit": "Reset-Link senden",
+    "sending": "Senden...",
+    "backToLogin": "Zurück zum Login",
+    "successMessage": "Ein Link zum Zurücksetzen des Passworts wurde an Ihre E-Mail gesendet",
+    "errorMessage": "Fehler beim Senden des Reset-Links"
+  },
+  "resetPassword": {
+    "title": "Passwort zurücksetzen",
+    "description": "Bitte geben Sie Ihr neues Passwort ein",
+    "newPassword": "Neues Passwort",
+    "newPasswordPlaceholder": "Neues Passwort eingeben",
+    "confirmPassword": "Passwort bestätigen",
+    "confirmPasswordPlaceholder": "Bestätigen Sie Ihr neues Passwort",
+    "submit": "Passwort zurücksetzen",
+    "resetting": "Zurücksetzen...",
+    "backToLogin": "Zurück zum Login",
+    "successMessage": "Passwort erfolgreich zurückgesetzt. Sie können sich jetzt mit Ihrem neuen Passwort anmelden",
+    "errorMessage": "Fehler beim Zurücksetzen des Passworts",
+    "invalidToken": "Ungültiges oder abgelaufenes Token",
+    "passwordMismatch": "Passwörter stimmen nicht überein"
   }
 }
