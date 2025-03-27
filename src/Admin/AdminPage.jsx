@@ -34,6 +34,7 @@ import ChatAdmin from './ChatAdmin'; // Import the ChatAdmin component
 import { useTranslation } from 'react-i18next';
 import { toast, ToastContainer } from 'react-toastify';
 import TestModal from './TestModal'; // Import the test modal component
+import NotificationManager from './NotificationManager';
 
 export default function AdminPage() {
     // State to store users, tasks, and admin name
@@ -167,6 +168,8 @@ export default function AdminPage() {
           return <Settings />;
         case 'TestModal':
           return <TestModal />;
+        case 'Notifications':
+          return <NotificationManager />;
         default:
           return null;
       }
@@ -206,98 +209,81 @@ export default function AdminPage() {
     };
 
     // Save changes function
-    const saveChanges = (updatedData) => {
-      if (!updatedData || !updatedData.id) {
-        console.error('Invalid data for saving changes');
-        toast.error('Error: Invalid data');
+    const saveChanges = async (updatedData) => {
+      if (!updatedData.id) {
+        console.error('No ID provided for update');
         return;
       }
 
-      console.log('Saving changes:', updatedData);
+      try {
+        const endpoint = editType === 'user' ? `/api/users/${updatedData.id}` : `/api/tasks/${updatedData.id}`;
+        const method = 'PUT';
 
-      // Determine the API endpoint based on edit type
-      const endpoint = editType === 'user' 
-        ? `/Admin/users/${updatedData.id}` 
-        : `/Admin/tasks/${updatedData.id}`;
-
-      // For user edits, ensure role is properly passed
-      let dataToSend = updatedData;
-      if (editType === 'user') {
-        // Ensure role is explicitly set and passed as a string
-        dataToSend = {
-          ...updatedData,
-          role: updatedData.role || 'user' // Default to 'user' if undefined
-        };
-        console.log('Sending user data with role:', dataToSend.role);
-      }
-
-      // Make the API request
-      axios.put(endpoint, dataToSend, { 
-        withXSRFToken: true,
-        headers: {
-          'Content-Type': 'application/json',
-          'Accept': 'application/json'
+        // For user edits, ensure role is explicitly set and passed as a string
+        if (editType === 'user') {
+          updatedData.role = updatedData.role || 'user';
+          console.log('Saving user with role:', updatedData.role);
         }
-      })
-        .then(response => {
-          console.log('API response:', response.data);
-          
-          // Update the local state based on edit type
-          if (editType === 'user') {
-            // Log the role values for debugging
-            console.log('Role before update:', 
-              users.find(user => user.id === updatedData.id)?.role,
-              'Role from form:', dataToSend.role,
-              'Role from response:', response.data.user?.role || response.data.updated_role);
-            
-            // Use the role from the response data if available, otherwise use the one from our request
-            const updatedRole = response.data.user?.role || response.data.updated_role || dataToSend.role;
-            
-            // Update users state
-            setUsers(prevUsers => 
-              prevUsers.map(user => 
-                user.id === updatedData.id ? 
-                { ...user, ...dataToSend, role: updatedRole } : user
-              )
-            );
-            
-            // If the updated user is the current logged-in user, refresh auth context
-            if (authUser?.user?.id === updatedData.id) {
-              console.log('Current user updated, refreshing auth context');
-              fetchAuthenticatedUser();
-            }
-            
-            toast.success('User updated successfully');
-            
-            // Force a refresh of the users data to ensure we have the latest from the server
-            fetchUsers();
-          } else if (editType === 'task') {
-            setTasks(prevTasks => 
-              prevTasks.map(task => 
-                task.id === updatedData.id ? { ...task, ...dataToSend } : task
-              )
-            );
-            toast.success('Task updated successfully');
-            
-            // Force a refresh of the tasks data
-            fetchTasks();
-          }
-          
-          // Close the modal
-          closeEditModal();
-        })
-        .catch(error => {
-          console.error('Error saving changes:', error);
-          
-          // Log more detailed error information
-          if (error.response) {
-            console.error('Error response:', error.response.data);
-            console.error('Error status:', error.response.status);
-            toast.error(`Error saving changes: ${error.response.data.message || 'Server error'}`);
-          } else {
-            toast.error('Error saving changes: Network or server error');
-          }
+
+        const response = await axios({
+          method,
+          url: endpoint,
+          data: updatedData,
         });
+
+        if (response.status === 200) {
+          // If this is a task creation and the user is an admin
+          if (editType === 'task' && authUser?.user?.role === 'admin') {
+            // Send notification to the assigned user
+            if (updatedData.assigned_to) {
+              try {
+                await axios.post('/api/notifications', {
+                  user_id: updatedData.assigned_to,
+                  type: 'task',
+                  title: 'New Task Assigned',
+                  message: `You have been assigned a new task: ${updatedData.title}`,
+                  data: {
+                    task_name: updatedData.title,
+                    task_description: updatedData.description,
+                    task_id: updatedData.id,
+                    priority: updatedData.priority,
+                    due_date: updatedData.due_date
+                  }
+                });
+              } catch (error) {
+                console.error('Error sending notification:', error);
+                toast.error('Task created but notification failed to send');
+              }
+            }
+          }
+
+          // Update local state
+          if (editType === 'user') {
+            setUsers(prevUsers =>
+              prevUsers.map(user =>
+                user.id === updatedData.id ? response.data : user
+              )
+            );
+          } else {
+            setTasks(prevTasks =>
+              prevTasks.map(task =>
+                task.id === updatedData.id ? response.data : task
+              )
+            );
+          }
+
+          // If the updated user is the currently logged-in user, refresh the auth context
+          if (editType === 'user' && updatedData.id === authUser.user.id) {
+            await fetchAuthenticatedUser();
+          }
+
+          setIsEditModalOpen(false);
+          toast.success(t('admin.changesSaved'));
+        }
+      } catch (error) {
+        console.error('Error saving changes:', error);
+        toast.error(error.response?.data?.message || t('admin.errorSaving'));
+      }
     };
 
     // Toggle modal function

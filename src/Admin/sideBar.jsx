@@ -23,6 +23,15 @@ const Sidebar = ({ users, setscreen, selectedScreen }) => {
     return selectedScreen === screenName ? 'active' : '';
   };
 
+  const menuItems = [
+    { id: 'Dashboard', icon: 'chart-line', label: 'Dashboard' },
+    { id: 'UserTask', icon: 'users', label: 'Users & Tasks' },
+    { id: 'activityLog', icon: 'history', label: 'Activity Log' },
+    { id: 'Chat', icon: 'comments', label: 'Chat' },
+    { id: 'Notifications', icon: 'bell', label: 'Notifications' },
+    { id: 'Settings', icon: 'cog', label: 'Settings' },
+  ];
+
   return (
     <div className={`sidebar ${isCollapsed ? 'collapsed' : ''}`}>
       {/* Sidebar Header */}
@@ -35,46 +44,16 @@ const Sidebar = ({ users, setscreen, selectedScreen }) => {
 
       {/* Sidebar Menu */}
       <ul className="sidebar-menu">
-        <li className={isActive('Dashboard')}>
-          <Link onClick={() => setscreen('Dashboard')}>
-            <span className="icon">
-              <i className="fas fa-tachometer-alt"></i>
-            </span>
-            {!isCollapsed && <span className="text">Dashboard</span>}
-          </Link>
-        </li>
-        <li className={isActive('UserTask')}>
-          <Link onClick={() => setscreen('UserTask')}>
-            <span className="icon">
-              <i className="fas fa-tasks"></i>
-            </span>
-            {!isCollapsed && <span className="text">Tasks & Users</span>}
-          </Link>
-        </li>
-        <li className={isActive('Chat')}>
-          <Link onClick={() => setscreen('Chat')}>
-            <span className="icon">
-              <i className="fas fa-comments"></i>
-            </span>
-            {!isCollapsed && <span className="text">Chat</span>}
-          </Link>
-        </li>
-        <li className={isActive('activityLog')}>
-          <Link onClick={() => setscreen('activityLog')}>
-            <span className="icon">
-              <i className="fas fa-history"></i>
-            </span>
-            {!isCollapsed && <span className="text">Activity Log</span>}
-          </Link>
-        </li>
-        <li className={isActive('Settings')}>
-          <Link onClick={() => setscreen('Settings')}>
-            <span className="icon">
-              <i className="fas fa-cog"></i>
-            </span>
-            {!isCollapsed && <span className="text">Settings</span>}
-          </Link>
-        </li>
+        {menuItems.map((item) => (
+          <li key={item.id} className={isActive(item.id)}>
+            <Link onClick={() => setscreen(item.id)}>
+              <span className="icon">
+                <i className={`fas fa-${item.icon}`}></i>
+              </span>
+              {!isCollapsed && <span className="text">{item.label}</span>}
+            </Link>
+          </li>
+        ))}
         <li>
           <Link to="/logout">
             <span className="icon">

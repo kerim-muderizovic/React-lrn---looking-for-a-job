@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { BrowserRouter as Router, Routes, Route, Navigate, useLocation, useNavigate } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate, useLocation, useNavigate, Link } from 'react-router-dom';
 import './App.css';
 import Navbar from './navbar';
 import Footer from './footer';
@@ -21,6 +21,8 @@ import { I18nextProvider } from 'react-i18next';
 import './i18';
 import i18n from './i18';
 import axios from './axiosConfig';
+import NotificationCenter from './components/NotificationCenter';
+import { useTranslation } from 'react-i18next';
 
 // Component to handle the password reset redirection
 function PasswordResetRedirect() {
@@ -57,6 +59,7 @@ function PasswordResetRedirect() {
 
 function AppContent() {
   const { authUser, isLoading } = useAuth();
+  const { t } = useTranslation();
   console.log(authUser,"testttt");
   const isAdmin = authUser?.user?.role === "admin";
   
@@ -87,33 +90,93 @@ function AppContent() {
 
   return (
     <div style={{ display: "flex", flexDirection: "column", minHeight: "100vh" }}>
-    <Navbar />
-    <div style={{ flex: 1, overflow: "auto" }}>
-      <DndProvider backend={HTML5Backend}>
-        <Routes>
-          <Route path="/" element={authUser?.isLoggedIn ? <Navigate to="/crm" replace /> : <Navigate to="/register" replace />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Register />} />
-          <Route path="/2fa" element={<TwoFactorAuth />} />
-          <Route path="/forgot-password" element={<ForgotPassword />} />
-          <Route path="/reset-password" element={<ResetPassword />} />
-          <Route path="/password-reset/:token" element={<PasswordResetRedirect />} />
-  
-          <Route element={<RequireAuth />}>
-            <Route path="/user-profile" element={<UserProfile />} />
-            <Route path="/crm/*" element={<CRMApp style={{ flex: 1, minHeight: "100%" }} />} />
-            <Route path="/AdminPage/*" element={<AdminPage />} />
-          </Route>
-        </Routes>
-      </DndProvider>
+      <nav className="navbar navbar-expand-lg navbar-light bg-light">
+        <div className="container-fluid">
+          <Link className="navbar-brand" to="/">
+            {t('app.name')}
+          </Link>
+          <button
+            className="navbar-toggler"
+            type="button"
+            data-bs-toggle="collapse"
+            data-bs-target="#navbarNav"
+            aria-controls="navbarNav"
+            aria-expanded="false"
+            aria-label="Toggle navigation"
+          >
+            <span className="navbar-toggler-icon"></span>
+          </button>
+          <div className="collapse navbar-collapse" id="navbarNav">
+            <ul className="navbar-nav me-auto">
+              {authUser && (
+                <>
+                  <li className="nav-item">
+                    <Link className="nav-link" to="/profile">
+                      {t('nav.profile')}
+                    </Link>
+                  </li>
+                  {authUser.user.role === 'admin' && (
+                    <li className="nav-item">
+                      <Link className="nav-link" to="/admin">
+                        {t('nav.admin')}
+                      </Link>
+                    </li>
+                  )}
+                </>
+              )}
+            </ul>
+            <ul className="navbar-nav">
+              {authUser && (
+                <>
+                  <li className="nav-item">
+                    <NotificationCenter />
+                  </li>
+                  <li className="nav-item">
+                    <Link className="nav-link" to="/logout">
+                      {t('nav.logout')}
+                    </Link>
+                  </li>
+                </>
+              )}
+              {!authUser && (
+                <>
+                  <li className="nav-item">
+                    <Link className="nav-link" to="/login">
+                      {t('nav.login')}
+                    </Link>
+                  </li>
+                  <li className="nav-item">
+                    <Link className="nav-link" to="/register">
+                      {t('nav.register')}
+                    </Link>
+                  </li>
+                </>
+              )}
+            </ul>
+          </div>
+        </div>
+      </nav>
+      <div style={{ flex: 1, overflow: "auto" }}>
+        <DndProvider backend={HTML5Backend}>
+          <Routes>
+            <Route path="/" element={authUser?.isLoggedIn ? <Navigate to="/crm" replace /> : <Navigate to="/register" replace />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/register" element={<Register />} />
+            <Route path="/2fa" element={<TwoFactorAuth />} />
+            <Route path="/forgot-password" element={<ForgotPassword />} />
+            <Route path="/reset-password" element={<ResetPassword />} />
+            <Route path="/password-reset/:token" element={<PasswordResetRedirect />} />
+    
+            <Route element={<RequireAuth />}>
+              <Route path="/user-profile" element={<UserProfile />} />
+              <Route path="/crm/*" element={<CRMApp style={{ flex: 1, minHeight: "100%" }} />} />
+              <Route path="/AdminPage/*" element={<AdminPage />} />
+            </Route>
+          </Routes>
+        </DndProvider>
+      </div>
+      {!isAdmin  && <Footer />}
     </div>
-    {!isAdmin  && <Footer />}
-  </div>
-  
-
-
-  
-  
   );
 }
 
